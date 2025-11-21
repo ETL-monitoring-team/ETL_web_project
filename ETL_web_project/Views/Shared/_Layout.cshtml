@@ -1,96 +1,132 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en" class="dark-theme">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ETL_web_project</title>
 
-    <!-- FontAwesome -->
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
 
     <!-- Dashboard CSS -->
     <link rel="stylesheet" href="~/css/dashboard/navbar-sidebar.css" asp-append-version="true" />
 
-    <!-- Site CSS -->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
     <div class="dashboard">
 
         <!-- Sidebar -->
-        <nav class="sidebar">
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-cube"></i>
-                </div>
-                <span>DW Monitor</span>
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href='#'>
+                    <i class="fas fa-cube fa-2x logo"></i>
+                </a>
+                <h2>Monitor</h2>
             </div>
+            <ul class="sidebar-links">
+                <h4>
+                    <span>Main Menu</span>
+                    <div class="menu-separator"></div>
+                </h4>
+                <li>
+                    @* hepsi *@
+                    <a asp-controller="Dashboard" asp-action="Index">
+                        <i class="fa-solid fa-solar-panel"></i>
+                        Dashboard panel
+                   </a>
+                </li>
 
-            <ul class="nav-links">
-                <li class="active" data-section="dashboard">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                    <div class="nav-indicator"></div>
+                <li>
+                    @* sadece admin *@
+                    <a asp-controller="Etl" asp-action="Jobs">
+                        <i class="fa-solid fa-solar-panel"></i>
+                        ETL Jobs
+                    </a>
                 </li>
-                <li data-section="etl">
-                    <i class="fas fa-project-diagram"></i>
-                    <span>ETL Runs</span>
-                    <div class="nav-indicator"></div>
+
+                <li>
+                    @* admin ve analist(sadece görüntüleme) *@
+                    <a asp-controller="Etl" asp-action="Logs">
+                        <i class="fa-solid fa-solar-panel"></i>
+                        ETL Logs
+                    </a>
                 </li>
-                <li data-section="logs">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Logs</span>
-                    <div class="nav-indicator"></div>
+
+                <li>
+                    @* admin ve analist(readonly) *@
+                    <a asp-controller="Etl" asp-action="Staging">
+                        <i class="fa-solid fa-solar-panel"></i>
+                        Staging Tables
+                    </a>
                 </li>
-                <li data-section="staging">
-                    <i class="fas fa-table"></i>
-                    <span>Staging Tables</span>
-                    <div class="nav-indicator"></div>
+
+                <li>
+                    @* admin ve analist ve viewer((sadece dashboard grafikleri) *@
+                    <a asp-controller="Etl" asp-action="Facts">
+                        <i class="fa-solid fa-solar-panel"></i>
+                        Fact Explorer
+                    </a>
                 </li>
-                <li data-section="settings">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
-                    <div class="nav-indicator"></div>
+
+                <li>
+                    @* sadece admin *@
+                    <a asp-controller="Etl" asp-action="Schedule">
+                        <i class="fa-solid fa-solar-panel"></i>
+                        ETL Schedule
+                    </a>
+                </li>
+
+                <h4>
+                    <span>Account</span>
+                    <div class="menu-separator"></div>
+                </h4>
+
+                <li>
+                    @* sadece admin *@
+                    <a asp-controller="Admin" asp-action="Index">
+                        <i class="fa-solid fa-user-tie"></i>
+                        Admin panel
+                    </a>
+                </li>
+
+                <li>
+                    <a asp-controller="Settings" asp-action="Index">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                        Settings
+                    </a>
+                </li>
+
+                <li>
+                    @* BUNU ACMADIM BAKILACAK *@
+                    <a asp-controller="Account" asp-action="Logout">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Logout
+                    </a>
                 </li>
             </ul>
-        </nav>
+            <div class="user-account">
+                <div class="user-profile">
+                    <img src="images/profile-img.jpg"
+                    alt="profile-img"/>
+                    <div class="user-detail">
+                        <h3>@User.Identity?.Name</h3>
+                        <span>@User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+
+        <!-- Right side content -->
+        <div class="main-wrapper">
+            <!-- Navbar -->
+            <nav class="top-navbar">
+                <h2>Dashboard Navbar</h2>
+            </nav>
+
 
         <!-- Main Content -->
         <main class="main-content">
-            <header>
-                <div class="header-left">
-                    <div class="search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search anything..." />
-                    </div>
-                </div>
-                <div class="header-right">
-                    <div class="profile">
-                        <div class="profile-trigger">
-                            <div class="profile-avatar">
-                                <span class="avatar-text">JD</span>
-                            </div>
-                            <div class="profile-info">
-                                <span class="profile-name">John Doe</span>
-                                <span class="profile-role">Administrator</span>
-                            </div>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="profile-dropdown">
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <i class="fas fa-user"></i>
-                                    <span>My Profile</span>
-                                </li>
-                                <li class="logout">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    <span>Logout</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </header>
 
             <!-- Dashboard Container -->
             <div class="dashboard-container">
@@ -100,16 +136,9 @@
     </div>
 
     <!-- Footer -->
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - ETL_web_project
-        </div>
-    </footer>
 
-    <!-- JS -->
-    <script src="~/lib/jquery/jquery.min.js"></script>
+
     <script src="~/js/dashboard/navbar-sidebar.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
