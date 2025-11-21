@@ -1,21 +1,114 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark-theme">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ETL_web_project</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- FontAwesome -->
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+
+    <!-- Dashboard CSS -->
+    <link rel="stylesheet" href="~/css/dashboard/navbar-sidebar.css" asp-append-version="true" />
+
+    <!-- Site CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
+    <div class="dashboard">
 
-    
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-    
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <span>DW Monitor</span>
+            </div>
+
+            <ul class="nav-links">
+                <li class="active" data-section="dashboard">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                    <div class="nav-indicator"></div>
+                </li>
+                <li data-section="etl">
+                    <i class="fas fa-project-diagram"></i>
+                    <span>ETL Runs</span>
+                    <div class="nav-indicator"></div>
+                </li>
+                <li data-section="logs">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Logs</span>
+                    <div class="nav-indicator"></div>
+                </li>
+                <li data-section="staging">
+                    <i class="fas fa-table"></i>
+                    <span>Staging Tables</span>
+                    <div class="nav-indicator"></div>
+                </li>
+                <li data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                    <div class="nav-indicator"></div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <div class="header-left">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search anything..." />
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="profile">
+                        <div class="profile-trigger">
+                            <div class="profile-avatar">
+                                <span class="avatar-text">JD</span>
+                            </div>
+                            <div class="profile-info">
+                                <span class="profile-name">John Doe</span>
+                                <span class="profile-role">Administrator</span>
+                            </div>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="profile-dropdown">
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <i class="fas fa-user"></i>
+                                    <span>My Profile</span>
+                                </li>
+                                <li class="logout">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Container -->
+            <div class="dashboard-container">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - ETL_web_project
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/js/dashboard/navbar-sidebar.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
