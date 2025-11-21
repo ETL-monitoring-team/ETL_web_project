@@ -17,7 +17,6 @@ namespace ETL_web_project.Controllers
             _accountService = accountService;
         }
 
-        // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
@@ -26,7 +25,6 @@ namespace ETL_web_project.Controllers
             return View(new LoginDto());
         }
 
-        // POST: /Account/Login
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -45,7 +43,6 @@ namespace ETL_web_project.Controllers
                 return View(model);
             }
 
-            // Claims oluştur
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, userDto.Username),
@@ -68,11 +65,9 @@ namespace ETL_web_project.Controllers
                 return Redirect(returnUrl);
             }
 
-            // Şimdilik Home/Index’e yönlendiriyoruz
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Dashboard");
         }
 
-        // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
@@ -80,7 +75,6 @@ namespace ETL_web_project.Controllers
             return View(new RegisterDto());
         }
 
-        // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -94,6 +88,12 @@ namespace ETL_web_project.Controllers
             if (await _accountService.UsernameExistsAsync(model.Username))
             {
                 ModelState.AddModelError("Username", "Username already exists.");
+                return View(model);
+            }
+
+            if (await _accountService.EmailExistsAsync(model.Email))
+            {
+                ModelState.AddModelError("Email", "Email is already in use.");
                 return View(model);
             }
 
@@ -120,7 +120,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction("Login", "Account");
         }
         
-        // GET: /Account/AccessDenied
         [HttpGet]
         [AllowAnonymous]
         public IActionResult AccessDenied()
@@ -128,7 +127,6 @@ namespace ETL_web_project.Controllers
             return View();
         }
 
-        // GET: /Account/ForgotPassword
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -136,7 +134,6 @@ namespace ETL_web_project.Controllers
             return View();
         }
 
-        // POST: /Account/ForgotPassword
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -147,7 +144,6 @@ namespace ETL_web_project.Controllers
             return View();
         }
 
-        // POST: /Account/Logout
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
