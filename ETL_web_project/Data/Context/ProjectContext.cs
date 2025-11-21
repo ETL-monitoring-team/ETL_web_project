@@ -49,6 +49,17 @@ namespace ETL_web_project.Data.Context
 
             modelBuilder.Entity<UserAccount>().ToTable("UserAccount", schema: "auth");
 
+            //  Username UNIQUE
+            modelBuilder.Entity<UserAccount>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
+            // Email UNIQUE
+            modelBuilder.Entity<UserAccount>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+
             base.OnModelCreating(modelBuilder);
         }
     }
