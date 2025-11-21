@@ -1,122 +1,160 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using ETL_web_project.DTOs;
+using ETL_web_project.Interfaces;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETL_web_project.Controllers
 {
     public class AccountController : Controller
     {
-        // GET: AccountController
-        public ActionResult Index()
+        private readonly IAccountService _accountService;
+
+        public AccountController(IAccountService accountService)
         {
-            return View();
+            _accountService = accountService;
         }
 
-        // GET: AccountController/Details/5
-        public ActionResult Details(int id)
+        // GET: /Account/Login
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login(string? returnUrl = null)
         {
-            return View();
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(new LoginDto());
         }
 
-        // GET: AccountController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AccountController/Create
+        // POST: /Account/Login
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Login(LoginDto model, string? returnUrl = null)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            catch
+
+            var userDto = await _accountService.ValidateUserAsync(model);
+
+            if (userDto == null)
             {
-                return View();
+                ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                return View(model);
             }
+
+            // Claims oluştur
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, userDto.Username),
+                new Claim(ClaimTypes.Role, userDto.Role.ToString()),
+                new Claim("UserId", userDto.UserId.ToString())
+            };
+
+            var identity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal);
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
+            // Şimdilik Home/Index’e yönlendiriyoruz
+            return RedirectToAction("Index", "Home");
         }
 
-        // GET: AccountController/Edit/5
-        public ActionResult Edit(int id)
+        // GET: /Account/Register
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Register()
         {
-            return View();
+            return View(new RegisterDto());
         }
 
-        // POST: AccountController/Edit/5
+        // POST: /Account/Register
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Register(RegisterDto model)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                return View(model);
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: AccountController/Delete/5
-        public ActionResult Delete(int id)
+            if (await _accountService.UsernameExistsAsync(model.Username))
+            {
+                ModelState.AddModelError("Username", "Username already exists.");
+                return View(model);
+            }
+
+            var createdUser = await _accountService.RegisterUserAsync(model);
+
+            // Kayıttan sonra otomatik login
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, createdUser.Username),
+                new Claim(ClaimTypes.Role, createdUser.Role.ToString()),
+                new Claim("UserId", createdUser.UserId.ToString())
+            };
+
+            var identity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal);
+
+            return RedirectToAction("Login", "Account");
+        }
+        
+        // GET: /Account/AccessDenied
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
         {
             return View();
         }
 
-        // POST: AccountController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-
-        // GET: AccountController/Login
+        // GET: /Account/ForgotPassword
         [HttpGet]
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-        // GET: AccountController/Register
-        [HttpGet]
-        public ActionResult Register()
-        {
-            return View();
-        }
-
-        // GET: AccountController/AccessDenied
-        [HttpGet]
-        public ActionResult AccessDenied()
-        {
-            return View();
-        }
-
-        [HttpGet]
+        [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
             return View();
         }
 
+        // POST: /Account/ForgotPassword
         [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public IActionResult ForgotPassword(string email)
         {
-            // Şimdilik boş bırak – ileride mail gönderme ekleyebiliriz
+            // Şimdilik sadece mesaj gösteriyoruz
             ViewBag.Message = "If the email exists, a reset link will be sent.";
             return View();
         }
 
+        // POST: /Account/Logout
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Account");
+        }
     }
 }
-
-

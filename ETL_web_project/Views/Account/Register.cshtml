@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ETL_web_project.DTOs.RegisterDto
+
+@{
     ViewData["Title"] = "Create Account";
     Layout = "";
 }
@@ -21,41 +23,55 @@
         </div>
 
         <form asp-action="Register" asp-controller="Account" method="post" class="mt-3">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- FullName -->
             <div class="form-group mb-3">
-                <label for="FullName" class="login-label">Full Name</label>
-                <input id="FullName" name="FullName" class="form-control login-input" placeholder="e.g. John Smith" />
+                <label asp-for="FullName" class="login-label"></label>
+                <input asp-for="FullName" class="form-control login-input" placeholder="e.g. John Smith" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
                 <small class="login-footer-text">
                     This name may be shown in logs, dashboards, and audit trails.
                 </small>
             </div>
 
+            <!-- Username -->
             <div class="form-group mb-3">
-                <label for="Username" class="login-label">Username</label>
-                <input id="Username" name="Username" class="form-control login-input" placeholder="e.g. j.smith" />
+                <label asp-for="Username" class="login-label"></label>
+                <input asp-for="Username" class="form-control login-input" placeholder="e.g. j.smith" />
+                <span asp-validation-for="Username" class="text-danger"></span>
                 <small class="login-footer-text">
                     Use a short, unique identifier. You will use this to sign in.
                 </small>
             </div>
 
+            <!-- Email -->
             <div class="form-group mb-3">
-                <label for="Email" class="login-label">Work Email</label>
-                <input id="Email" name="Email" type="email" class="form-control login-input" placeholder="e.g. j.smith@company.com" />
+                <label asp-for="Email" class="login-label"></label>
+                <input asp-for="Email" class="form-control login-input" placeholder="e.g. j.smith@company.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
                 <small class="login-footer-text">
                     We'll use this for notifications about ETL jobs and system alerts (if enabled).
                 </small>
             </div>
 
+            <!-- Password -->
             <div class="form-group mb-3">
-                <label for="Password" class="login-label">Password</label>
-                <input id="Password" name="Password" type="password" class="form-control login-input" placeholder="Create a strong password" />
+                <label asp-for="Password" class="login-label"></label>
+                <input asp-for="Password" class="form-control login-input" placeholder="Create a strong password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
                 <small class="login-footer-text">
                     Use at least 8 characters, including numbers and symbols if possible.
                 </small>
             </div>
 
+            <!-- Confirm Password -->
             <div class="form-group mb-4">
-                <label for="ConfirmPassword" class="login-label">Confirm Password</label>
-                <input id="ConfirmPassword" name="ConfirmPassword" type="password" class="form-control login-input" placeholder="Re-enter your password" />
+                <label asp-for="ConfirmPassword" class="login-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control login-input" placeholder="Re-enter your password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 
             <button type="submit" class="btn btn-login-primary w-100 mb-3">
@@ -79,3 +95,7 @@
 
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
