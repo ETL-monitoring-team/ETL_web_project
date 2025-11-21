@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "Create Account";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/auth.css" />
+
+<div class="login-page-wrapper">
+    <div class="login-card">
+
+        <div class="text-center mb-3">
+            <div class="login-brand-circle">
+                <span>DW</span>
+            </div>
+
+            <h3 class="login-title mb-1">Create an Account</h3>
+            <p class="login-subtitle mb-0">
+                Set up your access to the Retail DW &amp; ETL Monitor platform.
+            </p>
+        </div>
+
+        <form asp-action="Register" asp-controller="Account" method="post" class="mt-3">
+            <div class="form-group mb-3">
+                <label for="FullName" class="login-label">Full Name</label>
+                <input id="FullName" name="FullName" class="form-control login-input" placeholder="e.g. John Smith" />
+                <small class="login-footer-text">
+                    This name may be shown in logs, dashboards, and audit trails.
+                </small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="Username" class="login-label">Username</label>
+                <input id="Username" name="Username" class="form-control login-input" placeholder="e.g. j.smith" />
+                <small class="login-footer-text">
+                    Use a short, unique identifier. You will use this to sign in.
+                </small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="Email" class="login-label">Work Email</label>
+                <input id="Email" name="Email" type="email" class="form-control login-input" placeholder="e.g. j.smith@company.com" />
+                <small class="login-footer-text">
+                    We'll use this for notifications about ETL jobs and system alerts (if enabled).
+                </small>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="Password" class="login-label">Password</label>
+                <input id="Password" name="Password" type="password" class="form-control login-input" placeholder="Create a strong password" />
+                <small class="login-footer-text">
+                    Use at least 8 characters, including numbers and symbols if possible.
+                </small>
+            </div>
+
+            <div class="form-group mb-4">
+                <label for="ConfirmPassword" class="login-label">Confirm Password</label>
+                <input id="ConfirmPassword" name="ConfirmPassword" type="password" class="form-control login-input" placeholder="Re-enter your password" />
+            </div>
+
+            <button type="submit" class="btn btn-login-primary w-100 mb-3">
+                Create Account
+            </button>
+
+            <div class="text-center mb-2">
+                <span class="login-footer-text">
+                    Already have an account?
+                    <a asp-action="Login" asp-controller="Account" class="login-link">Sign in</a>
+                </span>
+            </div>
+        </form>
+
+        <div class="mt-3 text-center">
+            <p class="login-footer-text mb-0">
+                Once your account is created, your role and permissions will determine which
+                ETL jobs, logs, and monitoring tools you can access.
+            </p>
+        </div>
+
+    </div>
+</div>

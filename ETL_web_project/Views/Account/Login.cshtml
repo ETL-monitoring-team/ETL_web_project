@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
+
+<link rel="stylesheet" href="~/css/auth.css" />
+
+<div class="login-page-wrapper">
+    <div class="login-card">
+
+        <div class="text-center mb-3">
+            <div class="login-brand-circle">
+                <span>DW</span>
+            </div>
+
+            <h3 class="login-title mb-1">Retail DW &amp; ETL Monitor</h3>
+            <p class="login-subtitle mb-0">
+                Sign in to monitor ETL runs, data freshness and warehouse health.
+            </p>
+        </div>
+
+        <form asp-action="Login" asp-controller="Account" method="post" class="mt-4">
+            <div class="form-group mb-3">
+                <label for="Username" class="login-label">Username</label>
+                <input id="Username" name="Username" class="form-control login-input" placeholder="e.g. j.smith" />
+            </div>
+
+            <div class="form-group mb-1">
+                <label for="Password" class="login-label">Password</label>
+                <input id="Password" name="Password" type="password" class="form-control login-input" placeholder="Enter your password" />
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4 login-forgot">
+                <span></span>
+                <a asp-action="ForgotPassword" asp-controller="Account" class="login-link">
+                    Forgot your password?
+                </a>
+            </div>
+
+            <button type="submit" class="btn btn-login-primary w-100 mb-3">
+                Sign In
+            </button>
+
+            <div class="text-center mb-2">
+                <span class="login-footer-text">
+                    Don’t have an account?
+                    <a asp-action="Register" asp-controller="Account" class="login-link">Create one</a>
+                </span>
+            </div>
+        </form>
+
+        <div class="mt-3 text-center">
+            <p class="login-footer-text mb-0">
+                Once signed in, you can access ETL job monitoring, logs, scheduling tools and data warehouse exploration features based on your role.
+            </p>
+        </div>
+
+    </div>
+</div>
