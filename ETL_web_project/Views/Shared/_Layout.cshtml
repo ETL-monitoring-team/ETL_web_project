@@ -6,73 +6,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ETL_web_project</title>
 
+    <!-- Font Awesome -->
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
 
     <!-- Dashboard CSS -->
     <link rel="stylesheet" href="~/css/dashboard/navbar-sidebar.css" asp-append-version="true" />
-
 </head>
 <body>
     <div class="dashboard">
 
         <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <a href='#'>
-                    <i class="fas fa-cube fa-2x logo"></i>
-                </a>
-                <h2>Monitor</h2>
-            </div>
+           
+
             <ul class="sidebar-links">
                 <h4>
                     <span>Main Menu</span>
                     <div class="menu-separator"></div>
                 </h4>
                 <li>
-                    @* hepsi *@
                     <a asp-controller="Dashboard" asp-action="Index">
-                        <i class="fa-solid fa-solar-panel"></i>
-                        Dashboard panel
-                   </a>
+                        <i class="fa-solid fa-solar-panel"></i> Dashboard panel
+                    </a>
                 </li>
-
                 <li>
-                    @* sadece admin *@
                     <a asp-controller="Etl" asp-action="Jobs">
-                        <i class="fa-solid fa-solar-panel"></i>
-                        ETL Jobs
+                        <i class="fa-solid fa-solar-panel"></i> ETL Jobs
                     </a>
                 </li>
-
                 <li>
-                    @* admin ve analist(sadece görüntüleme) *@
                     <a asp-controller="Etl" asp-action="Logs">
-                        <i class="fa-solid fa-solar-panel"></i>
-                        ETL Logs
+                        <i class="fa-solid fa-solar-panel"></i> ETL Logs
                     </a>
                 </li>
-
                 <li>
-                    @* admin ve analist(readonly) *@
                     <a asp-controller="Etl" asp-action="Staging">
-                        <i class="fa-solid fa-solar-panel"></i>
-                        Staging Tables
+                        <i class="fa-solid fa-solar-panel"></i> Staging Tables
                     </a>
                 </li>
-
                 <li>
-                    @* admin ve analist ve viewer((sadece dashboard grafikleri) *@
                     <a asp-controller="Etl" asp-action="Facts">
-                        <i class="fa-solid fa-solar-panel"></i>
-                        Fact Explorer
+                        <i class="fa-solid fa-solar-panel"></i> Fact Explorer
                     </a>
                 </li>
-
                 <li>
-                    @* sadece admin *@
                     <a asp-controller="Etl" asp-action="Schedule">
-                        <i class="fa-solid fa-solar-panel"></i>
-                        ETL Schedule
+                        <i class="fa-solid fa-solar-panel"></i> ETL Schedule
                     </a>
                 </li>
 
@@ -80,34 +59,27 @@
                     <span>Account</span>
                     <div class="menu-separator"></div>
                 </h4>
-
                 <li>
-                    @* sadece admin *@
                     <a asp-controller="Admin" asp-action="Index">
-                        <i class="fa-solid fa-user-tie"></i>
-                        Admin panel
+                        <i class="fa-solid fa-user-tie"></i> Admin panel
                     </a>
                 </li>
-
                 <li>
                     <a asp-controller="Settings" asp-action="Index">
-                        <i class="fa-solid fa-screwdriver-wrench"></i>
-                        Settings
+                        <i class="fa-solid fa-screwdriver-wrench"></i> Settings
                     </a>
                 </li>
-
                 <li>
-                    @* BUNU ACMADIM BAKILACAK *@
                     <a asp-controller="Account" asp-action="Logout">
-                        <i class="fa-solid fa-right-to-bracket"></i>
-                        Logout
+                        <i class="fa-solid fa-right-to-bracket"></i> Logout
                     </a>
                 </li>
             </ul>
+
+            <!-- User Info -->
             <div class="user-account">
                 <div class="user-profile">
-                    <img src="images/profile-img.jpg"
-                    alt="profile-img"/>
+                    <img src="~/images/profile-img.jpg" alt="profile-img" />
                     <div class="user-detail">
                         <h3>@User.Identity?.Name</h3>
                         <span>@User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value</span>
@@ -116,28 +88,90 @@
             </div>
         </aside>
 
+     @*    navbarda bugün düzeltilmesi gerkeen eksik: search zaten responsive büyüyüo kücüyor ama eger ekran cok kücükse o search butonu sadece dursun üstüne tıklanınca üst tarafın tamamında search arama sekmesi dursun. Sağdaki butonlar da ekran kücülünce nasıl görünüyor bi bakmak gerek. *@
 
-        <!-- Right side content -->
+        <!-- Main Wrapper -->
         <div class="main-wrapper">
+
             <!-- Navbar -->
             <nav class="top-navbar">
-                <h2>Dashboard Navbar</h2>
+               
+                <div class="nav-left">
+                    <div class="sidebar-header">
+                        <a href="#">
+                            <i class="fas fa-cube fa-2x logo"></i>
+                        </a>
+                        <h2>Monitor</h2>
+                    </div>
+                    <!-- Search Button -->
+                    <form class="search-form" onsubmit="return false;">
+                        <input type="text" class="search-input" placeholder="Search..." />
+                        <button type="button" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+
+
+
+                </div>
+
+             @*    ŞUAN İÇİN BİLDİRİMLER BURAYA KAC TANE GİRDİYSEK O GÖRÜNÜYOR. SONRA BU BİLDİRİM KISMINI CONTROLLERDAN DOLDURTACAGIZ SERVİSTE BİR LİSTEDE FALAN TUTARIZ BİLDİRİMLERİ. BİLDİRİMLER BİLDİRİM EKRANI ACILIP GÖRÜLÜRSE O KIRMIZI İŞARET GİTSİN EKLENECEK. BİLDİRİMLER ÜSTÜNE TIKLANIP DEĞİŞİKLİK YAPILAN TABLO EKRANI ACILIRSA DA BİLDİRİMLER KISMINDAN GİDECEK. BİR DE HEPSİNİ SİL EKLERİZ SAĞ ÜSTÜNE DROPDOWNIN *@
+                <div class="nav-right">
+                    <!-- Notifications -->
+                    <div class="notification-wrapper">
+                        <button id="notificationBtn" class="icon-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-count">3</span>
+                        </button>
+                        <div id="notificationDropdown" class="notification-dropdown">
+                            <div class="notification-item">
+                                <p><strong>System:</strong> ETL job completed.</p>
+                                <span class="time">2 min ago</span>
+                            </div>
+                            <div class="notification-item">
+                                <p><strong>Alert:</strong> New data available.</p>
+                                <span class="time">10 min ago</span>
+                            </div>  <div class="notification-item">
+                                <p><strong>Alert:</strong> New data available.</p>
+                                <span class="time">10 min ago</span>
+                            </div>  
+                            <div class="notification-item">
+                                <p><strong>Reminder:</strong> Backup your database.</p>
+                                <span class="time">1 hour ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fullscreen Toggle -->
+                    <button class="icon-btn js-toggle-fullscreen-btn" id="fullscreenBtn" aria-label="Enter fullscreen mode">
+                        <svg class="toggle-fullscreen-svg" width="28" height="28" viewBox="-2 -2 28 28">
+                            <g class="icon-fullscreen-enter">
+                                <path d="M 2 9 v -7 h 7" />
+                                <path d="M 22 9 v -7 h -7" />
+                                <path d="M 22 15 v 7 h -7" />
+                                <path d="M 2 15 v 7 h 7" />
+                            </g>
+                            <g class="icon-fullscreen-leave">
+                                <path d="M 24 17 h -7 v 7" />
+                                <path d="M 0 17 h 7 v 7" />
+                                <path d="M 0 7 h 7 v -7" />
+                                <path d="M 24 7 h -7 v -7" />
+                            </g>
+                        </svg>
+                    </button>
+                </div>
             </nav>
 
-
-        <!-- Main Content -->
-        <main class="main-content">
-
-            <!-- Dashboard Container -->
-            <div class="dashboard-container">
-                @RenderBody()
-            </div>
-        </main>
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="dashboard-container">
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
     </div>
 
-    <!-- Footer -->
-
-
+    <!-- Scripts -->
     <script src="~/js/dashboard/navbar-sidebar.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

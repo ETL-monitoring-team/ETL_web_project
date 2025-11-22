@@ -115,21 +115,21 @@ body{
     width: calc(100% - 260px);
 }
 
-.top-navbar {
+/*.top-navbar {
     height: 60px;
     background: #1f2333;
     display: flex;
     align-items: center;
     padding: 0 20px;
     color: white;
-}
-
+}*/
+/*
 .main-content {
     padding: 20px;
     background: #d2d2d2;
     min-height: calc(100vh - 60px);
 }
-
+*/
 .user-account {
     margin-top: auto;
     padding: 12px 10px;
@@ -167,4 +167,190 @@ body{
 .sidebar:hover .user-account {
     background: #ffffff2d;
     border-radius: 4px;
+}
+
+
+/* Navbar */
+.top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #161a2d;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    z-index: 1000;
+    transition: none;
+}
+
+.sidebar:hover ~ .top-navbar {
+    left: 0;
+    width: 100%;
+}
+
+
+.main-content {
+    margin-left: 80px;
+    margin-top: 60px;
+    padding: 1rem;
+    transition: margin-left 0.4s;
+}
+
+.sidebar:hover ~ .main-content {
+    margin-left: 260px;
+}
+
+/*navbar sol kısım*/
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+/* Navbar Search */
+.search-form {
+    display: flex;
+    align-items: center;
+    background: #2c3145;
+    border-radius: 25px;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+    width: 30%;
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #fff;
+    padding: 5px 10px;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.search-input::placeholder {
+    color: #ccc;
+}
+
+.search-btn {
+    border: none;
+    background: #33357800;
+    padding: 5px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+}
+
+.search-btn:hover {
+    color: #bdbdbd;
+}
+
+
+/*navbar sağ kısım*/
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-btn {
+    background: #171d3500;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+.js-toggle-fullscreen-btn {
+    position: relative;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.toggle-fullscreen-svg path {
+    transform-box: view-box;
+    transform-origin: 12px 12px;
+    fill: none;
+    stroke: hsl(225, 10%, 8%);
+    stroke: #ffffff;
+    stroke-width: 4;
+    transition: .5s;
+}
+
+.js-toggle-fullscreen-btn:not(.on) .icon-fullscreen-leave {
+    display: none;
+}
+
+.js-toggle-fullscreen-btn.on .icon-fullscreen-enter {
+    display: none;
+}
+
+
+/*bildirim butonu*/
+.notification-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.notification-btn {
+    position: relative;
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    font-size: 0.7rem;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    line-height: 16px;
+    border-radius: 50%;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 30px;
+    width: 250px;
+    max-height: 180px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0px 2px 12px rgba(0,0,0,0.2);
+    z-index: 999;
+}
+    
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.85rem;
+    color: black;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item .time {
+    font-size: 0.7rem;
+    color: gray;
+    display: block;
+    margin-top: 2px;
 }
