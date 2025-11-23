@@ -198,6 +198,13 @@ body{
     padding: 1rem;
     transition: margin-left 0.4s;
 }
+.dashboard {
+    background: radial-gradient(circle at top, rgba(76, 29, 149, 0.55) 0%, #0b1120 35%, #020617 100%)
+}
+.dashboard-container,
+.dash-container {
+    background: transparent;
+}
 
 .sidebar:hover ~ .main-content {
     margin-left: 260px;

@@ -20,6 +20,9 @@ builder.Services.AddAutoMapper(typeof(UserAccountProfile).Assembly);
 // Account Service (Login/Register için)
 builder.Services.AddScoped<IAccountService, AccountService>();
 
+
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
 // Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

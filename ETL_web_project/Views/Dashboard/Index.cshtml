@@ -1,7 +1,270 @@
-﻿@{
-    ViewData["Title"] = "Dashboard Page";
+﻿@model ETL_web_project.DTOs.DashboardSummaryDto
+@using System.Text.Json
+
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">DASHBOARD</h1>
-</div>
+<link rel="stylesheet" href="~/css/dashboard/dashboard-main.css" asp-append-version="true" />
+
+
+<section class="dash-container">
+
+    <!-- ========== TOP KPI ROW ========== -->
+    <div class="dash-row kpi-row">
+
+        <!-- TOTAL SALES -->
+        <div class="card kpi-card">
+            <div class="kpi-icon kpi-icon-purple">
+                <i class="fa-solid fa-coins"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Total Sales</span>
+                <h2 class="kpi-value">
+                    @Model.TotalSalesAmount.ToString("C")
+                </h2>
+                <span class="kpi-sub">
+                    Quantity: @Model.TotalSalesQuantity
+                </span>
+            </div>
+        </div>
+
+        <!-- TODAY SALES -->
+        <div class="card kpi-card">
+            <div class="kpi-icon kpi-icon-blue">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Today Sales</span>
+                <h2 class="kpi-value">
+                    @Model.TodaySalesAmount.ToString("C")
+                </h2>
+                <span class="kpi-sub">
+                    @Model.TodaySalesQuantity pcs
+                </span>
+                <span class="kpi-pill @(Model.TodayVsYesterdaySalesPercent >= 0 ? "pill-success" : "pill-danger")">
+                    @(Model.TodayVsYesterdaySalesPercent >= 0 ? "+" : "")
+                    @Model.TodayVsYesterdaySalesPercent.ToString("F1")%
+                    vs yesterday
+                </span>
+            </div>
+        </div>
+
+        <!-- LAST ETL RUN -->
+        <div class="card kpi-card @(Model.LastEtlStatus == ETL_web_project.Enums.EtlStatus.Failed ? "kpi-error" : "")">
+            <div class="kpi-icon kpi-icon-orange">
+                <i class="fa-solid fa-gears"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Last ETL Run</span>
+                <h2 class="kpi-value">@Model.LastEtlStatus</h2>
+                <span class="kpi-sub">
+                    @Model.LastEtlStartTime?.ToString("g") ?? "No runs yet"
+                </span>
+                <span class="kpi-sub">
+                    Duration: @Model.LastEtlDurationText
+                </span>
+            </div>
+        </div>
+
+        <!-- USERS -->
+        <div class="card kpi-card">
+            <div class="kpi-icon kpi-icon-green">
+                <i class="fa-solid fa-user-group"></i>
+            </div>
+            <div class="kpi-content">
+                <span class="kpi-label">Total Users</span>
+                <h2 class="kpi-value">@Model.ActiveUserCount</h2>
+                <span class="kpi-sub">
+                    Active analysts & admins
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========== REVENUE ANALYTICS (BIG CHART) ========== -->
+    <div class="dash-row">
+        <div class="card full-width-card">
+            <div class="card-header">
+                <div>
+                    <h3 class="card-title">Revenue Analytics</h3>
+                    <span class="card-subtitle">Sales trend for the last 14 days</span>
+                </div>
+                <div class="card-header-right">
+                    <span class="chip chip-outline">Last 14 Days</span>
+                </div>
+            </div>
+
+            <div class="card-body chart-body">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== BOTTOM GRID (Freshness + Recent ETL + Top N) ========== -->
+    <div class="dash-row bottom-grid">
+
+        <!-- FRESHNESS CARD -->
+        <div class="card bottom-card">
+            <div class="card-header">
+                <h3 class="card-title">Data Freshness</h3>
+                <span class="card-subtitle">Warehouse & staging latency</span>
+            </div>
+            <div class="card-body freshness-body">
+                <div class="freshness-block">
+                    <span class="fresh-label">Warehouse (DW)</span>
+                    <h3 class="fresh-value">
+                        @(Model.WarehouseFreshnessHours?.ToString() ?? "-") h
+                    </h3>
+                    <span class="fresh-sub">
+                        Last load: @Model.WarehouseLastLoadTime?.ToString("g") ?? "N/A"
+                    </span>
+                </div>
+                <div class="freshness-divider"></div>
+                <div class="freshness-block">
+                    <span class="fresh-label">Staging</span>
+                    <h3 class="fresh-value">
+                        @(Model.StagingFreshnessHours?.ToString() ?? "-") h
+                    </h3>
+                    <span class="fresh-sub">
+                        Last load: @Model.StagingLastLoadTime?.ToString("g") ?? "N/A"
+                    </span>
+                </div>
+
+                <div class="fresh-entities">
+                    <span class="fresh-label">Entities</span>
+                    <span class="fresh-sub">
+                        @Model.StoreCount stores · @Model.ProductCount products · @Model.CustomerCount customers
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT ETL RUNS -->
+        <div class="card bottom-card">
+            <div class="card-header">
+                <h3 class="card-title">Recent ETL Runs</h3>
+                <span class="card-subtitle">Last 5 executions</span>
+            </div>
+            <div class="card-body table-wrapper">
+                <table class="table compact-table">
+                    <thead>
+                        <tr>
+                            <th>Job</th>
+                            <th>Status</th>
+                            <th>Start</th>
+                            <th>Dur.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.RecentRuns.Any())
+                        {
+                            <tr>
+                                <td colspan="4" class="table-empty">No runs yet.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var run in Model.RecentRuns)
+                            {
+                                <tr class="etl-status-@run.Status.ToString().ToLower()">
+                                    <td>@run.JobName</td>
+                                    <td>@run.Status</td>
+                                    <td>@run.StartTime.ToString("g")</td>
+                                    <td>@run.DurationText</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TOP STORES + TOP PRODUCTS -->
+        <div class="card bottom-card">
+            <div class="card-header">
+                <h3 class="card-title">Top Stores & Products</h3>
+                <span class="card-subtitle">By total sales amount</span>
+            </div>
+            <div class="card-body topn-body">
+                <div class="topn-column">
+                    <h4 class="topn-title">Top Stores</h4>
+                    <table class="table compact-table">
+                        <thead>
+                            <tr>
+                                <th>Store</th>
+                                <th>Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.TopStores.Any())
+                            {
+                                <tr>
+                                    <td colspan="2" class="table-empty">No data.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var s in Model.TopStores)
+                                {
+                                    <tr>
+                                        <td>@s.StoreName</td>
+                                        <td>@s.TotalAmount.ToString("C")</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="topn-column">
+                    <h4 class="topn-title">Top Products</h4>
+                    <table class="table compact-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.TopProducts.Any())
+                            {
+                                <tr>
+                                    <td colspan="2" class="table-empty">No data.</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var p in Model.TopProducts)
+                                {
+                                    <tr>
+                                        <td>@p.ProductName</td>
+                                        <td>@p.TotalAmount.ToString("C")</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <script>
+        // C# → JS: DailySales verisini grafiğe gönderiyoruz
+        window.dashboardDailySales =
+            @Html.Raw(JsonSerializer.Serialize(
+                Model.DailySales.Select(x => new {
+                    label = x.Date.ToString("dd MMM"),
+                    value = x.Amount
+                })
+            ));
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/dashboard/salesChart.js"></script>
+}

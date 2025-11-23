@@ -1,14 +1,25 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ETL_web_project.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ETL_web_project.Controllers
 {
     public class DashboardController : Controller
     {
-        // GET: DashboardController
-        public ActionResult Index()
+        private readonly IDashboardService _dashboardService;
+
+        public DashboardController(IDashboardService dashboardService)
         {
-            return View();
+            _dashboardService = dashboardService;
+        }
+
+        // GET: DashboardController
+        // Dashboard ana sayfası – DashboardSummaryDto ile view'a model gönderiyoruz
+        public async Task<IActionResult> Index()
+        {
+            var model = await _dashboardService.GetDashboardAsync();
+            return View(model);
         }
 
         // GET: DashboardController/Details/5
