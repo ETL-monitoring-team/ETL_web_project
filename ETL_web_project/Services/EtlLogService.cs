@@ -3,8 +3,6 @@ using ETL_web_project.DTOs;
 using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
 using Microsoft.EntityFrameworkCore;
-// alias:
-using LogLevel = ETL_web_project.Enums.LogLevel;
 
 namespace ETL_web_project.Services
 {
@@ -20,7 +18,7 @@ namespace ETL_web_project.Services
         public async Task<EtlLogSummaryDto> GetLogsAsync(
             DateTime? fromDate,
             DateTime? toDate,
-            LogLevel? level,
+            Enums.LogLevel? level,
             string? searchText)
         {
             var now = DateTime.UtcNow;
@@ -48,13 +46,13 @@ namespace ETL_web_project.Services
             // SUMMARY
             var summary = new EtlLogSummaryDto
             {
-                ErrorCount = await query.CountAsync(l => l.Level == LogLevel.Error),
-                WarningCount = await query.CountAsync(l => l.Level == LogLevel.Warn),
-                InfoCount = await query.CountAsync(l => l.Level == LogLevel.Info),
+                ErrorCount = await query.CountAsync(l => l.Level == Enums.LogLevel.Error),
+                WarningCount = await query.CountAsync(l => l.Level == Enums.LogLevel.Warn),
+                InfoCount = await query.CountAsync(l => l.Level == Enums.LogLevel.Info),
 
-                ErrorsLast24h = await query.CountAsync(l => l.Level == LogLevel.Error && l.LogTime >= last24h),
-                WarningsLast24h = await query.CountAsync(l => l.Level == LogLevel.Warn && l.LogTime >= last24h),
-                InfoLast24h = await query.CountAsync(l => l.Level == LogLevel.Info && l.LogTime >= last24h),
+                ErrorsLast24h = await query.CountAsync(l => l.Level == Enums.LogLevel.Error && l.LogTime >= last24h),
+                WarningsLast24h = await query.CountAsync(l => l.Level == Enums.LogLevel.Warn && l.LogTime >= last24h),
+                InfoLast24h = await query.CountAsync(l => l.Level == Enums.LogLevel.Info && l.LogTime >= last24h),
 
                 ActiveRuns = await _context.EtlRuns.CountAsync(r => r.EndTime == null)
             };
@@ -78,6 +76,11 @@ namespace ETL_web_project.Services
                 .ToListAsync();
 
             return summary;
+        }
+
+        public Task<string?> GetLogsAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

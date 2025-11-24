@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ETL_web_project.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ETL_web_project.Data.Entities
@@ -13,7 +14,7 @@ namespace ETL_web_project.Data.Entities
 
         public DateTime LogTime { get; set; } = DateTime.UtcNow;
 
-        public LogLevel Level { get; set; }
+        public Enums.LogLevel Level { get; set; }
 
         [Required, MaxLength(2000)]
         public string Message { get; set; }

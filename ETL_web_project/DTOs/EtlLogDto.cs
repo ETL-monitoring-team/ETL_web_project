@@ -8,7 +8,7 @@ namespace ETL_web_project.DTOs
         public DateTime LogTime { get; set; }
 
         // ÇAKIŞMA OLMAMASI İÇİN TAM AD ALANI KULLANDIK
-        public ETL_web_project.Enums.LogLevel Level { get; set; }
+        public Enums.LogLevel Level { get; set; }
 
         public string Message { get; set; } = string.Empty;
 
