@@ -7,10 +7,14 @@ namespace ETL_web_project.Controllers
     public class EtlController : Controller
     {
         private readonly IEtlLogService _etlLogService;
+        private readonly IEtlJobService _etlJobService;   
 
-        public EtlController(IEtlLogService etlLogService)
+        public EtlController(
+            IEtlLogService etlLogService,
+            IEtlJobService etlJobService)   
         {
             _etlLogService = etlLogService;
+            _etlJobService = etlJobService;
         }
 
         public async Task<ActionResult> Index()
@@ -20,9 +24,10 @@ namespace ETL_web_project.Controllers
 
         // ============ SIDEBAR PAGES ============
 
-        public ActionResult Jobs()
+        public async Task<ActionResult> Jobs(string? searchText)
         {
-            return View();
+            var jobs = await _etlJobService.GetJobsAsync(searchText);   
+            return View(jobs);
         }
 
         public async Task<ActionResult> Logs()

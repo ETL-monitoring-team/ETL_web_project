@@ -1,8 +1,117 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<ETL_web_project.DTOs.EtlJobListItemDto>
+
 @{
+    ViewData["Title"] = "ETL Jobs";
+    var search = ViewData["Search"] as string;
 }
-<div class="text-center">
-    <h1 class="display-4">Jobs</h1>
-</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/etl/jobs.css" asp-append-version="true" />
+}
+
+<section class="etl-jobs-page">
+
+    <!-- HEADER -->
+    <div class="etl-jobs-header card">
+        <div class="etl-jobs-header-left">
+            <h1>ETL Jobs</h1>
+            <p>Manage ETL pipelines, monitor status and trigger manual runs.</p>
+        </div>
+
+        <!-- SEARCH BAR -->
+        <form method="get" asp-action="Jobs" asp-controller="Etl" class="jobs-search-form">
+            <input type="text"
+                   name="search"
+                   value="@search"
+                   placeholder="Search job..." />
+            <button type="submit">
+                <i class="fa-solid fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- TABLE CARD -->
+    <div class="card jobs-table-card">
+        <div class="jobs-table-header">
+            <h2 class="card-title">Job Records</h2>
+            <span class="jobs-table-subtitle">Sorted by latest run</span>
+        </div>
+
+        <table class="jobs-table">
+            <thead>
+                <tr>
+                    <th>Job</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Last Start</th>
+                    <th>Duration</th>
+                    <th>Active</th>
+                    <th class="jobs-actions-col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="table-empty">
+                            No ETL jobs found.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var job in Model)
+                    {
+                        var statusCss = job.LastStatus switch
+                        {
+                            ETL_web_project.Enums.EtlStatus.Success => "status-pill status-success",
+                            ETL_web_project.Enums.EtlStatus.Failed => "status-pill status-failed",
+                            ETL_web_project.Enums.EtlStatus.Running => "status-pill status-running",
+                            _ => "status-pill status-never"
+                        };
+
+                        <tr>
+                            <td>
+                                <div class="job-main">
+                                    <span class="job-name">@job.JobName</span>
+                                    <span class="job-code">@job.JobCode</span>
+                                </div>
+                            </td>
+                            <td>@job.Description</td>
+                            <td>
+                                <span class="@statusCss">
+                                    @(job.LastStatus?.ToString() ?? "Never")
+                                </span>
+                            </td>
+                            <td>@job.LastStartText</td>
+                            <td>@job.LastDurationText</td>
+                            <td>
+                                @if (job.IsActive)
+                                {
+                                    <span class="active-pill active-yes">Enabled</span>
+                                }
+                                else
+                                {
+                                    <span class="active-pill active-no">Disabled</span>
+                                }
+                            </td>
+                            <td class="jobs-actions">
+                                <button type="button" class="btn-outline-primary">
+                                    Run Now
+                                </button>
+                                <button type="button" class="btn-outline-secondary">
+                                    View Runs
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+</section>
+
+@section Scripts {
+    <!-- Şimdilik ekstra JS yok -->
+}
