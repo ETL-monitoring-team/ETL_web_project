@@ -1,8 +1,179 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ETL_web_project.Models.SettingsViewModel
 @{
+    ViewData["Title"] = "Settings";
 }
-<div class="text-center">
-    <h1 class="display-4">Settings</h1>
+<link rel="stylesheet" href="~/css/settings.css" asp-append-version="true" />
+
+@* Hata var backendi düzelteceğim*@
+
+<div class="settings-container">
+
+    @if (TempData["SettingsMessage"] != null)
+    {
+        <div class="alert alert-info">@TempData["SettingsMessage"]</div>
+    }
+
+    @if (TempData["SettingsError"] != null)
+    {
+        <div class="alert alert-error">@TempData["SettingsError"]</div>
+    }
+
+    <div class="settings-tabs">
+        <button class="tab-btn active" data-tab="profile">Profile</button>
+        <button class="tab-btn" data-tab="password">Password</button>
+        <button class="tab-btn" data-tab="prefs">Preferences</button>
+        <button class="tab-btn" data-tab="request">Requests</button>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div class="tab-content active" id="profile">
+        <form asp-action="UpdateProfile" method="post">
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(false, "", new { @class = "text-danger small mb-2" })
+
+            <div class="form-group">
+                <label asp-for="Profile.Username"></label>
+                <input asp-for="Profile.Username" class="form-control" />
+                <span asp-validation-for="Profile.Username" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Profile.Email"></label>
+                <input asp-for="Profile.Email" class="form-control" />
+                <span asp-validation-for="Profile.Email" class="text-danger small"></span>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Save</button>
+                <button type="reset" class="btn-secondary">Reset ↺</button>
+            </div>
+
+            <div class="profile-meta">
+                <div class="profile-meta-item">
+                    <div class="profile-meta-label">Role</div>
+                    <div class="profile-meta-value">@Model.Profile.Role</div>
+                </div>
+                <div class="profile-meta-item">
+                    <div class="profile-meta-label">Created At</div>
+                    <div class="profile-meta-value">
+                        @Model.Profile.CreatedAt.ToString("dd MMM yyyy HH:mm")
+                    </div>
+                </div>
+                <div class="profile-meta-item">
+                    <div class="profile-meta-label">Last Login</div>
+                    <div class="profile-meta-value">
+                        @if (Model.Profile.LastLoginAt.HasValue)
+                        {
+                            @Model.Profile.LastLoginAt.Value.ToString("dd MMM yyyy HH:mm")
+                        }
+                        else
+                        {
+                            @:Never
+                        }
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- PASSWORD TAB -->
+    <div class="tab-content" id="password">
+        <form asp-action="ChangePassword" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label>Current Password</label>
+                <input asp-for="PasswordModel.CurrentPassword" class="form-control" type="password" />
+                <span asp-validation-for="PasswordModel.CurrentPassword" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group">
+                <label>New Password</label>
+                <input asp-for="PasswordModel.NewPassword" class="form-control" type="password" />
+                <span asp-validation-for="PasswordModel.NewPassword" class="text-danger small"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Confirm Password</label>
+                <input asp-for="PasswordModel.ConfirmPassword" class="form-control" type="password" />
+                <span asp-validation-for="PasswordModel.ConfirmPassword" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn-primary mt-2">Change Password</button>
+        </form>
+    </div>
+
+    <!-- PREFS TAB -->
+    <div class="tab-content" id="prefs">
+        <form asp-action="UpdatePreferences" method="post">
+            @Html.AntiForgeryToken()
+
+            <label>
+                <input asp-for="Preferences.UseDarkTheme" />
+                Dark Theme
+            </label><br />
+
+            <label>
+                <input asp-for="Preferences.NotifyOnJobFailed" />
+                Notify When ETL Job Fails
+            </label><br />
+
+            <label>
+                <input asp-for="Preferences.NotifyOnJobSuccess" />
+                Notify When ETL Job Succeeds
+            </label><br />
+
+            <button class="btn-primary mt-2">Save Preferences</button>
+        </form>
+    </div>
+
+    <!-- REQUESTS TAB -->
+    <div class="tab-content" id="request">
+        <div class="request-info">
+            Use this form to send a request to the admin (role change, access request, other issues).
+        </div>
+
+        <!-- Başarı mesajı (JS ile gösterilecek) -->
+        <div id="request-success" class="alert alert-info hidden">
+            ✅ Your request has been sent to the admin.
+        </div>
+
+        <form class="contact-form" id="request-form" action="https://api.web3forms.com/submit" method="POST">
+
+            <input type="hidden" name="access_key" value="fc5acbce-c379-471d-8eed-42defdd31de9" />
+            <input type="hidden" name="subject" value="ETL Monitor - User Request" />
+
+            <div class="form-group">
+                <label for="req-name">Name</label>
+                <input id="req-name" type="text" name="name"
+                       value="@Model.Profile.Username"
+                       readonly
+                       required />
+            </div>
+
+            <div class="form-group">
+                <label for="req-email">Email</label>
+                <input id="req-email" type="email" name="email"
+                       value="@Model.Profile.Email"
+                       readonly
+                       required />
+            </div>
+
+            <div class="form-group">
+                <label for="req-message">Request / Message</label>
+                <textarea id="req-message" name="message" rows="4"
+                          placeholder="Explain your request (e.g., role change to Admin, additional permissions, etc.)"
+                          required></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary">Send Request</button>
+        </form>
+    </div>
+
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/settings-tabs.js"></script>
+}
