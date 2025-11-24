@@ -1,8 +1,281 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ETL_web_project.DTOs.StagingPageDto
+@using System.Text.Json
+
 @{
+    ViewData["Title"] = "Staging Tables";
 }
-<div class="text-center">
-    <h1 class="display-4">Staging</h1>
-</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/etl/staging.css" asp-append-version="true" />
+}
+
+<section class="etl-staging-page">
+
+    <!-- TOP METRICS -->
+    <div class="stg-top-metrics">
+        <div class="card metric-card">
+            <span class="metric-label">Total Raw Rows</span>
+            <h2 class="metric-value">@Model.TotalRawRows.ToString("N0")</h2>
+            <span class="metric-sub">All rows in @Model.SelectedTableName</span>
+        </div>
+
+        <div class="card metric-card">
+            <span class="metric-label">New Rows (Last Load)</span>
+            <h2 class="metric-value">@Model.NewRowsLastLoad.ToString("N0")</h2>
+            <span class="metric-sub">Inserted at last load</span>
+        </div>
+
+        <div class="card metric-card">
+            <span class="metric-label">Last Load Time</span>
+            <h2 class="metric-value">
+                @(Model.LastLoadTime?.ToLocalTime().ToString("dd.MM.yyyy HH:mm") ?? "N/A")
+            </h2>
+            <span class="metric-sub">Warehouse staging refresh</span>
+        </div>
+
+        <div class="card metric-card">
+            <span class="metric-label">Data Freshness</span>
+            <h2 class="metric-value">
+                @(Model.DataFreshnessMinutes.HasValue ? $"{Model.DataFreshnessMinutes} min" : "-")
+            </h2>
+            <span class="metric-sub">Since last load</span>
+        </div>
+
+        <div class="card metric-card metric-error">
+            <span class="metric-label">Error Count</span>
+            <h2 class="metric-value">@Model.ErrorCountLast24h</h2>
+            <span class="metric-sub">Errors in last 24h</span>
+        </div>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="stg-main-grid">
+        <!-- LEFT COLUMN -->
+        <div class="stg-left-col">
+            <!-- TABLE DROPDOWN + GRID -->
+            <div class="card stg-table-card">
+                <div class="stg-card-header">
+                    <div class="stg-header-left">
+                        <div class="stg-table-select">
+                            <button type="button" class="stg-table-select-btn">
+                                @Model.SelectedTableName
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </button>
+                            @* ileride başka staging tabloları eklersen dropdown gerçek olacak *@
+                        </div>
+                    </div>
+                    <span class="stg-header-sub">
+                        Recent rows (top 8)
+                    </span>
+                </div>
+
+                <table class="stg-rows-table">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>SalesTime</th>
+                            <th>StoreCode</th>
+                            <th>ProductCode</th>
+                            <th>Quantity</th>
+                            <th>UnitPrice</th>
+                            <th>LoadedAt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.RecentRows.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="table-empty">No rows found in staging.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var r in Model.RecentRows)
+                            {
+                                <tr>
+                                    <td>@r.Id</td>
+                                    <td>@(r.SalesTime?.ToString("dd.MM.yyyy HH:mm:ss") ?? "-")</td>
+                                    <td>@r.StoreCode</td>
+                                    <td>@r.ProductCode</td>
+                                    <td>@(r.Quantity?.ToString() ?? "-")</td>
+                                    <td>@(r.UnitPrice?.ToString("N2") ?? "-")</td>
+                                    <td>@r.LoadedAt.ToString("dd.MM.yyyy HH:mm:ss")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <div class="stg-table-footer">
+                    <span>Rows per page 8 • Showing latest loaded rows</span>
+                </div>
+            </div>
+
+            <!-- SUMMARY CARD -->
+            <div class="card stg-summary-card">
+                <h3 class="card-title">Summary</h3>
+                <div class="stg-summary-grid">
+                    <div class="stg-summary-item">
+                        <span class="summary-label">Total Rows</span>
+                        <span class="summary-value">@Model.Summary.TotalRows.ToString("N0")</span>
+                    </div>
+                    <div class="stg-summary-item">
+                        <span class="summary-label">Distinct Stores</span>
+                        <span class="summary-value">@Model.Summary.DistinctStores</span>
+                    </div>
+                    <div class="stg-summary-item">
+                        <span class="summary-label">Distinct Products</span>
+                        <span class="summary-value">@Model.Summary.DistinctProducts</span>
+                    </div>
+                    <div class="stg-summary-item">
+                        <span class="summary-label">Min. SalesTime</span>
+                        <span class="summary-value">
+                            @(Model.Summary.MinSalesTime?.ToString("dd.MM.yyyy HH:mm") ?? "N/A")
+                        </span>
+                    </div>
+                    <div class="stg-summary-item">
+                        <span class="summary-label">Max. SalesTime</span>
+                        <span class="summary-value">
+                            @(Model.Summary.MaxSalesTime?.ToString("dd.MM.yyyy HH:mm") ?? "N/A")
+                        </span>
+                    </div>
+                    <div class="stg-summary-item">
+                        <span class="summary-label">Min. LoadedAt</span>
+                        <span class="summary-value">
+                            @(Model.Summary.MinLoadedAt?.ToString("dd.MM.yyyy HH:mm") ?? "N/A")
+                        </span>
+                    </div>
+                    <div class="stg-summary-item">
+                        <span class="summary-label">Max. LoadedAt</span>
+                        <span class="summary-value">
+                            @(Model.Summary.MaxLoadedAt?.ToString("dd.MM.yyyy HH:mm") ?? "N/A")
+                        </span>
+                    </div>
+                    <div class="stg-summary-item">
+                        <span class="summary-label">Avg. Quantity</span>
+                        <span class="summary-value">
+                            @(Model.Summary.AvgQuantity?.ToString("N2") ?? "-")
+                        </span>
+                    </div>
+                    <div class="stg-summary-item">
+                        <span class="summary-label">Avg. UnitPrice</span>
+                        <span class="summary-value">
+                            @(Model.Summary.AvgUnitPrice?.ToString("N2") ?? "-")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="stg-right-col">
+            <!-- DATA QUALITY -->
+            <div class="card stg-quality-card">
+                <h3 class="card-title">Data Quality Checks</h3>
+
+                <div class="stg-quality-grid">
+                    <div class="stg-quality-item">
+                        <span class="quality-label">Missing StoreCode</span>
+                        <span class="quality-value">
+                            @Model.Quality.MissingStoreCodeCount
+                        </span>
+                    </div>
+                    <div class="stg-quality-item">
+                        <span class="quality-label">Missing ProductCode</span>
+                        <span class="quality-value">
+                            @Model.Quality.MissingProductCodeCount
+                        </span>
+                    </div>
+                    <div class="stg-quality-item">
+                        <span class="quality-label">Invalid Quantity (≤ 0)</span>
+                        <span class="quality-value">
+                            @Model.Quality.InvalidQuantityCount
+                        </span>
+                    </div>
+                    <div class="stg-quality-item">
+                        <span class="quality-label">Invalid UnitPrice (≤ 0)</span>
+                        <span class="quality-value">
+                            @Model.Quality.InvalidPriceCount
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOAD TREND (BAR CHART) -->
+            <div class="card stg-load-card">
+                <div class="stg-card-header">
+                    <h3 class="card-title">Load Trend</h3>
+                    <span class="stg-header-sub">Last 7 days</span>
+                </div>
+                <div class="chart-body">
+                    <canvas id="stagingLoadChart"></canvas>
+                </div>
+                <div class="stg-load-actions">
+                    <button class="btn-outline-primary" type="button">Reload</button>
+                    <button class="btn-outline-secondary" type="button">Clear Staging</button>
+                    <button class="btn-outline-secondary" type="button">Export CSV</button>
+                </div>
+            </div>
+
+            <!-- ERROR LOG -->
+            <div class="card stg-error-card">
+                <div class="stg-card-header">
+                    <h3 class="card-title">Error Log</h3>
+                    <span class="stg-header-sub">Latest warnings & errors</span>
+                </div>
+
+                <table class="stg-error-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Level</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.ErrorLogs.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="table-empty">No errors or warnings.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var log in Model.ErrorLogs)
+                            {
+                                var levelClass = log.Level switch
+                                {
+                                    ETL_web_project.Enums.LogLevel.Error => "log-level-error",
+                                    ETL_web_project.Enums.LogLevel.Warn  => "log-level-warn",
+                                    _ => "log-level-info"
+                                };
+
+                                <tr>
+                                    <td>@log.LogTime.ToString("dd.MM.yyyy HH:mm")</td>
+                                    <td><span class="@levelClass">@log.Level</span></td>
+                                    <td>@log.Message</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+@section Scripts {
+    <script>
+        window.stagingLoadTrend =
+            @Html.Raw(JsonSerializer.Serialize(
+                Model.LoadTrend.Select(x => new {
+                    label = x.Date.ToString("dd MMM"),
+                    value = x.RowCount
+                })
+            ));
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/etl/stagingChart.js" asp-append-version="true"></script>
+}
