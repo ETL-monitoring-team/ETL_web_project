@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ETL_web_project.Interfaces;
+using ETL_web_project.DTOs;   // <-- EKLENDİ
 
 namespace ETL_web_project.Controllers
 {
@@ -10,11 +12,11 @@ namespace ETL_web_project.Controllers
     public class EtlController : Controller
     {
         private readonly IEtlLogService _etlLogService;
-        private readonly IEtlJobService _etlJobService;   
+        private readonly IEtlJobService _etlJobService;
 
         public EtlController(
             IEtlLogService etlLogService,
-            IEtlJobService etlJobService)   
+            IEtlJobService etlJobService)
         {
             _etlLogService = etlLogService;
             _etlJobService = etlJobService;
@@ -27,9 +29,10 @@ namespace ETL_web_project.Controllers
 
         // ============ SIDEBAR PAGES ============
 
-        public async Task<ActionResult> Jobs(string? searchText)
+        public async Task<ActionResult> Jobs(string? search)
         {
-            var jobs = await _etlJobService.GetJobsAsync(searchText);   
+            var jobs = await _etlJobService.GetJobsAsync(search);
+            ViewData["Search"] = search;          // arama terimini view'a gönder
             return View(jobs);
         }
 
@@ -41,7 +44,9 @@ namespace ETL_web_project.Controllers
 
         public ActionResult Staging()
         {
-            return View();
+            // Model null gelmesin diye boş da olsa bir DTO gönderiyoruz
+            var model = new StagingPageDto();
+            return View(model);
         }
 
         public ActionResult Facts()
