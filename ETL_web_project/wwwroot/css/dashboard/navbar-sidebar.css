@@ -199,6 +199,7 @@ body{
     transition: margin-left 0.4s;
 }
 .dashboard {
+    min-height: 100vh;
     background: radial-gradient(circle at top, rgba(76, 29, 149, 0.55) 0%, #0b1120 35%, #020617 100%)
 }
 .dashboard-container,

@@ -27,7 +27,7 @@ namespace ETL_web_project.Controllers
 
         public async Task<ActionResult> Logs()
         {
-            var logs = await _etlLogService.GetLogsAsync();
+            var logs = await _etlLogService.GetLogsAsync(null, null, null, null);
             return View(logs);
         }
 

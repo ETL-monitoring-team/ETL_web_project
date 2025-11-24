@@ -14,6 +14,6 @@ namespace ETL_web_project.Interfaces
             DateTime? toDate,
             LogLevel? level,
             string? searchText);
-        Task<string?> GetLogsAsync();
     }
 }
+

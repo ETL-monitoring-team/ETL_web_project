@@ -114,8 +114,10 @@
                                 {
                                     LogLevel.Error => "etl-status-failed",
                                     LogLevel.Warn => "etl-status-warning",
-                                    _ => "etl-status-info"
+                                    LogLevel.Info => "etl-status-info",
+                                    _ => string.Empty
                                 };
+
 
                                 <tr class="@css">
                                     <td>@log.LogTime.ToString("g")</td>
