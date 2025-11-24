@@ -1,8 +1,177 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ETL_web_project.Models.AdminDashboardViewModel
+@using ETL_web_project.Enums
+
 @{
+    ViewData["Title"] = "Admin Panel";
 }
-<div class="text-center">
-    <h1 class="display-4">Admin</h1>
+
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+
+<div class="admin-container">
+
+    @if (TempData["AdminMessage"] != null)
+    {
+        <div class="alert alert-info">@TempData["AdminMessage"]</div>
+    }
+
+    @if (TempData["AdminError"] != null)
+    {
+        <div class="alert alert-error">@TempData["AdminError"]</div>
+    }
+
+    <div class="admin-summary-cards">
+        <div class="summary-card">
+            <div class="summary-label">Total Users</div>
+            <div class="summary-value">@Model.TotalUsers</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-label">Active Users</div>
+            <div class="summary-value">@Model.ActiveUsers</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-label">Admins</div>
+            <div class="summary-value">@Model.AdminCount</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-label">Analysts</div>
+            <div class="summary-value">@Model.AnalystCount</div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-label">Data Engineers</div>
+            <div class="summary-value">@Model.DataEngineerCount</div>
+        </div>
+    </div>
+
+    <!-- 🔍 SEARCH BAR (kullanıcı tablosunun hemen üstüne) -->
+    <div class="admin-search-row">
+        <form asp-action="Index" method="get" class="admin-search-form">
+            <input type="text"
+                   name="search"
+                   value="@Model.SearchTerm"
+                   class="admin-search-input"
+                   placeholder="Search by username..." />
+
+            <button type="submit" class="btn btn-secondary btn-sm">
+                Search
+            </button>
+
+            @if (!string.IsNullOrEmpty(Model.SearchTerm))
+            {
+                <a asp-action="Index" class="btn btn-sm btn-clear-search">
+                    Clear
+                </a>
+            }
+        </form>
+    </div>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Active</th>
+                    <th>Created</th>
+                    <th>Last Login</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model.Users)
+                {
+                    <tr>
+                        <td>@u.Username</td>
+                        <td>@u.Email</td>
+                        <td>
+                            @if (u.Role == UserRole.Admin)
+                            {
+                                <span class="badge badge-admin">Admin</span>
+                            }
+                            else if (u.Role == UserRole.DataEngineer)
+                            {
+                                <span class="badge badge-engineer">Data Engineer</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-analyst">Analyst</span>
+                            }
+                    </td>
+                    <td>@(u.IsActive ? "Yes" : "No")</td>
+                    <td>@u.CreatedAt.ToString("dd MMM yyyy HH:mm")</td>
+                    <td>
+                        @(u.LastLoginAt.HasValue
+                                                ? u.LastLoginAt.Value.ToString("dd MMM yyyy HH:mm")
+                                                : "Never")
+                    </td>
+
+                        <td class="actions-cell">
+                        @if (u.Role != UserRole.Admin)
+                            {
+                                <!-- Role Change Form -->
+                                <form asp-action="UpdateUserRole"
+                                      method="post"
+                                      class="inline-form role-form">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="UserId" value="@u.UserId" />
+
+                                    <select name="Role" class="form-select-small">
+                                        <option value="Analyst" selected="@(u.Role == UserRole.Analyst)">Analyst</option>
+                                        <option value="DataEngineer" selected="@(u.Role == UserRole.DataEngineer)">Data Engineer</option>
+                                        <option value="Admin" selected="@(u.Role == UserRole.Admin)">Admin</option>
+                                    </select>
+
+                                    <button type="button"
+                                            class="btn btn-sm btn-role-save js-role-save">
+                                        Save
+                                    </button>
+                                </form>
+
+                                <!-- Active/Passive Form -->
+                                <form asp-action="ToggleUserActive"
+                                      method="post"
+                                      class="inline-form">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="userId" value="@u.UserId" />
+                                    <button type="submit" class="btn btn-sm btn-toggle">
+                                        @(u.IsActive ? "Deactivate" : "Activate")
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">No actions for Admin</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<!-- ROLE CHANGE CONFIRM MODAL -->
+<div id="roleConfirmModal" class="modal-overlay hidden">
+    <div class="modal-card">
+        <h3>Confirm Role Change</h3>
+        <p>Please enter your password to confirm this action.</p>
+
+        <div class="modal-body">
+            <label for="adminPasswordInput">Admin Password</label>
+            <input type="password" id="adminPasswordInput" class="form-control" />
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" id="modalCancel" class="btn btn-secondary">
+                Cancel
+            </button>
+            <button type="button" id="modalConfirm" class="btn btn-primary">
+                Confirm
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/admin.js"></script>
+}

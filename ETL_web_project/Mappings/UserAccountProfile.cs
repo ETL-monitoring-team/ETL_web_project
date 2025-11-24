@@ -14,6 +14,8 @@ namespace ETL_web_project.Mappings
             CreateMap<RegisterDto, UserAccount>()
                           .ForMember(dest => dest.PasswordHash,
                               opt => opt.MapFrom(src => PasswordHashHandler.HashPassword(src.Password)));
+            CreateMap<UserAccount, AdminUserDto>();
+
         }
     }
 }

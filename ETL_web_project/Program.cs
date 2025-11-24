@@ -26,6 +26,7 @@ builder.Services.AddScoped<IEtlLogService, EtlLogService>();
 
 builder.Services.AddScoped<IEtlJobService, EtlJobService>();
 
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 // Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
