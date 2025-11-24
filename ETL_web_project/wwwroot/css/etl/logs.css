@@ -1,0 +1,102 @@
+﻿/* ============================================
+   LOGS PAGE – THEME MATCHED WITH DASHBOARD
+   ============================================ */
+
+/* General Layout */
+.logs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* KPI cards (error / warn / info) colors */
+.kpi-icon-red {
+    background: linear-gradient(135deg, #ff4757, #ff6b81);
+}
+
+.kpi-icon-yellow {
+    background: linear-gradient(135deg, #facc15, #f59e0b);
+}
+
+.kpi-icon-blue {
+    background: linear-gradient(135deg, #32a7ff, #4f46e5);
+}
+
+/* Table for logs */
+.table-wrapper {
+    max-height: 350px;
+    overflow-y: auto;
+    border-radius: 12px;
+}
+
+.table thead th {
+    color: #a8b1d6;
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 0.5rem 0.3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.table tbody td {
+    font-size: 0.82rem;
+    padding: 0.45rem 0.3rem;
+    color: #d9dfff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.compact-table tbody tr:hover {
+    background: rgba(107, 141, 227, 0.12);
+}
+
+/* Empty message styling */
+.table-empty {
+    text-align: center;
+    padding: 1rem;
+    color: #7077a1;
+    font-size: 0.85rem;
+}
+
+/* ETL levels color-coded rows */
+.etl-status-failed td {
+    color: #ff6b6b;
+}
+
+.etl-status-warning td {
+    color: #facc15;
+}
+
+.etl-status-info td {
+    color: #7cc0ff;
+}
+
+/* Log cards and page header */
+.card-header .card-title {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.card-header .card-subtitle {
+    color: #b5bdd8;
+    font-size: 0.8rem;
+}
+
+/* Small chip */
+.chip-outline {
+    border-color: #6b8de3;
+    color: #bcd4ff;
+}
+
+/* Scrollbar custom look */
+.table-wrapper::-webkit-scrollbar {
+    width: 7px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #6B8DE3, #7D1C8D);
+    border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}

@@ -1,54 +1,52 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ETL_web_project.Interfaces;
 
 namespace ETL_web_project.Controllers
 {
     public class EtlController : Controller
     {
-        public ActionResult Index()
+        private readonly IEtlLogService _etlLogService;
+
+        public EtlController(IEtlLogService etlLogService)
+        {
+            _etlLogService = etlLogService;
+        }
+
+        public async Task<ActionResult> Index()
         {
             return View();
         }
 
-        //BUNLAR OLUŞTURULACAK SİDEBARDAKİ VİEWLARDAN BAZISI
+        // ============ SIDEBAR PAGES ============
+
         public ActionResult Jobs()
         {
             return View();
         }
-        public ActionResult Logs()
+
+        public async Task<ActionResult> Logs()
         {
-            return View();
+            var logs = await _etlLogService.GetLogsAsync();
+            return View(logs);
         }
+
         public ActionResult Staging()
         {
             return View();
         }
+
         public ActionResult Facts()
         {
             return View();
         }
+
         public ActionResult Schedule()
         {
             return View();
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        // =======================================
 
         public ActionResult Details(int id)
         {
