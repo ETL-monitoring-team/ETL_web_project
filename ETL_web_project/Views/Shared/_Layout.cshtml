@@ -14,6 +14,8 @@
 
 
 
+    <!-- Sayfaya özel ekstra CSS dosyaları için -->
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <div class="dashboard">
@@ -91,7 +93,7 @@
             </div>
         </aside>
 
-     @*    navbarda bugün düzeltilmesi gerkeen eksik: search zaten responsive büyüyüo kücüyor ama eger ekran cok kücükse o search butonu sadece dursun üstüne tıklanınca üst tarafın tamamında search arama sekmesi dursun. Sağdaki butonlar da ekran kücülünce nasıl görünüyor bi bakmak gerek. *@
+        @*    navbarda bugün düzeltilmesi gerkeen eksik: search zaten responsive büyüyüo kücüyor ama eger ekran cok kücükse o search butonu sadece dursun üstüne tıklanınca üst tarafın tamamında search arama sekmesi dursun. Sağdaki butonlar da ekran kücülünce nasıl görünüyor bi bakmak gerek. *@
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -118,7 +120,7 @@
 
                 </div>
 
-             @*    ŞUAN İÇİN BİLDİRİMLER BURAYA KAC TANE GİRDİYSEK O GÖRÜNÜYOR. SONRA BU BİLDİRİM KISMINI CONTROLLERDAN DOLDURTACAGIZ SERVİSTE BİR LİSTEDE FALAN TUTARIZ BİLDİRİMLERİ. BİLDİRİMLER BİLDİRİM EKRANI ACILIP GÖRÜLÜRSE O KIRMIZI İŞARET GİTSİN EKLENECEK. BİLDİRİMLER ÜSTÜNE TIKLANIP DEĞİŞİKLİK YAPILAN TABLO EKRANI ACILIRSA DA BİLDİRİMLER KISMINDAN GİDECEK. BİR DE HEPSİNİ SİL EKLERİZ SAĞ ÜSTÜNE DROPDOWNIN *@
+                @*    ŞUAN İÇİN BİLDİRİMLER BURAYA KAC TANE GİRDİYSEK O GÖRÜNÜYOR. SONRA BU BİLDİRİM KISMINI CONTROLLERDAN DOLDURTACAGIZ SERVİSTE BİR LİSTEDE FALAN TUTARIZ BİLDİRİMLERİ. BİLDİRİMLER BİLDİRİM EKRANI ACILIP GÖRÜLÜRSE O KIRMIZI İŞARET GİTSİN EKLENECEK. BİLDİRİMLER ÜSTÜNE TIKLANIP DEĞİŞİKLİK YAPILAN TABLO EKRANI ACILIRSA DA BİLDİRİMLER KISMINDAN GİDECEK. BİR DE HEPSİNİ SİL EKLERİZ SAĞ ÜSTÜNE DROPDOWNIN *@
                 <div class="nav-right">
                     <!-- Notifications -->
                     <div class="notification-wrapper">
@@ -137,7 +139,7 @@
                             </div>  <div class="notification-item">
                                 <p><strong>Alert:</strong> New data available.</p>
                                 <span class="time">10 min ago</span>
-                            </div>  
+                            </div>
                             <div class="notification-item">
                                 <p><strong>Reminder:</strong> Backup your database.</p>
                                 <span class="time">1 hour ago</span>
