@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ETL_web_project.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ETL_web_project.Interfaces;
 using ETL_web_project.DTOs;   // <-- EKLENDİ
 
 namespace ETL_web_project.Controllers
 {
+    [Authorize]
+
     public class EtlController : Controller
     {
         private readonly IEtlLogService _etlLogService;

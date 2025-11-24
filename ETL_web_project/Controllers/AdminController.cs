@@ -1,83 +1,97 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ETL_web_project.DTOs;
+using ETL_web_project.Enums;
+using ETL_web_project.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETL_web_project.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        // GET: AdminController
-        public ActionResult Index()
+        private readonly IAdminService _adminService;
+        private readonly IAccountService _accountService;
+
+        public AdminController(IAdminService adminService, IAccountService accountService)
         {
-            return View();
+            _adminService = adminService;
+            _accountService = accountService;
         }
 
-        // GET: AdminController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        public async Task<IActionResult> Index(string? search)
         {
-            return View();
+            var vm = await _adminService.GetDashboardAsync(search);
+            return View(vm);
         }
 
-        // GET: AdminController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: AdminController/Create
+        // ============= Role değiştir (şifre doğrulamalı) =============
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> UpdateUserRole(AdminChangeRoleDto model)
         {
-            try
+            if (string.IsNullOrWhiteSpace(model.AdminPassword))
             {
+                TempData["AdminError"] = "Please enter your password to confirm role change.";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+
+            var currentUsername = User.Identity?.Name;
+            if (string.IsNullOrEmpty(currentUsername))
             {
-                return View();
+                TempData["AdminError"] = "User context not found.";
+                return RedirectToAction(nameof(Index));
             }
+
+            var loginDto = new LoginDto
+            {
+                Username = currentUsername,
+                Password = model.AdminPassword
+            };
+
+            var adminUser = await _accountService.ValidateUserAsync(loginDto);
+
+            if (adminUser == null || adminUser.Role != UserRole.Admin)
+            {
+                TempData["AdminError"] = "Password is incorrect or you are not allowed to change roles.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (!Enum.TryParse<UserRole>(model.Role, out var newRole))
+            {
+                TempData["AdminError"] = "Invalid role.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var ok = await _adminService.ChangeUserRoleAsync(model.UserId, newRole);
+            if (!ok)
+            {
+                TempData["AdminError"] = "User not found or role could not be updated.";
+            }
+            else
+            {
+                TempData["AdminMessage"] = "User role updated successfully.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Edit/5
+        // ============= Aktif / Pasif =============
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> ToggleUserActive(int userId)
         {
-            try
+            var ok = await _adminService.ToggleUserActiveAsync(userId);
+            if (!ok)
             {
-                return RedirectToAction(nameof(Index));
+                TempData["AdminError"] = "User not found or status could not be updated.";
             }
-            catch
+            else
             {
-                return View();
+                TempData["AdminMessage"] = "User status updated successfully.";
             }
-        }
 
-        // GET: AdminController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AdminController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }
