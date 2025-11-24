@@ -10,7 +10,7 @@
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
 
        <!-- Dashboard CSS -->
-    <link rel="stylesheet" href="~/css/dashboard/navbar-sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/navbar-sidebar.css" asp-append-version="true" />
 
 
 
@@ -101,7 +101,7 @@
                
                 <div class="nav-left">
                     <div class="sidebar-header">
-                        <a href="#">
+                        <a asp-controller="Dashboard" asp-action="Index">
                             <i class="fas fa-cube fa-2x logo"></i>
                         </a>
                         <h2>Monitor</h2>
@@ -175,7 +175,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="~/js/dashboard/navbar-sidebar.js"></script>
+    <script src="~/js/navbar-sidebar.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

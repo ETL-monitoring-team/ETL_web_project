@@ -17,9 +17,8 @@ builder.Services.AddControllersWithViews();
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(UserAccountProfile).Assembly);
 
-// Account Service (Login/Register için)
 builder.Services.AddScoped<IAccountService, AccountService>();
-
+builder.Services.AddScoped<ISettingsService, SettingsService>();
 
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
@@ -50,6 +49,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

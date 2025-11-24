@@ -1,83 +1,96 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Security.Claims;
+using ETL_web_project.DTOs;
+using ETL_web_project.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETL_web_project.Controllers
 {
+    [Authorize]
     public class SettingsController : Controller
     {
-        // GET: SettingsController
-        public ActionResult Index()
+        private readonly ISettingsService _service;
+
+        public SettingsController(ISettingsService service)
         {
-            return View();
+            _service = service;
         }
 
-        // GET: SettingsController/Details/5
-        public ActionResult Details(int id)
+        private int GetUserId()
         {
-            return View();
+            var idStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(idStr);
         }
 
-        // GET: SettingsController/Create
-        public ActionResult Create()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var vm = await _service.GetSettingsForUserAsync(GetUserId());
+            return View(vm);
         }
 
-        // POST: SettingsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> UpdateProfile(ProfileSettingsDto dto)
         {
-            try
+            dto.UserId = GetUserId();
+
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var vmInvalid = await _service.GetSettingsForUserAsync(GetUserId());
+                vmInvalid.Profile.Username = dto.Username;
+                vmInvalid.Profile.Email = dto.Email;
+
+                TempData["SettingsError"] = "Please fix validation errors and try again.";
+                return View("Index", vmInvalid);
             }
-            catch
+
+            var ok = await _service.UpdateProfileAsync(dto);
+            if (!ok)
             {
-                return View();
+                TempData["SettingsError"] = "Profile could not be updated.";
             }
+            else
+            {
+                TempData["SettingsMessage"] = "Profile updated successfully.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: SettingsController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
 
-        // POST: SettingsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
         {
-            try
+            dto.UserId = GetUserId();
+
+            if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Index));
+                var vmInvalid = await _service.GetSettingsForUserAsync(GetUserId());
+                return View("Index", vmInvalid);
             }
-            catch
+
+            var ok = await _service.ChangePasswordAsync(dto);
+            if (!ok)
             {
-                return View();
+                TempData["SettingsError"] = "Current password is incorrect.";
             }
+            else
+            {
+                TempData["SettingsMessage"] = "Password changed successfully.";
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: SettingsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: SettingsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> UpdatePreferences(UserPreferenceDto dto)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await _service.UpdatePreferencesAsync(GetUserId(), dto);
+            TempData["SettingsMessage"] = "Preferences saved.";
+            return RedirectToAction(nameof(Index));
         }
     }
 }
