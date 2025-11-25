@@ -17,7 +17,6 @@ namespace ETL_web_project.DTOs
         [MaxLength(255)]
         public string Email { get; set; }
 
-        // Şifre doğrulama için (popup'tan geliyor)
         [Required]
         [MinLength(8)]
         public string? ConfirmPassword { get; set; }

@@ -47,7 +47,8 @@ namespace ETL_web_project.Controllers
             {
                 new Claim(ClaimTypes.Name, userDto.Username),
                 new Claim(ClaimTypes.Role, userDto.Role.ToString()),
- new Claim(ClaimTypes.NameIdentifier, userDto.UserId.ToString())             };
+                new Claim(ClaimTypes.NameIdentifier, userDto.UserId.ToString())
+            };
 
             var identity = new ClaimsIdentity(
                 claims,
@@ -102,7 +103,8 @@ namespace ETL_web_project.Controllers
             {
                 new Claim(ClaimTypes.Name, createdUser.Username),
                 new Claim(ClaimTypes.Role, createdUser.Role.ToString()),
-  new Claim(ClaimTypes.NameIdentifier, createdUser.UserId.ToString())            };
+                new Claim(ClaimTypes.NameIdentifier, createdUser.UserId.ToString())
+            };
 
             var identity = new ClaimsIdentity(
                 claims,

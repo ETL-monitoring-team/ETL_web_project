@@ -10,8 +10,6 @@ namespace ETL_web_project.DTOs
         public string? Description { get; set; }
 
         public bool IsActive { get; set; }
-
-        // Son çalıştırma bilgileri
         public long? LastRunId { get; set; }
         public EtlStatus? LastStatus { get; set; }
         public DateTime? LastStartTime { get; set; }
@@ -21,7 +19,7 @@ namespace ETL_web_project.DTOs
         public int? LastRowsInserted { get; set; }
         public int? LastRowsUpdated { get; set; }
 
-        // View için hazır duration metni
+
         public string LastDurationText
         {
             get

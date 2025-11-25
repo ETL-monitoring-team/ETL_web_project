@@ -7,12 +7,9 @@ namespace ETL_web_project.DTOs
         public long LogId { get; set; }
         public DateTime LogTime { get; set; }
 
-        // ÇAKIŞMA OLMAMASI İÇİN TAM AD ALANI KULLANDIK
         public Enums.LogLevel Level { get; set; }
 
         public string Message { get; set; } = string.Empty;
-
-        // Run info
         public long RunId { get; set; }
         public string JobName { get; set; } = string.Empty;
         public string JobCode { get; set; } = string.Empty;

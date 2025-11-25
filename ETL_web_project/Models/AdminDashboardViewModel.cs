@@ -12,8 +12,6 @@ namespace ETL_web_project.Models
         public int AdminCount { get; set; }
         public int AnalystCount { get; set; }
         public int DataEngineerCount { get; set; }
-
-        // Arama kutusu için
         public string? SearchTerm { get; set; }
     }
 }

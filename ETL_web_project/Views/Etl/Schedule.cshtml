@@ -1,8 +1,173 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ETL_web_project.DTOs.EtlScheduleOverviewDto
 @{
+    ViewData["Title"] = "ETL Schedule";
 }
-<div class="text-center">
-    <h1 class="display-4">Schedule</h1>
-</div>
+
+<section class="etl-schedule-page">
+
+    <!-- HEADER -->
+    <div class="etl-schedule-header">
+        <div class="title-block">
+            <h2>ETL Schedule</h2>
+            <span class="subtitle">Monitor automatic executions of ETL jobs</span>
+        </div>
+
+        <button class="btn-purple">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add Schedule</span>
+        </button>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="etl-schedule-kpis">
+        <div class="etl-schedule-card">
+            <div class="card-icon bg-icon-1">
+                <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <div class="card-text">
+                <span class="label">Total Scheduled Jobs</span>
+                <span class="value">@Model.TotalJobs</span>
+            </div>
+        </div>
+
+        <div class="etl-schedule-card">
+            <div class="card-icon bg-icon-2">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="card-text">
+                <span class="label">Active Schedules</span>
+                <span class="value">@Model.ActiveJobs</span>
+            </div>
+        </div>
+
+        <div class="etl-schedule-card">
+            <div class="card-icon bg-icon-3">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div class="card-text">
+                <span class="label">Failed Last Scheduled Run</span>
+                <span class="value">@Model.FailedLastRuns</span>
+            </div>
+        </div>
+
+        <div class="etl-schedule-card">
+            <div class="card-icon bg-icon-4">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <div class="card-text">
+                <span class="label">Next Run (Closest)</span>
+                <span class="value">
+                    @(Model.ClosestNextRun?.ToString("g") ?? "-")
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLE PANEL -->
+    <div class="etl-schedule-panel">
+        <div class="panel-header-row">
+            <h3>ETL Schedule</h3>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="etl-schedule-table">
+                <thead>
+                    <tr>
+                        <th>Job</th>
+                        <th>Frequency</th>
+                        <th>Last Run</th>
+                        <th>Next Run</th>
+                        <th>Status</th>
+                        <th class="col-actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Rows.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="empty-row">
+                                No jobs found. Create ETL jobs to see schedule here.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var row in Model.Rows)
+                        {
+                            var statusClass = row.LastRunStatus switch
+                            {
+                                ETL_web_project.Enums.EtlStatus.Success => "status-success",
+                                ETL_web_project.Enums.EtlStatus.Failed => "status-failed",
+                                ETL_web_project.Enums.EtlStatus.Running => "status-running",
+                                _ => "status-unknown"
+                            };
+
+                            <tr>
+                                <!-- JOB -->
+                                <td>
+                                    <div class="job-name">@row.JobName</div>
+                                    <div class="job-code">@row.JobCode</div>
+                                </td>
+
+                                <!-- FREQUENCY -->
+                                <td>
+                                    <span class="freq-text">@row.FrequencyText</span>
+                                </td>
+
+                                <!-- LAST RUN -->
+                                <td>
+                                    <div class="time-main">
+                                        @(row.LastRunTime?.ToString("g") ?? "-")
+                                    </div>
+                                    <div class="time-sub @statusClass">
+                                        @(row.LastRunStatus?.ToString() ?? "N/A")
+                                    </div>
+                                </td>
+
+                                <!-- NEXT RUN -->
+                                <td>
+                                    <div class="time-main">
+                                        @(row.NextRunTime?.ToString("g") ?? "-")
+                                    </div>
+                                    <div class="time-sub status-next">
+                                        @((row.NextRunTime.HasValue && row.IsActive) ? "Scheduled" : "-")
+                                    </div>
+                                </td>
+
+                                <!-- STATUS -->
+                                <td>
+                                    @if (row.IsActive)
+                                    {
+                                        <span class="pill pill-active">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="pill pill-paused">Paused</span>
+                                    }
+                                </td>
+
+                                <!-- ACTIONS -->
+                                <td class="col-actions">
+                                    <button class="icon-btn-circle" title="Run now">
+                                        <i class="fa-solid fa-play"></i>
+                                    </button>
+                                    <button class="icon-btn-circle" title="Pause / Resume">
+                                        <i class="fa-solid fa-pause"></i>
+                                    </button>
+                                    <button class="icon-btn-circle" title="Edit">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/etl/schedule.css" asp-append-version="true" />
+}

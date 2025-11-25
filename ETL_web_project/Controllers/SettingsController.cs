@@ -30,7 +30,6 @@ namespace ETL_web_project.Controllers
             return View(vm);
         }
 
-        // =============== PROFILE UPDATE ===============
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProfile(ProfileSettingsDto profile)
@@ -69,7 +68,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // =============== CHANGE PASSWORD ===============
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto model)
@@ -101,7 +99,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // =============== UPDATE PREFERENCES ===============
         [HttpPost]
         public async Task<IActionResult> UpdatePreferences(UserPreferenceDto prefs)
         {

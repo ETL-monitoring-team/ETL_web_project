@@ -10,13 +10,12 @@ namespace ETL_web_project.Data.Context
         {
         }
 
-        
         public DbSet<DimDate> DimDates { get; set; }
         public DbSet<DimStore> DimStores { get; set; }
         public DbSet<DimProduct> DimProducts { get; set; }
         public DbSet<DimCustomer> DimCustomers { get; set; }
 
-        
+       
         public DbSet<FactSales> FactSales { get; set; }
 
         public DbSet<SalesRaw> SalesRaws { get; set; }
@@ -28,8 +27,6 @@ namespace ETL_web_project.Data.Context
 
      
         public DbSet<UserAccount> UserAccounts { get; set; }
-
-      
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -49,12 +46,10 @@ namespace ETL_web_project.Data.Context
 
             modelBuilder.Entity<UserAccount>().ToTable("UserAccount", schema: "auth");
 
-            //  Username UNIQUE
             modelBuilder.Entity<UserAccount>()
                 .HasIndex(u => u.Username)
                 .IsUnique();
 
-            // Email UNIQUE
             modelBuilder.Entity<UserAccount>()
                 .HasIndex(u => u.Email)
                 .IsUnique();

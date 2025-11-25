@@ -7,14 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DbContext
 builder.Services.AddDbContext<ProjectContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// MVC
 builder.Services.AddControllersWithViews();
 
-// AutoMapper
 builder.Services.AddAutoMapper(typeof(UserAccountProfile).Assembly);
 
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -28,10 +25,9 @@ builder.Services.AddScoped<IEtlJobService, EtlJobService>();
 
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IStagingService, StagingService>();
+builder.Services.AddScoped<IEtlScheduleOverviewService, EtlScheduleOverviewService>();
 
 
-
-// Cookie Authentication
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -52,7 +48,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// Sýra önemli: önce auth sonra authorization
 app.UseAuthentication();
 app.UseAuthorization();
 

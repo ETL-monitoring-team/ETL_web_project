@@ -42,7 +42,6 @@
         </div>
     </div>
 
-    <!-- 🔍 SEARCH BAR (kullanıcı tablosunun hemen üstüne) -->
     <div class="admin-search-row">
         <form asp-action="Index" method="get" class="admin-search-form">
             <input type="text"
@@ -108,7 +107,6 @@
                         <td class="actions-cell">
                         @if (u.Role != UserRole.Admin)
                             {
-                                <!-- Role Change Form -->
                                 <form asp-action="UpdateUserRole"
                                       method="post"
                                       class="inline-form role-form">
@@ -127,7 +125,6 @@
                                     </button>
                                 </form>
 
-                                <!-- Active/Passive Form -->
                                 <form asp-action="ToggleUserActive"
                                       method="post"
                                       class="inline-form">
@@ -150,7 +147,6 @@
     </div>
 </div>
 
-<!-- ROLE CHANGE CONFIRM MODAL -->
 <div id="roleConfirmModal" class="modal-overlay hidden">
     <div class="modal-card">
         <h3>Confirm Role Change</h3>

@@ -1,0 +1,289 @@
+﻿/* === PAGE LAYOUT === */
+
+.etl-schedule-page {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* HEADER */
+
+.etl-schedule-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+    .etl-schedule-header .title-block h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: #f9fafb;
+        margin: 0;
+    }
+
+    .etl-schedule-header .subtitle {
+        font-size: 12px;
+        color: #9ca3af;
+    }
+
+.btn-purple {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: #f9fafb;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+    .btn-purple i {
+        font-size: 12px;
+    }
+
+/* KPI CARDS */
+
+.etl-schedule-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.etl-schedule-card {
+    background: radial-gradient(circle at top left, #312e81 0, #020617 65%);
+    border-radius: 18px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
+}
+
+.card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f9fafb;
+    flex-shrink: 0;
+}
+
+.bg-icon-1 {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+}
+
+.bg-icon-2 {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.bg-icon-3 {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+}
+
+.bg-icon-4 {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+}
+
+.card-text .label {
+    font-size: 11px;
+    color: #9ca3af;
+    display: block;
+}
+
+.card-text .value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #f9fafb;
+}
+
+/* PANEL + TABLE */
+
+.etl-schedule-panel {
+    background: radial-gradient(circle at top left, #111827 0, #020617 65%);
+    border-radius: 22px;
+    padding: 16px 18px 12px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+}
+
+.panel-header-row h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #e5e7eb;
+    margin: 0 0 4px;
+}
+
+.table-wrapper {
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
+.etl-schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+    .etl-schedule-table thead tr {
+        border-bottom: 1px solid rgba(55, 65, 81, 0.8);
+    }
+
+    .etl-schedule-table thead th {
+        text-align: left;
+        padding: 8px 6px;
+        color: #9ca3af;
+        font-weight: 500;
+        font-size: 11px;
+    }
+
+    .etl-schedule-table tbody tr {
+        border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+    }
+
+        .etl-schedule-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+    .etl-schedule-table tbody td {
+        padding: 10px 6px;
+        color: #e5e7eb;
+        vertical-align: middle;
+    }
+
+/* JOB CELL */
+
+.job-name {
+    font-weight: 600;
+    color: #f9fafb;
+}
+
+.job-code {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+/* FREQUENCY */
+
+.freq-text {
+    font-size: 12px;
+    color: #c4b5fd;
+}
+
+/* TIME CELLS */
+
+.time-main {
+    font-size: 12px;
+}
+
+.time-sub {
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+/* STATUS COLORS (last run) */
+
+.status-success {
+    color: #4ade80;
+}
+
+.status-failed {
+    color: #f97373;
+}
+
+.status-running {
+    color: #facc15;
+}
+
+.status-unknown {
+    color: #9ca3af;
+}
+
+.status-next {
+    color: #a5b4fc;
+}
+
+/* PILLS (Active / Paused) */
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.pill-active {
+    background: rgba(22, 163, 74, 0.25);
+    color: #bbf7d0;
+}
+
+.pill-paused {
+    background: rgba(55, 65, 81, 0.6);
+    color: #e5e7eb;
+}
+
+/* ACTION BUTTONS */
+
+.col-actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.icon-btn-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    border: none;
+    background: #111827;
+    color: #e5e7eb;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.15s ease;
+    font-size: 11px;
+}
+
+    .icon-btn-circle:hover {
+        background: #4c1d95;
+        transform: translateY(-1px);
+    }
+
+/* EMPTY STATE */
+
+.empty-row {
+    text-align: center;
+    padding: 26px 8px;
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 992px) {
+    .etl-schedule-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .etl-schedule-kpis {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .etl-schedule-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .col-actions {
+        text-align: left;
+    }
+}

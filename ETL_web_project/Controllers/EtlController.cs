@@ -1,25 +1,26 @@
 ﻿using ETL_web_project.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ETL_web_project.Interfaces;
-using ETL_web_project.DTOs;   // <-- EKLENDİ
+using ETL_web_project.DTOs;
 
 namespace ETL_web_project.Controllers
 {
     [Authorize]
-
     public class EtlController : Controller
     {
         private readonly IEtlLogService _etlLogService;
         private readonly IEtlJobService _etlJobService;
+        private readonly IEtlScheduleOverviewService _scheduleOverviewService;
 
         public EtlController(
             IEtlLogService etlLogService,
-            IEtlJobService etlJobService)
+            IEtlJobService etlJobService,
+            IEtlScheduleOverviewService scheduleOverviewService)
+
         {
             _etlLogService = etlLogService;
             _etlJobService = etlJobService;
+            _scheduleOverviewService = scheduleOverviewService;
         }
 
         public async Task<ActionResult> Index()
@@ -27,12 +28,11 @@ namespace ETL_web_project.Controllers
             return View();
         }
 
-        // ============ SIDEBAR PAGES ============
 
         public async Task<ActionResult> Jobs(string? search)
         {
             var jobs = await _etlJobService.GetJobsAsync(search);
-            ViewData["Search"] = search;          // arama terimini view'a gönder
+            ViewData["Search"] = search;
             return View(jobs);
         }
 
@@ -54,79 +54,84 @@ namespace ETL_web_project.Controllers
             return View();
         }
 
-        public ActionResult Schedule()
+        public async Task<IActionResult> Schedule()
         {
-            return View();
+            var vm = await _scheduleOverviewService.GetOverviewAsync();
+            return View(vm);
         }
 
-        // =======================================
 
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
 
-        // GET: EtlController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
 
-        // POST: EtlController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: EtlController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+        // muhtemelen sileceğiz simdilik yorum satırı yaptım
 
-        // POST: EtlController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //public ActionResult Details(int id)
+        //{
+        //    return View();
+        //}
 
-        // GET: EtlController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //// GET: EtlController/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        // POST: EtlController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //// POST: EtlController/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //// GET: EtlController/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: EtlController/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //// GET: EtlController/Delete/5
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
+
+        //// POST: EtlController/Delete/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Delete(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
     }
 }

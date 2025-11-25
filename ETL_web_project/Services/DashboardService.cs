@@ -20,7 +20,7 @@ namespace ETL_web_project.Services
             var now = DateTime.UtcNow;
             var today = now.Date;
             var yesterday = today.AddDays(-1);
-            var fromDate14 = today.AddDays(-13);   // son 14 gün için
+            var fromDate14 = today.AddDays(-13);
 
             var dto = new DashboardSummaryDto();
 

@@ -1,20 +1,16 @@
-﻿/* ========= PAGE GRID ========= */
-
-.dash-container {
+﻿.dash-container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     padding: 1.5rem;
 }
 
-/* Bir satır = flex row */
 .dash-row {
     display: flex;
     gap: 1.5rem;
     flex-wrap: wrap;
 }
 
-/* Üst KPI row */
 .kpi-row {
     flex-wrap: nowrap;
 }
@@ -25,7 +21,6 @@
     }
 }
 
-/* Kart Base */
 .card {
     background: #151821;
     border-radius: 18px;
@@ -167,10 +162,10 @@
     padding: 0.8rem 0.8rem 0.4rem 0.8rem;
 }
 
-    .chart-body canvas {
-        width: 100% !important;
-        height: 260px !important;
-    }
+.chart-body canvas {
+    width: 100% !important;
+    height: 260px !important;
+}
 
 /* ========= BOTTOM GRID ========= */
 
@@ -245,19 +240,19 @@
     font-size: 0.8rem;
 }
 
-    .table thead th {
-        text-align: left;
-        padding: 0.4rem 0.3rem;
-        color: #9ca3c7;
-        font-weight: 600;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    }
+.table thead th {
+    text-align: left;
+    padding: 0.4rem 0.3rem;
+    color: #9ca3c7;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
 
-    .table tbody td {
-        padding: 0.3rem 0.3rem;
-        color: #d1d5f0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-    }
+.table tbody td {
+    padding: 0.3rem 0.3rem;
+    color: #d1d5f0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
 
 .compact-table tbody tr:hover {
     background: rgba(107, 141, 227, 0.06);
