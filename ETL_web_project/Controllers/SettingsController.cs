@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using ETL_web_project.DTOs;
 using ETL_web_project.Interfaces;
+using ETL_web_project.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,78 +19,108 @@ namespace ETL_web_project.Controllers
 
         private int GetUserId()
         {
-            var idStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.Parse(idStr);
+            return int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
             var vm = await _service.GetSettingsForUserAsync(GetUserId());
+            TempData["ActiveTab"] = "profile";
             return View(vm);
         }
 
+        // =============== PROFILE UPDATE ===============
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateProfile(ProfileSettingsDto dto)
+        public async Task<IActionResult> UpdateProfile(ProfileSettingsDto profile)
         {
-            dto.UserId = GetUserId();
+            var userId = GetUserId();
+            profile.UserId = userId;
+
+            if (string.IsNullOrWhiteSpace(profile.ConfirmPassword))
+            {
+                ModelState.AddModelError("Profile.ConfirmPassword", "Password is required.");
+            }
 
             if (!ModelState.IsValid)
             {
-                var vmInvalid = await _service.GetSettingsForUserAsync(GetUserId());
-                vmInvalid.Profile.Username = dto.Username;
-                vmInvalid.Profile.Email = dto.Email;
-
-                TempData["SettingsError"] = "Please fix validation errors and try again.";
-                return View("Index", vmInvalid);
+                TempData["ActiveTab"] = "profile";
+                var vm = await _service.GetSettingsForUserAsync(userId);
+                vm.Profile.Username = profile.Username;
+                vm.Profile.Email = profile.Email;
+                return View("Index", vm);
             }
 
-            var ok = await _service.UpdateProfileAsync(dto);
-            if (!ok)
+            var result = await _service.UpdateProfileAsync(profile);
+
+            if (!result.Success)
             {
-                TempData["SettingsError"] = "Profile could not be updated.";
-            }
-            else
-            {
-                TempData["SettingsMessage"] = "Profile updated successfully.";
+                TempData["ActiveTab"] = "profile";
+                ModelState.AddModelError(string.Empty, result.ErrorMessage);
+                var vm = await _service.GetSettingsForUserAsync(userId);
+                vm.Profile.Username = profile.Username;
+                vm.Profile.Email = profile.Email;
+                return View("Index", vm);
             }
 
+            TempData["ActiveTab"] = "profile";
+            TempData["ProfileSuccess"] = "Profile updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
-
+        // =============== CHANGE PASSWORD ===============
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto model)
         {
-            dto.UserId = GetUserId();
+            var userId = GetUserId();
+            model.UserId = userId;
 
             if (!ModelState.IsValid)
             {
-                var vmInvalid = await _service.GetSettingsForUserAsync(GetUserId());
-                return View("Index", vmInvalid);
+                TempData["ActiveTab"] = "password";
+                var vm = await _service.GetSettingsForUserAsync(userId);
+                vm.PasswordModel = model;
+                return View("Index", vm);
             }
 
-            var ok = await _service.ChangePasswordAsync(dto);
-            if (!ok)
+            var result = await _service.ChangePasswordAsync(model);
+
+            if (!result.Success)
             {
-                TempData["SettingsError"] = "Current password is incorrect.";
-            }
-            else
-            {
-                TempData["SettingsMessage"] = "Password changed successfully.";
+                TempData["ActiveTab"] = "password";
+                ModelState.AddModelError(string.Empty, result.ErrorMessage);
+                var vm = await _service.GetSettingsForUserAsync(userId);
+                vm.PasswordModel = model;
+                return View("Index", vm);
             }
 
+            TempData["ActiveTab"] = "password";
+            TempData["ProfileSuccess"] = "Password updated successfully.";
             return RedirectToAction(nameof(Index));
         }
 
+        // =============== UPDATE PREFERENCES ===============
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdatePreferences(UserPreferenceDto dto)
+        public async Task<IActionResult> UpdatePreferences(UserPreferenceDto prefs)
         {
-            await _service.UpdatePreferencesAsync(GetUserId(), dto);
-            TempData["SettingsMessage"] = "Preferences saved.";
+            var userId = GetUserId();
+            prefs.UserId = userId;
+
+            TempData["ActiveTab"] = "prefs";
+
+            var result = await _service.UpdatePreferencesAsync(prefs);
+
+            if (!result.Success)
+            {
+                ModelState.AddModelError(string.Empty, result.ErrorMessage);
+                var vm = await _service.GetSettingsForUserAsync(userId);
+                vm.Preferences = prefs;
+                return View("Index", vm);
+            }
+
+            TempData["ProfileSuccess"] = "Preferences updated.";
             return RedirectToAction(nameof(Index));
         }
     }

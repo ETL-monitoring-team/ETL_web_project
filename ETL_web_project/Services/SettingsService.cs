@@ -1,4 +1,5 @@
 ﻿using ETL_web_project.Data.Context;
+using ETL_web_project.Data.Entities;
 using ETL_web_project.DTOs;
 using ETL_web_project.Handlers;
 using ETL_web_project.Interfaces;
@@ -16,14 +17,14 @@ namespace ETL_web_project.Services
             _context = ctx;
         }
 
-        // 1) Sayfa yüklenirken tüm modelleri doldur
+        // =============== LOAD SETTINGS ===============
         public async Task<SettingsViewModel> GetSettingsForUserAsync(int userId)
         {
             var user = await _context.UserAccounts
                 .AsNoTracking()
                 .FirstAsync(u => u.UserId == userId);
 
-            var vm = new SettingsViewModel
+            return new SettingsViewModel
             {
                 Profile = new ProfileSettingsDto
                 {
@@ -34,50 +35,82 @@ namespace ETL_web_project.Services
                     CreatedAt = user.CreatedAt,
                     LastLoginAt = user.LastLoginAt
                 },
-                PasswordModel = new ChangePasswordDto
-                {
-                    UserId = user.UserId
-                },
+                PasswordModel = new ChangePasswordDto { UserId = user.UserId },
                 Preferences = new UserPreferenceDto()
             };
-
-            return vm;
         }
 
-        // 2) Profil (username + email) güncelle
-        public async Task<bool> UpdateProfileAsync(ProfileSettingsDto dto)
+        // =============== UPDATE PROFILE ===============
+        public async Task<ProfileUpdateResult> UpdateProfileAsync(ProfileSettingsDto dto)
         {
-            var u = await _context.UserAccounts.FindAsync(dto.UserId);
-            if (u == null) return false;
+            var user = await _context.UserAccounts
+                .FirstOrDefaultAsync(u => u.UserId == dto.UserId);
 
-            // DTO zaten DataAnnotation ile valide edildi
-            u.Username = dto.Username;
-            u.Email = dto.Email;
+            if (user == null)
+                return new ProfileUpdateResult(false, "User not found.");
+
+            // PASSWORD VERIFY
+            if (!PasswordHashHandler.VerifyPassword(dto.ConfirmPassword!, user.PasswordHash))
+                return new ProfileUpdateResult(false, "Password is incorrect.");
+
+            // USERNAME RULES
+            if (dto.Username.Length < 8)
+                return new ProfileUpdateResult(false, "Username must be at least 8 characters.");
+
+            if (dto.Username.Length > 100)
+                return new ProfileUpdateResult(false, "Username cannot exceed 100 characters.");
+
+            // EMAIL RULES
+            if (dto.Email.Length > 255)
+                return new ProfileUpdateResult(false, "Email cannot exceed 255 characters.");
+
+            // UNIQUE CHECKS
+            if (await _context.UserAccounts.AnyAsync(u => u.UserId != dto.UserId && u.Username == dto.Username))
+                return new ProfileUpdateResult(false, "This username is already in use.");
+
+            if (await _context.UserAccounts.AnyAsync(u => u.UserId != dto.UserId && u.Email == dto.Email))
+                return new ProfileUpdateResult(false, "This email is already in use.");
+
+            // UPDATE
+            user.Username = dto.Username;
+            user.Email = dto.Email;
 
             await _context.SaveChangesAsync();
-            return true;
+            return new ProfileUpdateResult(true);
         }
 
-        // 3) Şifre değiştir
-        public async Task<bool> ChangePasswordAsync(ChangePasswordDto dto)
+        // =============== CHANGE PASSWORD ===============
+        public async Task<ProfileUpdateResult> ChangePasswordAsync(ChangePasswordDto dto)
         {
-            var u = await _context.UserAccounts.FindAsync(dto.UserId);
-            if (u == null) return false;
+            var user = await _context.UserAccounts
+                .FirstOrDefaultAsync(u => u.UserId == dto.UserId);
 
-            var ok = PasswordHashHandler.VerifyPassword(dto.CurrentPassword, u.PasswordHash);
-            if (!ok) return false;
+            if (user == null)
+                return new ProfileUpdateResult(false, "User not found.");
 
-            u.PasswordHash = PasswordHashHandler.HashPassword(dto.NewPassword);
+            // Check current password
+            if (!PasswordHashHandler.VerifyPassword(dto.CurrentPassword, user.PasswordHash))
+                return new ProfileUpdateResult(false, "Current password is incorrect.");
+
+            // New password rules
+            if (dto.NewPassword.Length < 8)
+                return new ProfileUpdateResult(false, "New password must be at least 8 characters.");
+
+            if (dto.NewPassword != dto.ConfirmPassword)
+                return new ProfileUpdateResult(false, "Passwords do not match.");
+
+            user.PasswordHash = PasswordHashHandler.HashPassword(dto.NewPassword);
 
             await _context.SaveChangesAsync();
-            return true;
+            return new ProfileUpdateResult(true);
         }
 
-        // 4) Kullanıcı tercihleri (şimdilik DB yok, ileride eklenecek)
-        public Task UpdatePreferencesAsync(int userId, UserPreferenceDto dto)
+        // =============== UPDATE PREFERENCES ===============
+        public async Task<ProfileUpdateResult> UpdatePreferencesAsync(UserPreferenceDto prefs)
         {
-            // İleride ayrı tabloya kaydedebilirsin.
-            return Task.CompletedTask;
+            // EXAMPLE — pref’ler dilediğin gibi kaydedilecek
+
+            return new ProfileUpdateResult(true);
         }
     }
 }

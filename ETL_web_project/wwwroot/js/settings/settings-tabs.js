@@ -48,7 +48,6 @@
 
                     if (successBox) {
                         successBox.classList.remove("hidden");
-                        successBox.classList.add("show");
                     }
                 } else {
                     alert("Something went wrong while sending your request. Please try again.");

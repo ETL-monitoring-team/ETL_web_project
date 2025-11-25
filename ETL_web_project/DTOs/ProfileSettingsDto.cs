@@ -1,6 +1,5 @@
-﻿using System;
+﻿using ETL_web_project.Enums;
 using System.ComponentModel.DataAnnotations;
-using ETL_web_project.Enums;
 
 namespace ETL_web_project.DTOs
 {
@@ -8,16 +7,20 @@ namespace ETL_web_project.DTOs
     {
         public int UserId { get; set; }
 
-        [Required(ErrorMessage = "Username is required.")]
-        [MaxLength(100, ErrorMessage = "Username cannot be longer than 100 characters.")]
-        [Display(Name = "Username")]
-        public string Username { get; set; } = null!;
+        [Required]
+        [MinLength(8)]
+        [MaxLength(100)]
+        public string Username { get; set; }
 
-        [Required(ErrorMessage = "Work email is required.")]
-        [EmailAddress(ErrorMessage = "Please enter a valid work email address.")]
-        [MaxLength(255, ErrorMessage = "Work email cannot be longer than 255 characters.")]
-        [Display(Name = "Work Email")]
-        public string Email { get; set; } = null!;
+        [Required]
+        [EmailAddress]
+        [MaxLength(255)]
+        public string Email { get; set; }
+
+        // Şifre doğrulama için (popup'tan geliyor)
+        [Required]
+        [MinLength(8)]
+        public string? ConfirmPassword { get; set; }
 
         public UserRole Role { get; set; }
         public DateTime CreatedAt { get; set; }

@@ -4,19 +4,17 @@
 }
 <link rel="stylesheet" href="~/css/settings.css" asp-append-version="true" />
 
-@* Hata var backendi düzelteceğim*@
-
 <div class="settings-container">
 
-    @if (TempData["SettingsMessage"] != null)
+    @* SUCCESS MESSAGE *@
+    @if (TempData["ProfileSuccess"] != null)
     {
-        <div class="alert alert-info">@TempData["SettingsMessage"]</div>
+        <div class="alert alert-info">
+            @TempData["ProfileSuccess"]
+        </div>
     }
 
-    @if (TempData["SettingsError"] != null)
-    {
-        <div class="alert alert-error">@TempData["SettingsError"]</div>
-    }
+    @Html.ValidationSummary(false, "", new { @class = "text-danger small mb-2" })
 
     <div class="settings-tabs">
         <button class="tab-btn active" data-tab="profile">Profile</button>
@@ -27,10 +25,8 @@
 
     <!-- PROFILE TAB -->
     <div class="tab-content active" id="profile">
-        <form asp-action="UpdateProfile" method="post">
+        <form id="profile-form" asp-action="UpdateProfile" method="post">
             @Html.AntiForgeryToken()
-
-            @Html.ValidationSummary(false, "", new { @class = "text-danger small mb-2" })
 
             <div class="form-group">
                 <label asp-for="Profile.Username"></label>
@@ -44,8 +40,10 @@
                 <span asp-validation-for="Profile.Email" class="text-danger small"></span>
             </div>
 
+            <input asp-for="Profile.ConfirmPassword" type="hidden" id="confirmPasswordHidden" />
+
             <div class="form-actions">
-                <button type="submit" class="btn-primary">Save</button>
+                <button type="button" class="btn-primary js-profile-save">Save</button>
                 <button type="reset" class="btn-secondary">Reset ↺</button>
             </div>
 
@@ -56,22 +54,11 @@
                 </div>
                 <div class="profile-meta-item">
                     <div class="profile-meta-label">Created At</div>
-                    <div class="profile-meta-value">
-                        @Model.Profile.CreatedAt.ToString("dd MMM yyyy HH:mm")
-                    </div>
+                    <div class="profile-meta-value">@Model.Profile.CreatedAt.ToString("dd MMM yyyy HH:mm")</div>
                 </div>
                 <div class="profile-meta-item">
                     <div class="profile-meta-label">Last Login</div>
-                    <div class="profile-meta-value">
-                        @if (Model.Profile.LastLoginAt.HasValue)
-                        {
-                            @Model.Profile.LastLoginAt.Value.ToString("dd MMM yyyy HH:mm")
-                        }
-                        else
-                        {
-                            @:Never
-                        }
-                    </div>
+                    <div class="profile-meta-value">@(Model.Profile.LastLoginAt?.ToString("dd MMM yyyy HH:mm") ?? "Never")</div>
                 </div>
             </div>
         </form>
@@ -128,43 +115,33 @@
         </form>
     </div>
 
-    <!-- REQUESTS TAB -->
+    <!-- REQUEST TAB -->
     <div class="tab-content" id="request">
-        <div class="request-info">
-            Use this form to send a request to the admin (role change, access request, other issues).
-        </div>
+        <div class="request-info">Use this form to send a request to the admin.</div>
 
-        <!-- Başarı mesajı (JS ile gösterilecek) -->
         <div id="request-success" class="alert alert-info hidden">
             ✅ Your request has been sent to the admin.
         </div>
 
         <form class="contact-form" id="request-form" action="https://api.web3forms.com/submit" method="POST">
-
             <input type="hidden" name="access_key" value="fc5acbce-c379-471d-8eed-42defdd31de9" />
             <input type="hidden" name="subject" value="ETL Monitor - User Request" />
 
             <div class="form-group">
                 <label for="req-name">Name</label>
-                <input id="req-name" type="text" name="name"
-                       value="@Model.Profile.Username"
-                       readonly
-                       required />
+                <input id="req-name" type="text" name="name" value="@Model.Profile.Username"
+                       data-initial="@Model.Profile.Username" readonly required />
             </div>
 
             <div class="form-group">
                 <label for="req-email">Email</label>
-                <input id="req-email" type="email" name="email"
-                       value="@Model.Profile.Email"
-                       readonly
-                       required />
+                <input id="req-email" type="email" name="email" value="@Model.Profile.Email"
+                       data-initial="@Model.Profile.Email" readonly required />
             </div>
 
             <div class="form-group">
                 <label for="req-message">Request / Message</label>
-                <textarea id="req-message" name="message" rows="4"
-                          placeholder="Explain your request (e.g., role change to Admin, additional permissions, etc.)"
-                          required></textarea>
+                <textarea id="req-message" name="message" rows="4" placeholder="Explain your request..." required></textarea>
             </div>
 
             <button type="submit" class="btn-primary">Send Request</button>
@@ -173,7 +150,46 @@
 
 </div>
 
+<!-- POPUP -->
+<div id="profileConfirmModal" class="modal-overlay hidden">
+    <div class="modal-card">
+        <h3>Confirm Profile Update</h3>
+        <p>Please enter your password to confirm.</p>
+
+        <div class="modal-body">
+            <label>Your Password</label>
+            <input type="password" id="profilePasswordInput" class="form-control" />
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" id="profileCancel" class="btn btn-secondary">Cancel</button>
+            <button type="button" id="profileConfirm" class="btn btn-primary">Confirm</button>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/settings-tabs.js"></script>
+    <script src="~/js/settings/settings-tabs.js"></script>
+    <script src="~/js/settings/settings-profile.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const activeTab = "@(TempData["ActiveTab"] ?? "profile")";
+
+            const buttons = document.querySelectorAll(".tab-btn");
+            const contents = document.querySelectorAll(".tab-content");
+
+            buttons.forEach(btn => btn.classList.remove("active"));
+            contents.forEach(tab => tab.classList.remove("active"));
+
+            const activeBtn = document.querySelector(`[data-tab='${activeTab}']`);
+            const activeContent = document.getElementById(activeTab);
+
+            if (activeBtn && activeContent) {
+                activeBtn.classList.add("active");
+                activeContent.classList.add("active");
+            }
+        });
+    </script>
 }

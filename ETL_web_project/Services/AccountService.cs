@@ -32,7 +32,9 @@ namespace ETL_web_project.Services
             if (!PasswordHashHandler.VerifyPassword(loginDto.Password, user.PasswordHash))
                 return null;
 
-            user.LastLoginAt = DateTime.UtcNow;
+            user.LastLoginAt = DateTime.Now;
+
+            _context.UserAccounts.Update(user);
             await _context.SaveChangesAsync();
 
             return _mapper.Map<UserDto>(user);

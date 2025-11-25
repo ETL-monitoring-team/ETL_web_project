@@ -11,12 +11,12 @@ namespace ETL_web_project.DTOs
         public string CurrentPassword { get; set; } = string.Empty;
 
         [Required]
-        [MinLength(6)]
+        [MinLength(8, ErrorMessage = "New password must be at least 8 characters.")]
         [DataType(DataType.Password)]
         public string NewPassword { get; set; } = string.Empty;
 
         [Required]
-        [Compare("NewPassword")]
+        [Compare("NewPassword", ErrorMessage = "Passwords do not match.")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; } = string.Empty;
     }

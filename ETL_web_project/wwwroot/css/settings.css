@@ -7,6 +7,7 @@
     gap: 20px;
     color: #f5f5f5;
 }
+
 .dashboard {
     min-height: 100vh;
 }
@@ -26,11 +27,6 @@
 .alert-error {
     background: rgba(255, 80, 80, 0.12);
     border: 1px solid rgba(255, 80, 80, 0.35);
-}
-
-/* JS ile görünür/görünmez */
-.hidden {
-    display: none;
 }
 
 /* TABS */
@@ -54,14 +50,13 @@
 }
 
     .tab-btn:hover {
-        background: rgba(255,255,255,0.03);
-        color: #ffffff;
+        background: rgba(255, 255, 255, 0.04);
+        color: white;
     }
 
     .tab-btn.active {
-        color: #ffffff;
+        color: white;
         background: linear-gradient(90deg, #6B8DE3, #7D1C8D);
-        box-shadow: 0 0 1px rgba(109, 92, 255, 0.4);
     }
 
 /* TAB CONTENT */
@@ -71,7 +66,7 @@
     border-radius: 16px;
     padding: 20px 22px;
     border: 1px solid #23263a;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.55);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
 }
 
     .tab-content.active {
@@ -79,20 +74,14 @@
     }
 
 /* FORM STYLING */
-.settings-container form {
+.form-group {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-}
-
-.settings-container label {
-    font-size: 13px;
-    color: #d2d7eb;
+    gap: 6px;
 }
 
 .form-control,
-.contact-form input[type="text"],
-.contact-form input[type="email"],
+.contact-form input,
 .contact-form textarea {
     width: 100%;
     padding: 8px 10px;
@@ -101,68 +90,49 @@
     background: #181b29;
     color: #f5f5f5;
     font-size: 13px;
-    outline: none;
-    transition: 0.2s ease;
 }
 
-    .form-control:focus,
-    .contact-form input[type="text"]:focus,
-    .contact-form input[type="email"]:focus,
-    .contact-form textarea:focus {
+    .form-control:focus {
         border-color: #6B8DE3;
-        background: #161827;
     }
 
-/* FORM BUTONLAR */
 .btn-primary {
-    padding: 7px 16px;
+    padding: 7px 18px;
     border-radius: 999px;
     font-size: 13px;
     font-weight: 600;
     background: linear-gradient(90deg, #6B8DE3, #7D1C8D);
-    color: #ffffff;
+    color: white;
     border: none;
     cursor: pointer;
-    transition: 0.15s ease;
-}
-
-    .btn-primary:hover {
-        transform: translateY(-1px);
-        opacity: 0.95;
-    }
-
-/* Reset butonu */
-.form-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 4px;
 }
 
 .btn-secondary {
-    padding: 7px 16px;
+    padding: 7px 18px;
     border-radius: 999px;
     font-size: 13px;
-    font-weight: 600;
     background: transparent;
-    color: #a5adc4;
     border: 1px solid #383d55;
-    cursor: pointer;
-    transition: 0.15s ease;
+    color: #a5adc4;
 }
 
     .btn-secondary:hover {
-        background: #1c2033;
-        color: #ffffff;
+        background: #1e2335;
+        color: white;
     }
 
-/* Profil info kartları */
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* PROFILE INFO BOXES */
 .profile-meta {
     margin-top: 14px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 8px;
-    font-size: 12px;
-    color: #c3c7e6;
+    gap: 10px;
 }
 
 .profile-meta-item {
@@ -174,35 +144,41 @@
 
 .profile-meta-label {
     font-size: 11px;
-    text-transform: uppercase;
-    opacity: 0.7;
+    opacity: 0.65;
 }
 
 .profile-meta-value {
     font-weight: 600;
-    margin-top: 2px;
 }
 
-/* Request tab */
-.request-info {
-    font-size: 12px;
-    color: #a5adc4;
-    margin-bottom: 10px;
-}
-
-.contact-form .form-group {
+/* MODAL */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
 }
 
-/* küçük ekranlar */
-@media (max-width: 768px) {
-    .settings-container {
-        padding: 16px 0 30px 0;
-    }
+.modal-card {
+    background: #161827;
+    border-radius: 14px;
+    padding: 20px;
+    width: 300px;
+    border: 1px solid #383d55;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
 
-    .settings-tabs {
-        flex-wrap: wrap;
-    }
+.modal-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* JS show/hide */
+.hidden {
+    display: none;
 }

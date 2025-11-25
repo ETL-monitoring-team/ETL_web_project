@@ -5,11 +5,13 @@ namespace ETL_web_project.DTOs
     public class RegisterDto
     {
         [Required]
+        [MinLength(8)]
         [MaxLength(100)]
         [Display(Name = "Full Name")]
         public string FullName { get; set; } = null!;
 
         [Required]
+        [MinLength(8)]
         [MaxLength(100)]
         [Display(Name = "Username")]
         public string Username { get; set; } = null!;
