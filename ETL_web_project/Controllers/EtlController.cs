@@ -23,12 +23,13 @@ namespace ETL_web_project.Controllers
             _scheduleOverviewService = scheduleOverviewService;
         }
 
-        public async Task<ActionResult> Index()
-        {
-            return View();
-        }
+        //kullanılmıyor silinecek
+        //public async Task<ActionResult> Index()
+        //{
+        //    return View();
+        //}
 
-
+        [Authorize(Roles = "Admin,DataEngineer")]
         public async Task<ActionResult> Jobs(string? search)
         {
             var jobs = await _etlJobService.GetJobsAsync(search);
@@ -36,12 +37,14 @@ namespace ETL_web_project.Controllers
             return View(jobs);
         }
 
+        [Authorize(Roles = "Admin,DataEngineer")]
         public async Task<ActionResult> Logs()
         {
             var logs = await _etlLogService.GetLogsAsync(null, null, null, null);
             return View(logs);
         }
 
+        [Authorize(Roles = "Admin,DataEngineer")]
         public ActionResult Staging()
         {
             // Model null gelmesin diye boş da olsa bir DTO gönderiyoruz
@@ -49,11 +52,13 @@ namespace ETL_web_project.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin,Analyst")]
         public ActionResult Facts()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin,DataEngineer")]
         public async Task<IActionResult> Schedule()
         {
             var vm = await _scheduleOverviewService.GetOverviewAsync();

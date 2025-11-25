@@ -17,41 +17,89 @@
 
         <!-- Sidebar -->
         <aside class="sidebar">
-           
+
+
+            @using System.Security.Claims
+            @{
+                string role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "";
+                bool IsAdmin = role == "Admin";
+                bool IsEngineer = role == "DataEngineer";
+                bool IsAnalyst = role == "Analyst";
+            }
 
             <ul class="sidebar-links">
+                
+                <form class="search-form" onsubmit="return false;">
+                    <input type="text" class="search-input" placeholder="Search..." />
+                    <button type="button" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+
                 <h4>
                     <span>Main Menu</span>
                     <div class="menu-separator"></div>
                 </h4>
+
+                <!-- Dashboard (HERKES) -->
                 <li>
                     <a asp-controller="Dashboard" asp-action="Index">
                         <i class="fa-solid fa-solar-panel"></i> Dashboard panel
                     </a>
                 </li>
-                <li>
+
+                <!-- ETL Jobs (Admin + DataEngineer) -->
+                <li class="@(IsAdmin || IsEngineer ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Jobs">
                         <i class="fa-solid fa-solar-panel"></i> ETL Jobs
+                        @if (!(IsAdmin || IsEngineer))
+                        {
+                            <i class="fa-solid fa-lock lock-icon"></i>
+                        }
                     </a>
                 </li>
-                <li>
+
+                <!-- ETL Logs (Admin + DataEngineer) -->
+                <li class="@(IsAdmin || IsEngineer ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Logs">
                         <i class="fa-solid fa-solar-panel"></i> ETL Logs
+                        @if (!(IsAdmin || IsEngineer))
+                        {
+                            <i class="fa-solid fa-lock lock-icon"></i>
+                        }
                     </a>
                 </li>
-                <li>
+
+                <!-- Staging Tables (Admin + DataEngineer) -->
+                <li class="@(IsAdmin || IsEngineer ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Staging">
                         <i class="fa-solid fa-solar-panel"></i> Staging Tables
+                        @if (!(IsAdmin || IsEngineer))
+                        {
+                            <i class="fa-solid fa-lock lock-icon"></i>
+                        }
                     </a>
                 </li>
-                <li>
+
+                <!-- Fact Explorer (Admin + Analyst) -->
+                <li class="@(IsAdmin || IsAnalyst ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Facts">
                         <i class="fa-solid fa-solar-panel"></i> Fact Explorer
+                        @if (!(IsAdmin || IsAnalyst))
+                        {
+                            <i class="fa-solid fa-lock lock-icon"></i>
+                        }
                     </a>
                 </li>
-                <li>
+
+                <!-- ETL Schedule (Admin + DataEngineer) -->
+                <li class="@(IsAdmin || IsEngineer ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Schedule">
                         <i class="fa-solid fa-solar-panel"></i> ETL Schedule
+                        @if (!(IsAdmin || IsEngineer))
+                        {
+                            <i class="fa-solid fa-lock lock-icon"></i>
+                        }
                     </a>
                 </li>
 
@@ -59,16 +107,26 @@
                     <span>Account</span>
                     <div class="menu-separator"></div>
                 </h4>
-                <li>
+
+                <!-- Admin panel (SADECE Admin) -->
+                <li class="@(IsAdmin ? "" : "locked")">
                     <a asp-controller="Admin" asp-action="Index">
                         <i class="fa-solid fa-user-tie"></i> Admin panel
+                        @if (!IsAdmin)
+                        {
+                            <i class="fa-solid fa-lock lock-icon"></i>
+                        }
                     </a>
                 </li>
+
+                <!-- Settings (HERKES) -->
                 <li>
                     <a asp-controller="Settings" asp-action="Index">
                         <i class="fa-solid fa-screwdriver-wrench"></i> Settings
                     </a>
                 </li>
+
+                <!-- Logout -->
                 <li>
                     <a asp-controller="Account" asp-action="Logout">
                         <i class="fa-solid fa-right-to-bracket"></i> Logout
@@ -95,7 +153,7 @@
 
             <!-- Navbar -->
             <nav class="top-navbar">
-               
+
                 <div class="nav-left">
                     <div class="sidebar-header">
                         <a asp-controller="Dashboard" asp-action="Index">
@@ -104,12 +162,7 @@
                         <h2>Monitor</h2>
                     </div>
                     <!-- Search Button -->
-                    <form class="search-form" onsubmit="return false;">
-                        <input type="text" class="search-input" placeholder="Search..." />
-                        <button type="button" class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
+
 
 
 
