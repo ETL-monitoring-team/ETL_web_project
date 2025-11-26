@@ -2,7 +2,9 @@
 using ETL_web_project.DTOs;
 using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
+using ETL_web_project.Data.Entities;          // EtlRun, EtlLog
 using Microsoft.EntityFrameworkCore;
+using LogLevel = ETL_web_project.Enums.LogLevel;
 
 namespace ETL_web_project.Services
 {
@@ -15,9 +17,11 @@ namespace ETL_web_project.Services
             _context = context;
         }
 
+        // ================================
+        // 1) JOB LİSTESİ (arama ile)
+        // ================================
         public async Task<List<EtlJobListItemDto>> GetJobsAsync(string? searchText)
         {
-            // 1) Job query (arama filtresi)
             var jobsQuery = _context.EtlJobs.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchText))
@@ -33,8 +37,6 @@ namespace ETL_web_project.Services
             jobsQuery = jobsQuery.OrderBy(j => j.JobName);
 
             var jobs = await jobsQuery.ToListAsync();
-
-            // 2) Her job için son run bilgisini çek
             var result = new List<EtlJobListItemDto>();
 
             foreach (var job in jobs)
@@ -68,6 +70,95 @@ namespace ETL_web_project.Services
             }
 
             return result;
+        }
+
+        // ================================
+        // 2) BELİRLİ JOB İÇİN RUN HISTORY
+        // ================================
+        public async Task<List<EtlRunHistoryDto>> GetRunsForJobAsync(int jobId)
+        {
+            return await _context.EtlRuns
+                .Where(r => r.JobId == jobId)
+                .OrderByDescending(r => r.StartTime)
+                .Select(r => new EtlRunHistoryDto
+                {
+                    RunId = r.RunId,
+                    Status = r.Status,
+                    StartTime = r.StartTime,
+                    EndTime = r.EndTime,
+                    DurationText = r.EndTime.HasValue
+                        ? (r.EndTime.Value - r.StartTime).ToString("hh\\:mm\\:ss")
+                        : "Running"
+                })
+                .ToListAsync();
+        }
+
+        // ================================
+        // 3) RUN NOW (manuel ETL tetikleme)
+        // ================================
+        public async Task<long> TriggerRunAsync(int jobId)
+        {
+            var job = await _context.EtlJobs.FindAsync(jobId);
+            if (job == null)
+                throw new Exception("Job not found.");
+
+            // --- ETL RUN KAYDI OLUŞTUR ---
+            var run = new EtlRun
+            {
+                JobId = jobId,
+                Status = EtlStatus.Running,
+                StartTime = DateTime.UtcNow,
+                ErrorMessage = string.Empty      // <-- NULL gitmesin
+            };
+
+            _context.EtlRuns.Add(run);
+            await _context.SaveChangesAsync();
+
+            // ilk log
+            await AddLogAsync(run.RunId, LogLevel.Info, "Job manually triggered.");
+
+            try
+            {
+                // Burada gerçekte ETL pipeline'ını çağırırsın.
+                // Şimdilik simülasyon:
+                await Task.Delay(1500);
+
+                run.Status = EtlStatus.Success;
+                run.EndTime = DateTime.UtcNow;
+                run.ErrorMessage = string.Empty;  // başarıyla bittiyse hata yok
+                await _context.SaveChangesAsync();
+
+                await AddLogAsync(run.RunId, LogLevel.Info, "Job completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                run.Status = EtlStatus.Failed;
+                run.EndTime = DateTime.UtcNow;
+                run.ErrorMessage = ex.Message;    // hata mesajını burada kaydediyoruz
+                await _context.SaveChangesAsync();
+
+                await AddLogAsync(run.RunId, LogLevel.Error, $"Job failed: {ex.Message}");
+            }
+
+            return run.RunId;
+        }
+
+
+        // ================================
+        // 4) LOG HELPER
+        // ================================
+        private async Task AddLogAsync(long runId, LogLevel level, string message)
+        {
+            var log = new EtlLog
+            {
+                RunId = runId,
+                Level = level,
+                Message = message,
+                LogTime = DateTime.UtcNow
+            };
+
+            _context.EtlLogs.Add(log);
+            await _context.SaveChangesAsync();
         }
     }
 }

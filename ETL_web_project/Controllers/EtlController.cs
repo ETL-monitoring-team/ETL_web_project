@@ -47,6 +47,37 @@ namespace ETL_web_project.Controllers
             return View(logs);
         }
 
+
+
+    
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RunJob(int jobId)
+        {
+            var runId = await _etlJobService.TriggerRunAsync(jobId);
+
+            TempData["JobRunMessage"] = $"Job #{jobId} manually triggered (RunId: {runId}).";
+
+            return RedirectToAction(nameof(Jobs));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> JobRuns(int jobId)
+        {
+            var runs = await _etlJobService.GetRunsForJobAsync(jobId);
+
+            ViewData["JobId"] = jobId;   // view’da başlıkta göstermek için
+            return View(runs);           // Views/Etl/JobRuns.cshtml => model: List<EtlRunHistoryDto>
+        }
+
+
+
+
+
+
+
+
         [Authorize(Roles = "Admin,DataEngineer")]
         public ActionResult Staging()
         {
@@ -74,9 +105,6 @@ namespace ETL_web_project.Controllers
 
             return View(model);
         }
-
-
-
 
 
 
