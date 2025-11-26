@@ -1,0 +1,73 @@
+﻿@model List<ETL_web_project.DTOs.EtlRunHistoryDto>
+
+@{
+    ViewData["Title"] = "Job Run History";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/etl/jobs.css" asp-append-version="true" />
+}
+
+<section class="etl-job-runs-page card">
+
+    <div class="jobs-table-header">
+        <h2 class="card-title">Run History</h2>
+        <span class="jobs-table-subtitle">Latest executions for this job</span>
+    </div>
+
+    <table class="jobs-table">
+        <thead>
+            <tr>
+                <th>Run Id</th>
+                <th>Status</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model == null || !Model.Any())
+            {
+                <tr>
+                    <td colspan="5" class="table-empty">
+                        No runs found for this job.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                foreach (var run in Model)
+                {
+                    var statusCss = run.Status switch
+                    {
+                        ETL_web_project.Enums.EtlStatus.Success => "status-pill status-success",
+                        ETL_web_project.Enums.EtlStatus.Failed => "status-pill status-failed",
+                        ETL_web_project.Enums.EtlStatus.Running => "status-pill status-running",
+                        _ => "status-pill status-never"
+                    };
+
+                    <tr>
+                        <td>@run.RunId</td>
+                        <td>
+                            <span class="@statusCss">@run.Status</span>
+                        </td>
+                        <td>@run.StartTime.ToString("g")</td>
+                        <td>@(run.EndTime?.ToString("g") ?? "-")</td>
+                        <td>@run.DurationText</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <!-- BACK BUTTON (bottom-right) -->
+    <div class="job-runs-back-container">
+        <a asp-controller="Etl"
+           asp-action="Jobs"
+           class="btn-outline-secondary job-runs-back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back to jobs</span>
+        </a>
+    </div>
+
+</section>

@@ -19,7 +19,10 @@
         </div>
 
         <!-- SEARCH BAR -->
-        <form method="get" asp-action="Jobs" asp-controller="Etl" class="jobs-search-form">
+        <form method="get"
+              asp-action="Jobs"
+              asp-controller="Etl"
+              class="jobs-search-form">
             <input type="text"
                    name="search"
                    value="@search"
@@ -29,6 +32,14 @@
             </button>
         </form>
     </div>
+
+    <!-- OPTIONAL MESSAGE (TempData) -->
+    @if (TempData["JobRunMessage"] is string msg && !string.IsNullOrWhiteSpace(msg))
+    {
+        <div class="job-run-alert">
+            @msg
+        </div>
+    }
 
     <!-- TABLE CARD -->
     <div class="card jobs-table-card">
@@ -50,7 +61,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if (!Model.Any())
+                @if (Model == null || !Model.Any())
                 {
                     <tr>
                         <td colspan="7" class="table-empty">
@@ -96,12 +107,25 @@
                                 }
                             </td>
                             <td class="jobs-actions">
-                                <button type="button" class="btn-outline-primary">
-                                    Run Now
-                                </button>
-                                <button type="button" class="btn-outline-secondary">
+
+                                <!-- RUN NOW: POST /Etl/RunJob -->
+                                <form asp-controller="Etl"
+                                      asp-action="RunJob"
+                                      asp-route-jobId="@job.JobId"
+                                      method="post"
+                                      class="inline-form">
+                                    <button type="submit" class="btn-outline-primary">
+                                        Run Now
+                                    </button>
+                                </form>
+
+                                <!-- VIEW RUNS: GET /Etl/JobRuns -->
+                                <a asp-controller="Etl"
+                                   asp-action="JobRuns"
+                                   asp-route-jobId="@job.JobId"
+                                   class="btn-outline-secondary">
                                     View Runs
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     }
@@ -111,4 +135,3 @@
     </div>
 
 </section>
-
