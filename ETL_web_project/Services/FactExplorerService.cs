@@ -29,7 +29,7 @@ namespace ETL_web_project.Services
                 .Include(f => f.Customer)
                 .AsQueryable();
 
-            // --------- Filtreler ----------
+            // --------- FILTERS ----------
             if (fromDate.HasValue)
                 query = query.Where(f => f.Date.Date >= fromDate.Value.Date);
 
@@ -95,15 +95,15 @@ namespace ETL_web_project.Services
                 AvgOrderValue = avgOrderValue
             };
 
-            // --------- TREND (line chart) ----------
-            var trend = await query
+            // --------- SALES TREND (chart) ----------
+            var salesTrend = await query
                 .GroupBy(f => f.Date.Date)
-                .Select(g => new FactTrendPointDto
+                .Select(g => new SalesTrendPointDto
                 {
                     Date = g.Key,
-                    TotalAmount = g.Sum(x => x.TotalAmount)
+                    Amount = g.Sum(x => x.TotalAmount)
                 })
-                .OrderBy(p => p.Date)
+                .OrderBy(x => x.Date)
                 .ToListAsync();
 
             // --------- TOP STORES / PRODUCTS / CUSTOMERS ----------
@@ -157,6 +157,7 @@ namespace ETL_web_project.Services
                 })
                 .ToListAsync();
 
+            // --------- PAGE DTO ----------
             return new FactExplorerPageDto
             {
                 FromDate = fromDate,
@@ -165,7 +166,7 @@ namespace ETL_web_project.Services
                 ProductSearch = productSearch,
                 CustomerSearch = customerSearch,
                 Summary = summary,
-                Trend = trend,
+                SalesTrend = salesTrend,
                 TopStores = topStores,
                 TopProducts = topProducts,
                 TopCustomers = topCustomers,

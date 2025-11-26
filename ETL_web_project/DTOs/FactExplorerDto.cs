@@ -53,5 +53,14 @@ namespace ETL_web_project.DTOs
         public List<TopEntityDto> TopProducts { get; set; } = new();
         public List<TopEntityDto> TopCustomers { get; set; } = new();
         public List<FactRecordDto> Records { get; set; } = new();
+
+        public List<SalesTrendPointDto> SalesTrend { get; set; } = new();
     }
 }
+
+public class TopItemDto
+{
+    public string Name { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+}
+
