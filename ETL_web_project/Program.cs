@@ -26,6 +26,7 @@ builder.Services.AddScoped<IEtlJobService, EtlJobService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IStagingService, StagingService>();
 builder.Services.AddScoped<IEtlScheduleOverviewService, EtlScheduleOverviewService>();
+builder.Services.AddScoped<IEtlScheduleService, EtlScheduleService>();
 
 builder.Services.AddScoped<IFactExplorerService, FactExplorerService>();
 
