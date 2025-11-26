@@ -89,10 +89,41 @@
             <div class="card-header">
                 <div>
                     <h3 class="card-title">Revenue Analytics</h3>
-                    <span class="card-subtitle">Sales trend for the last 14 days</span>
+                    <span class="card-subtitle">
+                        Sales trend for the last @Model.SalesRangeDays days
+                    </span>
                 </div>
+
                 <div class="card-header-right">
-                    <span class="chip chip-outline">Last 14 Days</span>
+                    <div class="range-dropdown">
+                        <button type="button" class="range-toggle">
+                            Last @Model.SalesRangeDays Days
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+
+                        <div class="range-menu">
+                            <a asp-controller="Dashboard"
+                               asp-action="Index"
+                               asp-route-range="7"
+                               class="range-item @(Model.SalesRangeDays == 7 ? "active" : "")">
+                                Last 7 Days
+                            </a>
+
+                            <a asp-controller="Dashboard"
+                               asp-action="Index"
+                               asp-route-range="14"
+                               class="range-item @(Model.SalesRangeDays == 14 ? "active" : "")">
+                                Last 14 Days
+                            </a>
+
+                            <a asp-controller="Dashboard"
+                               asp-action="Index"
+                               asp-route-range="30"
+                               class="range-item @(Model.SalesRangeDays == 30 ? "active" : "")">
+                                Last 30 Days
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -267,4 +298,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/js/dashboard/salesChart.js"></script>
+
+    <script>
+        // Range dropdown aç/kapa
+        document.addEventListener("DOMContentLoaded", () => {
+            const dropdown = document.querySelector(".range-dropdown");
+            if (!dropdown) return;
+
+            const toggle = dropdown.querySelector(".range-toggle");
+
+            toggle.addEventListener("click", () => {
+                dropdown.classList.toggle("open");
+            });
+
+            document.addEventListener("click", (e) => {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove("open");
+                }
+            });
+        });
+    </script>
 }
