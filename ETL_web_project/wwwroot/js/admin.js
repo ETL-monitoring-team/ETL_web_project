@@ -52,6 +52,13 @@
         currentRoleForm.submit();
         currentRoleForm = null;
     });
+    // ENTER ile onaylama (Save)
+    inputPassword.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault(); // Formun otomatik submit etmesini engeller
+            btnConfirm.click(); // Confirm butonunu tetikler
+        }
+    });
 
     // ESC ile kapatma
     document.addEventListener("keydown", (e) => {
