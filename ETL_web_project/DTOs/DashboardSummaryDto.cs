@@ -47,6 +47,9 @@ namespace ETL_web_project.DTOs
         // 4) DAILY SALES CHART
         // ===============================
 
+        // Grafikte kullanılan gün sayısı (7 / 14 / 30)
+        public int SalesRangeDays { get; set; } = 14;
+
         public List<DailySalesPointDto> DailySales { get; set; } = new();
 
 

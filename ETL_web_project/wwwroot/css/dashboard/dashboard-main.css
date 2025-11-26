@@ -144,15 +144,62 @@
     gap: 0.5rem;
 }
 
-.chip {
-    padding: 0.2rem 0.7rem;
+/* ---- Range dropdown ---- */
+
+.range-dropdown {
+    position: relative;
+}
+
+.range-toggle {
     border-radius: 999px;
+    padding: 6px 14px;
+    border: 1px solid #5b6cff;
+    background: linear-gradient(90deg, #7b5cff, #b845ff);
+    color: #fff;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.range-toggle i {
     font-size: 0.75rem;
 }
 
-.chip-outline {
-    border: 1px solid rgba(107, 141, 227, 0.7);
-    color: #c3d0ff;
+.range-menu {
+    position: absolute;
+    right: 0;
+    top: 110%;
+    min-width: 170px;
+    background: #111827;
+    border-radius: 12px;
+    padding: 6px 0;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    display: none;
+    z-index: 50;
+}
+
+.range-dropdown.open .range-menu {
+    display: block;
+}
+
+.range-item {
+    display: block;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    color: #e5e7eb;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+}
+
+.range-item:hover {
+    background: #1f2937;
+}
+
+.range-item.active {
+    color: #a855f7;
+    font-weight: 600;
 }
 
 .chart-body {
