@@ -11,16 +11,19 @@ namespace ETL_web_project.Controllers
         private readonly IEtlLogService _etlLogService;
         private readonly IEtlJobService _etlJobService;
         private readonly IEtlScheduleOverviewService _scheduleOverviewService;
+        private readonly IFactExplorerService _factExplorerService;
+
 
         public EtlController(
             IEtlLogService etlLogService,
             IEtlJobService etlJobService,
-            IEtlScheduleOverviewService scheduleOverviewService)
-
+            IEtlScheduleOverviewService scheduleOverviewService,
+            IFactExplorerService factExplorerService)
         {
             _etlLogService = etlLogService;
             _etlJobService = etlJobService;
             _scheduleOverviewService = scheduleOverviewService;
+            _factExplorerService = factExplorerService ?? throw new ArgumentNullException(nameof(factExplorerService));
         }
 
         //kullanılmıyor silinecek
@@ -52,11 +55,30 @@ namespace ETL_web_project.Controllers
             return View(model);
         }
 
+
+
         [Authorize(Roles = "Admin,Analyst")]
-        public ActionResult Facts()
+     public async Task<ActionResult> Facts(
+    DateTime? fromDate,
+    DateTime? toDate,
+    string? storeSearch,
+    string? productSearch,
+    string? customerSearch)
         {
-            return View();
+            var model = await _factExplorerService.GetFactExplorerAsync(
+                fromDate,
+                toDate,
+                storeSearch,
+                productSearch,
+                customerSearch);
+
+            return View(model);
         }
+
+
+
+
+
 
         [Authorize(Roles = "Admin,DataEngineer")]
         public async Task<IActionResult> Schedule()

@@ -1,0 +1,216 @@
+﻿.fact-page {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Cards base */
+.card {
+    background: #151821;
+    border-radius: 18px;
+    padding: 1.2rem 1.4rem;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Filter bar */
+.fact-filters .fact-filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.fact-filters .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 160px;
+}
+
+    .filter-group label {
+        font-size: 0.8rem;
+        color: #9ca3c7;
+    }
+
+    .filter-group input {
+        background: #11131a;
+        border-radius: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        padding: 0.4rem 0.6rem;
+        color: #e5e7ff;
+        font-size: 0.85rem;
+    }
+
+.filter-actions {
+    margin-left: auto;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    color: #fff;
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* Top KPIs */
+.fact-top-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 1.2rem;
+}
+
+.fact-kpi-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.kpi-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9ca3c7;
+}
+
+.kpi-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.kpi-sub {
+    font-size: 0.8rem;
+    color: #aeb4d7;
+}
+
+/* Middle grid */
+.fact-middle-grid {
+    display: grid;
+    grid-template-columns: 2.2fr 1.5fr;
+    gap: 1.5rem;
+}
+
+.fact-trend-card .card-body {
+    padding-top: 0.4rem;
+}
+
+.fact-trend-card canvas {
+    width: 100% !important;
+    height: 260px !important;
+}
+
+/* Top lists */
+.fact-toplists-card {
+    display: flex;
+    gap: 1.2rem;
+}
+
+.toplist-column {
+    flex: 1 1 0;
+}
+
+    .toplist-column h3 {
+        font-size: 0.9rem;
+        color: #e5e7ff;
+        margin-bottom: 0.4rem;
+    }
+
+    .toplist-column ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .toplist-column li {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.25rem 0;
+        font-size: 0.8rem;
+        color: #d1d5f0;
+    }
+
+        .toplist-column li .amount {
+            font-family: "JetBrains Mono", monospace;
+            color: #a5b4fc;
+        }
+
+/* Fact table */
+.fact-table-card .table-wrapper {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.fact-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+    .fact-table thead th {
+        text-align: left;
+        padding: 0.4rem 0.3rem;
+        color: #9ca3c7;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .fact-table tbody td {
+        padding: 0.35rem 0.3rem;
+        color: #d1d5f0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+    }
+
+    .fact-table tbody tr:hover {
+        background: rgba(107, 141, 227, 0.06);
+    }
+
+.table-empty {
+    text-align: center;
+    padding: 0.9rem 0;
+    color: #6b7280;
+}
+
+/* Card header */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+
+.card-title {
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.card-subtitle {
+    font-size: 0.8rem;
+    color: #a2a8c5;
+}
+
+@media (max-width: 1200px) {
+    .fact-top-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .fact-middle-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 800px) {
+    .fact-top-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
