@@ -24,8 +24,9 @@ namespace ETL_web_project.Data.Context
         public DbSet<EtlJob> EtlJobs { get; set; }
         public DbSet<EtlRun> EtlRuns { get; set; }
         public DbSet<EtlLog> EtlLogs { get; set; }
+        public DbSet<EtlSchedule> EtlSchedules { get; set; }
 
-     
+
         public DbSet<UserAccount> UserAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,6 +44,7 @@ namespace ETL_web_project.Data.Context
             modelBuilder.Entity<EtlJob>().ToTable("EtlJob", schema: "etl");
             modelBuilder.Entity<EtlRun>().ToTable("EtlRun", schema: "etl");
             modelBuilder.Entity<EtlLog>().ToTable("EtlLog", schema: "etl");
+            modelBuilder.Entity<EtlSchedule>().ToTable("EtlSchedule", schema: "etl");
 
             modelBuilder.Entity<UserAccount>().ToTable("UserAccount", schema: "auth");
 

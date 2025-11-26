@@ -58,12 +58,7 @@ namespace ETL_web_project.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin,DataEngineer")]
-        public async Task<IActionResult> Schedule()
-        {
-            var vm = await _scheduleOverviewService.GetOverviewAsync();
-            return View(vm);
-        }
+     
 
 
 

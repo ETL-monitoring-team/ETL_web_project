@@ -1,0 +1,154 @@
+﻿@model ETL_web_project.DTOs.EtlScheduleCreateFormDto
+
+@{
+    ViewData["Title"] = "Add Schedule";
+}
+
+<section class="etl-schedule-create-page">
+
+    <div class="page-header">
+        <h2>Add ETL Schedule</h2>
+        <p>Create a new automatic execution rule for an ETL job</p>
+    </div>
+
+    <div class="form-card">
+        <form asp-action="Create" method="post">
+
+            <!-- JOB SELECT -->
+            <div class="form-group">
+                <label>Job</label>
+                <select asp-for="CreateDto.JobId" class="input-control">
+                    <option value="">Select job...</option>
+                    @foreach (var job in Model.AvailableJobs)
+                    {
+                        <option value="@job.JobId">@job.JobName (@job.JobCode)</option>
+                    }
+                </select>
+            </div>
+
+            <!-- FREQUENCY -->
+            <div class="form-group">
+                <label>Frequency</label>
+                <input asp-for="CreateDto.FrequencyText"
+                       class="input-control"
+                       placeholder="Example: Every hour, Daily at 02:00, Weekly on Monday 03:00" />
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="form-actions">
+                <button type="submit" class="btn-purple">Create Schedule</button>
+
+                <a asp-action="Index" class="btn-cancel">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</section>
+
+@section Styles {
+    <style>
+
+        /* ---------- Page Layout ---------- */
+
+        .etl-schedule-create-page {
+            padding: 40px;
+            color: #fff;
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .page-header h2 {
+            font-size: 28px;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            color: #9da1b5;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .form-card {
+            background: linear-gradient(135deg, #161827 0%, #1d2033 100%);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.45);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* ---------- Inputs ---------- */
+
+        label {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+            display: block;
+            color: #d4d7e5;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .input-control {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            background: #1b1d2c;
+            border: 1px solid #34374a;
+            color: #fff;
+            font-size: 14px;
+            transition: border 0.2s, background 0.2s;
+        }
+
+            .input-control:focus {
+                border-color: #6c5ce7;
+                background: #212335;
+                outline: none;
+            }
+
+        /* ---------- Buttons ---------- */
+
+        .form-actions {
+            margin-top: 25px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-purple {
+            padding: 12px 22px;
+            background: #6c5ce7;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+            .btn-purple:hover {
+                background: #7e6cff;
+                transform: translateY(-2px);
+            }
+
+        .btn-cancel {
+            padding: 12px 22px;
+            background: #2f3347;
+            border-radius: 10px;
+            color: #c6c9d6;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+            .btn-cancel:hover {
+                background: #373b52;
+                transform: translateY(-2px);
+            }
+
+    </style>
+}

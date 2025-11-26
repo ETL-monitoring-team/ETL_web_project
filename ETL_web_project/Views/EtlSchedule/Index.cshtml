@@ -12,10 +12,10 @@
             <span class="subtitle">Monitor automatic executions of ETL jobs</span>
         </div>
 
-        <button class="btn-purple">
+        <a class="btn-purple" asp-action="Create" style="text-decoration:none;">
             <i class="fa-solid fa-plus"></i>
             <span>Add Schedule</span>
-        </button>
+        </a>
     </div>
 
     <!-- KPI CARDS -->
@@ -57,7 +57,7 @@
             <div class="card-text">
                 <span class="label">Next Run (Closest)</span>
                 <span class="value">
-                    @(Model.ClosestNextRun?.ToString("g") ?? "-")
+                    @(Model.ClosestNextRun?.ToString("dd.MM.yyyy HH:mm") ?? "-")
                 </span>
             </div>
         </div>
@@ -117,7 +117,7 @@
                                 <!-- LAST RUN -->
                                 <td>
                                     <div class="time-main">
-                                        @(row.LastRunTime?.ToString("g") ?? "-")
+                                        @(row.LastRunTime?.ToString("dd.MM.yyyy HH:mm") ?? "-")
                                     </div>
                                     <div class="time-sub @statusClass">
                                         @(row.LastRunStatus?.ToString() ?? "N/A")
@@ -127,7 +127,7 @@
                                 <!-- NEXT RUN -->
                                 <td>
                                     <div class="time-main">
-                                        @(row.NextRunTime?.ToString("g") ?? "-")
+                                        @(row.NextRunTime?.ToString("dd.MM.yyyy HH:mm") ?? "-")
                                     </div>
                                     <div class="time-sub status-next">
                                         @((row.NextRunTime.HasValue && row.IsActive) ? "Scheduled" : "-")
@@ -148,16 +148,28 @@
 
                                 <!-- ACTIONS -->
                                 <td class="col-actions">
-                                    <button class="icon-btn-circle" title="Run now">
-                                        <i class="fa-solid fa-play"></i>
-                                    </button>
-                                    <button class="icon-btn-circle" title="Pause / Resume">
-                                        <i class="fa-solid fa-pause"></i>
-                                    </button>
-                                    <button class="icon-btn-circle" title="Edit">
+
+                                    <form asp-action="RunNow" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@row.ScheduleId" />
+                                        <button class="icon-btn-circle" title="Run now">
+                                            <i class="fa-solid fa-play"></i>
+                                        </button>
+                                    </form>
+
+                                    <form asp-action="ToggleActive" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@row.ScheduleId" />
+                                        <button class="icon-btn-circle" title="Pause / Resume">
+                                            <i class="fa-solid @(row.IsActive ? "fa-pause" : "fa-play")"></i>
+                                        </button>
+                                    </form>
+
+                                    <a asp-action="Edit" asp-route-id="@row.ScheduleId" class="icon-btn-circle" title="Edit">
                                         <i class="fa-solid fa-pen"></i>
-                                    </button>
+                                    </a>
+
+
                                 </td>
+
                             </tr>
                         }
                     }

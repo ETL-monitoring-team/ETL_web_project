@@ -85,7 +85,7 @@
                 </li>
 
                 <li class="@(IsAdmin || IsEngineer ? "" : "locked")">
-                    <a asp-controller="Etl" asp-action="Schedule">
+                    <a asp-controller="EtlSchedule" asp-action="Index">
                         <i class="fa-solid fa-solar-panel"></i> ETL Schedule
                         @if (!(IsAdmin || IsEngineer))
                         {

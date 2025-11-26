@@ -22,7 +22,7 @@ namespace ETL_web_project.Data.Entities
         public int? RowsUpdated { get; set; }
 
         [MaxLength(2000)]
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
 
         [ForeignKey(nameof(JobId))]
         public virtual EtlJob Job { get; set; }
