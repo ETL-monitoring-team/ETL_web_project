@@ -7,7 +7,6 @@
     <title>@ViewData["Title"] - ETL_web_project</title>
 
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
-
     <link rel="stylesheet" href="~/css/navbar-sidebar.css" asp-append-version="true" />
 
     @RenderSection("Styles", required: false)
@@ -17,9 +16,6 @@
 
         <!-- Sidebar -->
         <aside class="sidebar">
-
-
-            @using System.Security.Claims
             @{
                 string role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "";
                 bool IsAdmin = role == "Admin";
@@ -28,7 +24,8 @@
             }
 
             <ul class="sidebar-links">
-                
+
+                <!-- Search -->
                 <form class="search-form" onsubmit="return false;">
                     <input type="text" class="search-input" placeholder="Search..." />
                     <button type="button" class="search-btn">
@@ -41,14 +38,12 @@
                     <div class="menu-separator"></div>
                 </h4>
 
-                <!-- Dashboard (HERKES) -->
                 <li>
                     <a asp-controller="Dashboard" asp-action="Index">
                         <i class="fa-solid fa-solar-panel"></i> Dashboard panel
                     </a>
                 </li>
 
-                <!-- ETL Jobs (Admin + DataEngineer) -->
                 <li class="@(IsAdmin || IsEngineer ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Jobs">
                         <i class="fa-solid fa-solar-panel"></i> ETL Jobs
@@ -59,7 +54,6 @@
                     </a>
                 </li>
 
-                <!-- ETL Logs (Admin + DataEngineer) -->
                 <li class="@(IsAdmin || IsEngineer ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Logs">
                         <i class="fa-solid fa-solar-panel"></i> ETL Logs
@@ -70,7 +64,6 @@
                     </a>
                 </li>
 
-                <!-- Staging Tables (Admin + DataEngineer) -->
                 <li class="@(IsAdmin || IsEngineer ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Staging">
                         <i class="fa-solid fa-solar-panel"></i> Staging Tables
@@ -81,7 +74,6 @@
                     </a>
                 </li>
 
-                <!-- Fact Explorer (Admin + Analyst) -->
                 <li class="@(IsAdmin || IsAnalyst ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Facts">
                         <i class="fa-solid fa-solar-panel"></i> Fact Explorer
@@ -92,7 +84,6 @@
                     </a>
                 </li>
 
-                <!-- ETL Schedule (Admin + DataEngineer) -->
                 <li class="@(IsAdmin || IsEngineer ? "" : "locked")">
                     <a asp-controller="Etl" asp-action="Schedule">
                         <i class="fa-solid fa-solar-panel"></i> ETL Schedule
@@ -108,7 +99,6 @@
                     <div class="menu-separator"></div>
                 </h4>
 
-                <!-- Admin panel (SADECE Admin) -->
                 <li class="@(IsAdmin ? "" : "locked")">
                     <a asp-controller="Admin" asp-action="Index">
                         <i class="fa-solid fa-user-tie"></i> Admin panel
@@ -119,14 +109,12 @@
                     </a>
                 </li>
 
-                <!-- Settings (HERKES) -->
                 <li>
                     <a asp-controller="Settings" asp-action="Index">
                         <i class="fa-solid fa-screwdriver-wrench"></i> Settings
                     </a>
                 </li>
 
-                <!-- Logout -->
                 <li>
                     <a asp-controller="Account" asp-action="Logout">
                         <i class="fa-solid fa-right-to-bracket"></i> Logout
@@ -140,18 +128,14 @@
                     <img src="~/images/profile-img.jpg" alt="profile-img" />
                     <div class="user-detail">
                         <h3>@User.Identity?.Name</h3>
-                        <span>@User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value</span>
+                        <span>@role</span>
                     </div>
                 </div>
             </div>
         </aside>
 
-        @*    navbarda bugün düzeltilmesi gerkeen eksik: search zaten responsive büyüyüo kücüyor ama eger ekran cok kücükse o search butonu sadece dursun üstüne tıklanınca üst tarafın tamamında search arama sekmesi dursun. Sağdaki butonlar da ekran kücülünce nasıl görünüyor bi bakmak gerek. *@
-
         <!-- Main Wrapper -->
         <div class="main-wrapper">
-
-            <!-- Navbar -->
             <nav class="top-navbar">
 
                 <div class="nav-left">
@@ -161,30 +145,22 @@
                         </a>
                         <h2>Monitor</h2>
                     </div>
-                    <!-- Search Button -->
-
-
-
-
                 </div>
 
-                @*    ŞUAN İÇİN BİLDİRİMLER BURAYA KAC TANE GİRDİYSEK O GÖRÜNÜYOR. SONRA BU BİLDİRİM KISMINI CONTROLLERDAN DOLDURTACAGIZ SERVİSTE BİR LİSTEDE FALAN TUTARIZ BİLDİRİMLERİ. BİLDİRİMLER BİLDİRİM EKRANI ACILIP GÖRÜLÜRSE O KIRMIZI İŞARET GİTSİN EKLENECEK. BİLDİRİMLER ÜSTÜNE TIKLANIP DEĞİŞİKLİK YAPILAN TABLO EKRANI ACILIRSA DA BİLDİRİMLER KISMINDAN GİDECEK. BİR DE HEPSİNİ SİL EKLERİZ SAĞ ÜSTÜNE DROPDOWNIN *@
                 <div class="nav-right">
-                    <!-- Notifications -->
+
                     <div class="notification-wrapper">
                         <button id="notificationBtn" class="icon-btn">
                             <i class="fas fa-bell"></i>
                             <span class="notification-count">3</span>
                         </button>
+
                         <div id="notificationDropdown" class="notification-dropdown">
                             <div class="notification-item">
                                 <p><strong>System:</strong> ETL job completed.</p>
                                 <span class="time">2 min ago</span>
                             </div>
                             <div class="notification-item">
-                                <p><strong>Alert:</strong> New data available.</p>
-                                <span class="time">10 min ago</span>
-                            </div>  <div class="notification-item">
                                 <p><strong>Alert:</strong> New data available.</p>
                                 <span class="time">10 min ago</span>
                             </div>
@@ -195,7 +171,7 @@
                         </div>
                     </div>
 
-                    <!-- Fullscreen Toggle -->
+                    <!-- Fullscreen -->
                     <button class="icon-btn js-toggle-fullscreen-btn" id="fullscreenBtn" aria-label="Enter fullscreen mode">
                         <svg class="toggle-fullscreen-svg" width="28" height="28" viewBox="-2 -2 28 28">
                             <g class="icon-fullscreen-enter">
@@ -215,7 +191,6 @@
                 </div>
             </nav>
 
-            <!-- Main Content -->
             <main class="main-content">
                 <div class="dashboard-container">
                     @RenderBody()
@@ -224,7 +199,7 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- JS dosyan -->
     <script src="~/js/navbar-sidebar.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

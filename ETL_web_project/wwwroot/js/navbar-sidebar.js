@@ -31,14 +31,13 @@ if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
 }
 
 // ---------------------------
-// Notification Dropdown & Count
+// Notification Dropdown
 // ---------------------------
 document.addEventListener('DOMContentLoaded', function () {
     const notificationBtn = document.getElementById('notificationBtn');
     const notificationDropdown = document.getElementById('notificationDropdown');
     const countSpan = document.querySelector('.notification-count');
 
-    // Dinamik bildirim sayısını güncelle
     function updateNotificationCount() {
         const notifications = document.querySelectorAll('.notification-dropdown .notification-item');
         let count = notifications.length;
@@ -50,19 +49,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     updateNotificationCount();
 
-    // Butona tıklanınca aç/kapa
     notificationBtn.addEventListener('click', function (e) {
         e.stopPropagation();
-        notificationDropdown.style.display = notificationDropdown.style.display === 'block' ? 'none' : 'block';
+        notificationDropdown.style.display =
+            notificationDropdown.style.display === 'block' ? 'none' : 'block';
     });
 
-    // Sayfanın başka bir yerine tıklanınca dropdown kapanır
     document.addEventListener('click', function () {
         notificationDropdown.style.display = 'none';
     });
 
-    // Dropdown tıklandığında kapanmayı engelle
     notificationDropdown.addEventListener('click', function (e) {
         e.stopPropagation();
     });
+
+    // ---------------------------
+    // Sidebar Search
+    // ---------------------------
+    const searchInput = document.querySelector(".search-input");
+    const menuItems = document.querySelectorAll(".sidebar-links li");
+
+    searchInput.addEventListener("keyup", function () {
+        const filter = searchInput.value.toLowerCase();
+
+        menuItems.forEach(item => {
+            if (item.querySelector("h4")) return;
+
+            const link = item.querySelector("a");
+            const text = link ? link.textContent.toLowerCase().trim() : "";
+
+            if (text.includes(filter)) item.style.display = "block";
+            else item.style.display = "none";
+        });
+    });
+
 });
