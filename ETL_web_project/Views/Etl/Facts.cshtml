@@ -1,8 +1,194 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ETL_web_project.DTOs.FactExplorerPageDto
+@using System.Text.Json
+
 @{
+    ViewData["Title"] = "Fact Explorer";
+
+    var trendJson = JsonSerializer.Serialize(Model.Trend);
 }
-<div class="text-center">
-    <h1 class="display-4">facts</h1>
-</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/etl/facts.css" asp-append-version="true" />
+}
+
+<section class="fact-page">
+
+    <div class="card fact-filters">
+        <form method="get" class="fact-filter-form">
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>From</label>
+                    <input type="date" name="fromDate"
+                           value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" />
+                </div>
+                <div class="filter-group">
+                    <label>To</label>
+                    <input type="date" name="toDate"
+                           value="@(Model.ToDate?.ToString("yyyy-MM-dd"))" />
+                </div>
+                <div class="filter-group">
+                    <label>Store</label>
+                    <input type="text" name="storeSearch"
+                           value="@Model.StoreSearch" placeholder="Store name or code" />
+                </div>
+                <div class="filter-group">
+                    <label>Product</label>
+                    <input type="text" name="productSearch"
+                           value="@Model.ProductSearch" placeholder="Product name or code" />
+                </div>
+                <div class="filter-group">
+                    <label>Customer</label>
+                    <input type="text" name="customerSearch"
+                           value="@Model.CustomerSearch" placeholder="Customer name" />
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="btn-primary">Apply</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="fact-top-grid">
+        <div class="card fact-kpi-card">
+            <span class="kpi-label">Total Sales</span>
+            <span class="kpi-value">@Model.Summary.TotalSales.ToString("N2")</span>
+            <span class="kpi-sub">Selected range</span>
+        </div>
+
+        <div class="card fact-kpi-card">
+            <span class="kpi-label">Total Quantity</span>
+            <span class="kpi-value">@Model.Summary.TotalQuantity.ToString("N0")</span>
+            <span class="kpi-sub">Units sold</span>
+        </div>
+
+        <div class="card fact-kpi-card">
+            <span class="kpi-label">Distinct Stores</span>
+            <span class="kpi-value">@Model.Summary.DistinctStores</span>
+            <span class="kpi-sub">Active stores</span>
+        </div>
+
+        <div class="card fact-kpi-card">
+            <span class="kpi-label">Distinct Products</span>
+            <span class="kpi-value">@Model.Summary.DistinctProducts</span>
+            <span class="kpi-sub">Sold in range</span>
+        </div>
+
+        <div class="card fact-kpi-card">
+            <span class="kpi-label">Distinct Customers</span>
+            <span class="kpi-value">@Model.Summary.DistinctCustomers</span>
+            <span class="kpi-sub">Unique buyers</span>
+        </div>
+
+        <div class="card fact-kpi-card">
+            <span class="kpi-label">Avg Order Value</span>
+            <span class="kpi-value">@Model.Summary.AvgOrderValue.ToString("N2")</span>
+            <span class="kpi-sub">Per customer</span>
+        </div>
+    </div>
+
+    <div class="fact-middle-grid">
+        <div class="card fact-trend-card">
+            <div class="card-header">
+                <h2 class="card-title">Sales Trend</h2>
+                <span class="card-subtitle">Amount by date</span>
+            </div>
+            <div class="card-body">
+                <canvas id="factTrendChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card fact-toplists-card">
+            <div class="toplist-column">
+                <h3>Top Stores</h3>
+                <ul>
+                    @foreach (var s in Model.TopStores)
+                    {
+                        <li>
+                            <span class="name">@s.Name</span>
+                            <span class="amount">@s.TotalAmount.ToString("N2")</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="toplist-column">
+                <h3>Top Products</h3>
+                <ul>
+                    @foreach (var p in Model.TopProducts)
+                    {
+                        <li>
+                            <span class="name">@p.Name</span>
+                            <span class="amount">@p.TotalAmount.ToString("N2")</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="toplist-column">
+                <h3>Top Customers</h3>
+                <ul>
+                    @foreach (var c in Model.TopCustomers)
+                    {
+                        <li>
+                            <span class="name">@c.Name</span>
+                            <span class="amount">@c.TotalAmount.ToString("N2")</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card fact-table-card">
+        <div class="card-header">
+            <h2 class="card-title">Fact Records</h2>
+            <span class="card-subtitle">Top 200 rows by date and amount</span>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="fact-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Store</th>
+                        <th>Product</th>
+                        <th>Customer</th>
+                        <th>Quantity</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Records.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="table-empty">No fact records found for the selected filters.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var row in Model.Records)
+                        {
+                            <tr>
+                                <td>@row.Date.ToString("dd.MM.yyyy")</td>
+                                <td>@row.Store</td>
+                                <td>@row.Product</td>
+                                <td>@row.Customer</td>
+                                <td>@row.Quantity</td>
+                                <td>@row.TotalAmount.ToString("N2")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+@section Scripts {
+    <script>
+        window.factTrendData = @Html.Raw(trendJson);
+    </script>
+    <script src="~/js/etl/factsChart.js" asp-append-version="true"></script>
+}
