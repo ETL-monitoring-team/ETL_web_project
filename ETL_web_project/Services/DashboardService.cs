@@ -15,14 +15,32 @@ namespace ETL_web_project.Services
             _context = context;
         }
 
-        public async Task<DashboardSummaryDto> GetDashboardAsync()
+        // Eski çağrılar bozulmasın diye: default 14 gün
+        public Task<DashboardSummaryDto> GetDashboardAsync()
+        {
+            return GetDashboardAsync(14);
+        }
+
+        // Yeni: grafik için gün sayısı parametreli (7 / 14 / 30)
+        public async Task<DashboardSummaryDto> GetDashboardAsync(int salesRangeDays)
         {
             var now = DateTime.UtcNow;
             var today = now.Date;
             var yesterday = today.AddDays(-1);
-            var fromDate14 = today.AddDays(-13);
 
-            var dto = new DashboardSummaryDto();
+            // sadece 7 / 14 / 30 kabul et, diğerlerinde 14'e düş
+            if (salesRangeDays != 7 && salesRangeDays != 14 && salesRangeDays != 30)
+            {
+                salesRangeDays = 14;
+            }
+
+            // Örn: 14 gün ise today - 13
+            var fromDate = today.AddDays(-(salesRangeDays - 1));
+
+            var dto = new DashboardSummaryDto
+            {
+                SalesRangeDays = salesRangeDays  // DTO'ya gün bilgisini yaz
+            };
 
             // =========================================
             // 1) SALES KPI'lari (FactSales + DimDate)
@@ -139,11 +157,11 @@ namespace ETL_web_project.Services
 
 
             // =========================================
-            // 4) DAILY SALES SERIES (LAST 14 DAYS)
+            // 4) DAILY SALES SERIES (LAST N DAYS)
             // =========================================
 
             dto.DailySales = await factQuery
-                .Where(f => f.Date.Date >= fromDate14 &&
+                .Where(f => f.Date.Date >= fromDate &&
                             f.Date.Date <= today)
                 .GroupBy(f => f.Date.Date)
                 .Select(g => new DailySalesPointDto

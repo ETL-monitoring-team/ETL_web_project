@@ -1,8 +1,216 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model ETL_web_project.DTOs.FactExplorerPageDto
 @{
+    ViewData["Title"] = "Fact Explorer";
 }
-<div class="text-center">
-    <h1 class="display-4">facts</h1>
-</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/etl/facts.css" asp-append-version="true" />
+}
+
+<section class="fact-explorer-page">
+
+    <!-- ================== FILTER BAR ================== -->
+    <form method="get" class="fx-filter-bar card">
+
+        <div class="fx-filter-group">
+            <label>From</label>
+            <input type="date" name="fromDate" value="@(Model?.FromDate?.ToString("yyyy-MM-dd"))" />
+        </div>
+
+        <div class="fx-filter-group">
+            <label>To</label>
+            <input type="date" name="toDate" value="@(Model?.ToDate?.ToString("yyyy-MM-dd"))" />
+        </div>
+
+        <div class="fx-filter-group">
+            <label>Store</label>
+            <input type="text" name="storeSearch" placeholder="Store name" value="@Model?.StoreSearch" />
+        </div>
+
+        <div class="fx-filter-group">
+            <label>Product</label>
+            <input type="text" name="productSearch" placeholder="Product name or code" value="@Model?.ProductSearch" />
+        </div>
+
+        <div class="fx-filter-group">
+            <label>Customer</label>
+            <input type="text" name="customerSearch" placeholder="Customer name" value="@Model?.CustomerSearch" />
+        </div>
+
+        <button class="fx-apply-btn" type="submit">Apply</button>
+    </form>
+
+
+    <!-- ================== SUMMARY METRICS ================== -->
+    <div class="fx-summary-row">
+
+        <div class="card fx-summary-card">
+            <span class="fx-summary-label">TOTAL SALES</span>
+            <h2 class="fx-summary-value">@Model?.Summary?.TotalSales.ToString("N2")</h2>
+            <span class="fx-summary-sub">Selected range</span>
+        </div>
+
+        <div class="card fx-summary-card">
+            <span class="fx-summary-label">TOTAL QUANTITY</span>
+            <h2 class="fx-summary-value">@Model?.Summary?.TotalQuantity</h2>
+            <span class="fx-summary-sub">Units sold</span>
+        </div>
+
+        <div class="card fx-summary-card">
+            <span class="fx-summary-label">DISTINCT STORES</span>
+            <h2 class="fx-summary-value">@Model?.Summary?.DistinctStores</h2>
+            <span class="fx-summary-sub">Active stores</span>
+        </div>
+
+        <div class="card fx-summary-card">
+            <span class="fx-summary-label">DISTINCT PRODUCTS</span>
+            <h2 class="fx-summary-value">@Model?.Summary?.DistinctProducts</h2>
+            <span class="fx-summary-sub">Sold in range</span>
+        </div>
+
+        <div class="card fx-summary-card">
+            <span class="fx-summary-label">DISTINCT CUSTOMERS</span>
+            <h2 class="fx-summary-value">@Model?.Summary?.DistinctCustomers</h2>
+            <span class="fx-summary-sub">Unique buyers</span>
+        </div>
+
+        <div class="card fx-summary-card">
+            <span class="fx-summary-label">AVG ORDER VALUE</span>
+            <h2 class="fx-summary-value">@Model?.Summary?.AvgOrderValue.ToString("N2")</h2>
+            <span class="fx-summary-sub">Per customer</span>
+        </div>
+
+    </div>
+
+
+    <!-- ================== SALES TREND (LINE CHART) ================== -->
+    <div class="fx-trend-row">
+
+        <div class="card fx-trend-card">
+            <div class="fx-card-header">
+                <h3>Sales Trend</h3>
+                <span>Amount by date</span>
+            </div>
+
+            <canvas id="salesTrendChart"></canvas>
+        </div>
+
+
+        <!-- ================== TOP LISTS ================== -->
+        <div class="card fx-top-card">
+
+            <div class="fx-top-column">
+                <h4>Top Stores</h4>
+                @foreach (var s in Model?.TopStores ?? new List<ETL_web_project.DTOs.TopEntityDto>())
+                {
+                    <div class="fx-top-item">
+                        <span>@s.Name</span>
+                        <span>@s.TotalAmount.ToString("N2")</span>
+                    </div>
+                }
+            </div>
+
+            <div class="fx-top-column">
+                <h4>Top Products</h4>
+                @foreach (var p in Model?.TopProducts ?? new List<ETL_web_project.DTOs.TopEntityDto>())
+                {
+                    <div class="fx-top-item">
+                        <span>@p.Name</span>
+                        <span>@p.TotalAmount.ToString("N2")</span>
+                    </div>
+                }
+            </div>
+
+            <div class="fx-top-column">
+                <h4>Top Customers</h4>
+                @foreach (var c in Model?.TopCustomers ?? new List<ETL_web_project.DTOs.TopEntityDto>())
+                {
+                    <div class="fx-top-item">
+                        <span>@c.Name</span>
+                        <span>@c.TotalAmount.ToString("N2")</span>
+                    </div>
+                }
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================== FACT RECORDS TABLE ================== -->
+    <div class="card fx-records-card">
+
+        <div class="fx-card-header">
+            <h3>Fact Records</h3>
+            <span>Latest 200 records</span>
+        </div>
+
+        <table class="fx-records-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Store</th>
+                    <th>Product</th>
+                    <th>Customer</th>
+                    <th>Quantity</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model?.Records == null || !Model.Records.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="fx-empty">No records found.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var r in Model.Records)
+                    {
+                        <tr>
+                            <td>@r.Date.ToString("dd.MM.yyyy")</td>
+                            <td>@r.Store</td>
+                            <td>@r.Product</td>
+                            <td>@r.Customer</td>
+                            <td>@r.Quantity</td>
+                            <td>@r.TotalAmount.ToString("N2")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</section>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const salesLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                    Model?.SalesTrend?.Select(x => x.Date.ToString("yyyy-MM-dd")) ?? new List<string>()
+            ));
+
+    const salesValues = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                Model?.SalesTrend?.Select(x => x.Amount) ?? new List<decimal>()
+        ));
+
+    const ctx = document.getElementById('salesTrendChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: salesLabels,
+                datasets: [{
+                    label: 'Sales Amount',
+                    data: salesValues,
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            }
+        });
+    </script>
+}
