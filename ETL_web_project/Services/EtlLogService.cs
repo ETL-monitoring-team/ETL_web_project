@@ -21,7 +21,7 @@ namespace ETL_web_project.Services
             LogLevel? level,
             string? searchText)
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             var last24h = now.AddHours(-24);
 
             var query = _context.EtlLogs

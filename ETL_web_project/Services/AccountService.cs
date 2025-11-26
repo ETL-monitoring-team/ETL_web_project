@@ -56,7 +56,7 @@ namespace ETL_web_project.Services
 
             entity.IsActive = true;
             entity.Role = Enums.UserRole.Analyst;
-            entity.CreatedAt = DateTime.UtcNow;
+            entity.CreatedAt = DateTime.Now;
 
             await _context.UserAccounts.AddAsync(entity);
             await _context.SaveChangesAsync();

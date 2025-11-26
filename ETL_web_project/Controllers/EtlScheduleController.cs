@@ -68,7 +68,7 @@ namespace ETL_web_project.Controllers
                 JobId = dto.JobId,
                 FrequencyText = dto.FrequencyText,
                 IsActive = true,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.Now
             };
 
             await _scheduleService.CreateAsync(schedule);

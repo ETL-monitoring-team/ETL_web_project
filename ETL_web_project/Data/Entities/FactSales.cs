@@ -18,7 +18,7 @@ namespace ETL_web_project.Data.Entities
         public int Quantity { get; set; }
         public decimal TotalAmount { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [ForeignKey(nameof(DateKey))]
         public virtual DimDate Date { get; set; }
