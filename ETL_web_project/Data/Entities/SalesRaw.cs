@@ -21,6 +21,6 @@ namespace ETL_web_project.Data.Entities
 
         public decimal? UnitPrice { get; set; }
 
-        public DateTime LoadedAt { get; set; } = DateTime.UtcNow;
+        public DateTime LoadedAt { get; set; } = DateTime.Now;
     }
 }

@@ -17,7 +17,7 @@ namespace ETL_web_project.Services
 
         public async Task<StagingPageDto> GetStagingOverviewAsync()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             var last24h = now.AddHours(-24);
 
             var model = new StagingPageDto();

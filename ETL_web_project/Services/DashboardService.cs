@@ -24,7 +24,7 @@ namespace ETL_web_project.Services
         // Yeni: grafik için gün sayısı parametreli (7 / 14 / 30)
         public async Task<DashboardSummaryDto> GetDashboardAsync(int salesRangeDays)
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             var today = now.Date;
             var yesterday = today.AddDays(-1);
 

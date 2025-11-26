@@ -51,21 +51,27 @@
         </div>
 
         <!-- LAST ETL RUN -->
-        <div class="card kpi-card @(Model.LastEtlStatus == ETL_web_project.Enums.EtlStatus.Failed ? "kpi-error" : "")">
-            <div class="kpi-icon kpi-icon-orange">
-                <i class="fa-solid fa-gears"></i>
-            </div>
-            <div class="kpi-content">
-                <span class="kpi-label">Last ETL Run</span>
-                <h2 class="kpi-value">@Model.LastEtlStatus</h2>
-                <span class="kpi-sub">
-                    @Model.LastEtlStartTime?.ToString("g") ?? "No runs yet"
-                </span>
-                <span class="kpi-sub">
-                    Duration: @Model.LastEtlDurationText
-                </span>
-            </div>
-        </div>
+<div class="card kpi-card @(Model.LastEtlStatus == ETL_web_project.Enums.EtlStatus.Failed ? "kpi-error" : "")">
+    <div class="kpi-icon kpi-icon-orange">
+        <i class="fa-solid fa-gears"></i>
+    </div>
+    <div class="kpi-content">
+        <span class="kpi-label">Last ETL Run</span>
+        <h2 class="kpi-value">@Model.LastEtlStatus</h2>
+
+        <!-- FIXED DATE DISPLAY -->
+        <span class="kpi-sub">
+            @(Model.LastEtlStartTime.HasValue
+                ? Model.LastEtlStartTime.Value.ToLocalTime().ToString("g")
+                : "No runs yet")
+        </span>
+
+        <span class="kpi-sub">
+            Duration: @Model.LastEtlDurationText
+        </span>
+    </div>
+</div>
+
 
         <!-- USERS -->
         <div class="card kpi-card">
@@ -143,32 +149,39 @@
                 <span class="card-subtitle">Warehouse & staging latency</span>
             </div>
             <div class="card-body freshness-body">
-                <div class="freshness-block">
-                    <span class="fresh-label">Warehouse (DW)</span>
-                    <h3 class="fresh-value">
-                        @(Model.WarehouseFreshnessHours?.ToString() ?? "-") h
-                    </h3>
-                    <span class="fresh-sub">
-                        Last load: @Model.WarehouseLastLoadTime?.ToString("g") ?? "N/A"
-                    </span>
-                </div>
-                <div class="freshness-divider"></div>
-                <div class="freshness-block">
-                    <span class="fresh-label">Staging</span>
-                    <h3 class="fresh-value">
-                        @(Model.StagingFreshnessHours?.ToString() ?? "-") h
-                    </h3>
-                    <span class="fresh-sub">
-                        Last load: @Model.StagingLastLoadTime?.ToString("g") ?? "N/A"
-                    </span>
-                </div>
+               <div class="freshness-block">
+    <span class="fresh-label">Warehouse (DW)</span>
+    <h3 class="fresh-value">
+        @(Model.WarehouseFreshnessHours?.ToString() ?? "-") h
+    </h3>
+    <span class="fresh-sub">
+        @(Model.WarehouseLastLoadTime.HasValue
+            ? Model.WarehouseLastLoadTime.Value.ToLocalTime().ToString("g")
+            : "N/A")
+    </span>
+</div>
 
-                <div class="fresh-entities">
-                    <span class="fresh-label">Entities</span>
-                    <span class="fresh-sub">
-                        @Model.StoreCount stores · @Model.ProductCount products · @Model.CustomerCount customers
-                    </span>
-                </div>
+<div class="freshness-divider"></div>
+
+<div class="freshness-block">
+    <span class="fresh-label">Staging</span>
+    <h3 class="fresh-value">
+        @(Model.StagingFreshnessHours?.ToString() ?? "-") h
+    </h3>
+    <span class="fresh-sub">
+        @(Model.StagingLastLoadTime.HasValue
+            ? Model.StagingLastLoadTime.Value.ToLocalTime().ToString("g")
+            : "N/A")
+    </span>
+</div>
+
+<div class="fresh-entities">
+    <span class="fresh-label">Entities</span> <br />
+    <span class="fresh-sub">
+        @Model.StoreCount stores · @Model.ProductCount products · @Model.CustomerCount customers
+    </span>
+</div>
+
             </div>
         </div>
 

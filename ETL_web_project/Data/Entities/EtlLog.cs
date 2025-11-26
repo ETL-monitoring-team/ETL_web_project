@@ -12,7 +12,7 @@ namespace ETL_web_project.Data.Entities
 
         public long RunId { get; set; }
 
-        public DateTime LogTime { get; set; } = DateTime.UtcNow;
+        public DateTime LogTime { get; set; } = DateTime.Now;
 
         public Enums.LogLevel Level { get; set; }
 
