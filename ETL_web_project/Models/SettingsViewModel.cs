@@ -6,8 +6,5 @@ namespace ETL_web_project.Models
     {
         public ProfileSettingsDto Profile { get; set; } = new();
         public ChangePasswordDto PasswordModel { get; set; } = new();
-        public UserPreferenceDto Preferences { get; set; } = new();
     }
 }
-
-

@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error - ETL Monitor</title>
+
+    <style>
+        :root {
+            --bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #222;
+            --accent: #007bff;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0e1117;
+                --card-bg: #161b22;
+                --text: #e6e6e6;
+                --accent: #4aa8ff;
+                --shadow: rgba(255, 255, 255, 0.08);
+            }
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: var(--text);
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px 35px;
+            width: 95%;
+            max-width: 420px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px var(--shadow);
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        p {
+            margin: 10px 0 25px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .home-btn {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.25s ease;
+        }
+
+            .home-btn:hover {
+                background: #005fcc;
+            }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Something went wrong</h1>
+        <p>
+            An unexpected error occurred while processing your request.<br />
+            Please try again later.
+        </p>
+
+        <a class="home-btn" href="/">Return to Home</a>
+    </div>
+</body>
+</html>

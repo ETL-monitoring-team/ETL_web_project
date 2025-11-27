@@ -7,9 +7,7 @@
     const confirmBtn = document.getElementById("profileConfirm");
     const profileForm = document.getElementById("profile-form");
 
-    if (!saveBtn || !modal || !passwordInput || !confirmHidden || !profileForm) {
-        return;
-    }
+    if (!saveBtn || !modal || !passwordInput || !confirmHidden || !profileForm) return;
 
     const openModal = () => {
         passwordInput.value = "";
@@ -26,9 +24,7 @@
         openModal();
     });
 
-    cancelBtn?.addEventListener("click", () => {
-        closeModal();
-    });
+    cancelBtn?.addEventListener("click", () => closeModal());
 
     confirmBtn?.addEventListener("click", () => {
         const pwd = passwordInput.value.trim();

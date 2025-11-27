@@ -16,7 +16,7 @@
         });
     });
 
-    // REQUEST FORM - Web3Forms AJAX submit
+    // REQUEST FORM - Web3Forms AJAX
     const requestForm = document.getElementById("request-form");
     const successBox = document.getElementById("request-success");
 
@@ -33,28 +33,14 @@
                 });
 
                 if (response.ok) {
-                    // formu temizle
                     requestForm.reset();
 
-                    // name & email readonly olduğu için tekrar doldur
-                    const nameInput = document.getElementById("req-name");
-                    const emailInput = document.getElementById("req-email");
-                    if (nameInput && nameInput.dataset.initial) {
-                        nameInput.value = nameInput.dataset.initial;
-                    }
-                    if (emailInput && emailInput.dataset.initial) {
-                        emailInput.value = emailInput.dataset.initial;
-                    }
-
-                    if (successBox) {
-                        successBox.classList.remove("hidden");
-                    }
+                    successBox?.classList.remove("hidden");
                 } else {
-                    alert("Something went wrong while sending your request. Please try again.");
+                    alert("Something went wrong. Try again.");
                 }
             } catch (err) {
-                console.error(err);
-                alert("Network error while sending your request.");
+                alert("Network error.");
             }
         });
     }
