@@ -1,7 +1,6 @@
 ﻿using ETL_web_project.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ETL_web_project.DTOs;
 
 namespace ETL_web_project.Controllers
 {
@@ -12,18 +11,20 @@ namespace ETL_web_project.Controllers
         private readonly IEtlJobService _etlJobService;
         private readonly IEtlScheduleOverviewService _scheduleOverviewService;
         private readonly IFactExplorerService _factExplorerService;
+        private readonly IStagingService _stagingService;
 
 
         public EtlController(
             IEtlLogService etlLogService,
             IEtlJobService etlJobService,
             IEtlScheduleOverviewService scheduleOverviewService,
-            IFactExplorerService factExplorerService)
+            IFactExplorerService factExplorerService, IStagingService stagingService)
         {
             _etlLogService = etlLogService;
             _etlJobService = etlJobService;
             _scheduleOverviewService = scheduleOverviewService;
             _factExplorerService = factExplorerService ?? throw new ArgumentNullException(nameof(factExplorerService));
+            _stagingService = stagingService; 
         }
 
         //kullanılmıyor silinecek
@@ -71,21 +72,12 @@ namespace ETL_web_project.Controllers
             return View(runs);           // Views/Etl/JobRuns.cshtml => model: List<EtlRunHistoryDto>
         }
 
-
-
-
-
-
-
-
         [Authorize(Roles = "Admin,DataEngineer")]
-        public ActionResult Staging()
+        public async Task<IActionResult> Staging()
         {
-            // Model null gelmesin diye boş da olsa bir DTO gönderiyoruz
-            var model = new StagingPageDto();
+            var model = await _stagingService.GetStagingOverviewAsync();
             return View(model);
         }
-
 
 
         [Authorize(Roles = "Admin,Analyst")]
