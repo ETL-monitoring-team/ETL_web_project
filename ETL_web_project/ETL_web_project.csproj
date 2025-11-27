@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Repositories\**" />
+    <Content Remove="Repositories\**" />
+    <EmbeddedResource Remove="Repositories\**" />
+    <None Remove="Repositories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\error.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.22" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.22" />
@@ -16,10 +27,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
 </Project>
