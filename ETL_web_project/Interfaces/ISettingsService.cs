@@ -9,5 +9,4 @@ public interface ISettingsService
 
     Task<ProfileUpdateResult> ChangePasswordAsync(ChangePasswordDto dto);
 
-    Task<ProfileUpdateResult> UpdatePreferencesAsync(UserPreferenceDto prefs);   
 }
