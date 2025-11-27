@@ -33,10 +33,13 @@
                     </button>
                 </form>
 
-                <h4>
-                    <span>Main Menu</span>
-                    <div class="menu-separator"></div>
-                </h4>
+                <li class="menu-title">
+
+                    <h4>
+                        <span>Main Menu</span>
+                        <div class="menu-separator"></div>
+                    </h4>
+                </li>
 
                 <li>
                     <a asp-controller="Dashboard" asp-action="Index">
@@ -94,10 +97,13 @@
                     </a>
                 </li>
 
-                <h4>
-                    <span>Account</span>
-                    <div class="menu-separator"></div>
-                </h4>
+                <li class="menu-title">
+
+                    <h4>
+                        <span>Account</span>
+                        <div class="menu-separator"></div>
+                    </h4>
+                </li>
 
                 <li class="@(IsAdmin ? "" : "locked")">
                     <a asp-controller="Admin" asp-action="Index">
