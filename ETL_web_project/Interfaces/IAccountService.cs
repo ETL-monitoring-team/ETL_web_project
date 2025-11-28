@@ -8,5 +8,9 @@ namespace ETL_web_project.Interfaces
         Task<bool> UsernameExistsAsync(string username);
         Task<bool> EmailExistsAsync(string email);
         Task<UserDto> RegisterUserAsync(RegisterDto registerDto);
+        Task<bool> ResetPasswordAsync(string token, string newPassword);
+        Task<string> GeneratePasswordResetTokenAsync(string email);
+
+
     }
 }

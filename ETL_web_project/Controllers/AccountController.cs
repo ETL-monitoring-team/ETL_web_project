@@ -1,22 +1,27 @@
-﻿using System.Security.Claims;
+﻿using ETL_web_project.Data.Context;
 using ETL_web_project.DTOs;
 using ETL_web_project.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ETL_web_project.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly ProjectContext _context;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, ProjectContext context)
         {
             _accountService = accountService;
+            _context = context;
         }
 
+        // ------------------ LOGIN ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
@@ -31,9 +36,7 @@ namespace ETL_web_project.Controllers
         public async Task<IActionResult> Login(LoginDto model, string? returnUrl = null)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
             var userDto = await _accountService.ValidateUserAsync(model);
 
@@ -61,13 +64,13 @@ namespace ETL_web_project.Controllers
                 principal);
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
-            {
                 return Redirect(returnUrl);
-            }
 
             return RedirectToAction("Index", "Dashboard");
         }
 
+
+        // ------------------ REGISTER ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
@@ -81,9 +84,7 @@ namespace ETL_web_project.Controllers
         public async Task<IActionResult> Register(RegisterDto model)
         {
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
             if (await _accountService.UsernameExistsAsync(model.Username))
             {
@@ -110,22 +111,15 @@ namespace ETL_web_project.Controllers
                 claims,
                 CookieAuthenticationDefaults.AuthenticationScheme);
 
-            var principal = new ClaimsPrincipal(identity);
-
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
-                principal);
+                new ClaimsPrincipal(identity));
 
-            return RedirectToAction("Login", "Account");
-        }
-        
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult AccessDenied()
-        {
-            return View();
+            return RedirectToAction("Login");
         }
 
+
+        // ------------------ FORGOT PASSWORD ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -136,20 +130,68 @@ namespace ETL_web_project.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public IActionResult ForgotPassword(string email)
+        public async Task<IActionResult> ForgotPassword(string email)
         {
-            // Şimdilik sadece mesaj gösteriyoruz
-            ViewBag.Message = "If the email exists, a reset link will be sent.";
+            TempData["Status"] = "If the email exists, the admin has been notified.";
+
+            var token = await _accountService.GeneratePasswordResetTokenAsync(email);
+
+            if (token != null)
+            {
+                var user = await _context.UserAccounts.FirstOrDefaultAsync(u => u.Email == email);
+
+                ViewBag.Username = user?.Username;
+                ViewBag.UserEmail = user?.Email;
+
+                ViewBag.ResetLink = Url.Action(
+                    "ResetPassword",
+                    "Account",
+                    new { token = token },
+                    Request.Scheme);
+            }
+
             return View();
         }
 
+
+        // ------------------ RESET PASSWORD ------------------
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+                return RedirectToAction("Login");
+
+            return View(new ResetPasswordDto { Token = token });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            var success = await _accountService.ResetPasswordAsync(dto.Token, dto.NewPassword);
+
+            if (!success)
+            {
+                ModelState.AddModelError("", "Token is invalid or expired.");
+                return View(dto);
+            }
+
+            return RedirectToAction("Login");
+        }
+
+
+        // ------------------ LOGOUT ------------------
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Login");
         }
-
     }
 }
