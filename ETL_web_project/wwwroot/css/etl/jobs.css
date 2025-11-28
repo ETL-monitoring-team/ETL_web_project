@@ -7,9 +7,13 @@
     padding: 1.5rem;
 }
 
+.job-run-alert {
+    color: white;
+}
+
 /* Card base: dashboard ile aynı olsun */
 .card {
-    background: #151821 ;
+    background: #151821;
     border-radius: 18px;
     padding: 1.2rem 1.4rem;
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
@@ -252,5 +256,4 @@
         padding-inline: 1rem;
         font-size: 0.85rem;
     }
-
 }
