@@ -201,6 +201,8 @@
     margin-top: 0.6rem;
 }
 
+/* Butonlar */
+
 .btn-outline-primary,
 .btn-outline-secondary {
     padding: 0.25rem 0.8rem;
@@ -208,6 +210,8 @@
     font-size: 0.78rem;
     background: transparent;
     cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
 }
 
 .btn-outline-primary {
@@ -219,6 +223,17 @@
     border: 1px solid rgba(156, 163, 175, 0.6);
     color: #e5e7eb;
 }
+
+    /* hover / focus efektleri (mor dolu görünüm) */
+
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus,
+    .btn-outline-secondary:hover,
+    .btn-outline-secondary:focus {
+        background: linear-gradient(135deg, #6B8DE3, #7D1C8D);
+        color: #ffffff;
+        border-color: transparent;
+    }
 
 /* ERROR CARD */
 

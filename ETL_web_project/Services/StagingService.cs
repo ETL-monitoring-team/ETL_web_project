@@ -1,7 +1,9 @@
 ﻿using ETL_web_project.Data.Context;
 using ETL_web_project.DTOs;
+using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace ETL_web_project.Services
 {
@@ -154,6 +156,41 @@ namespace ETL_web_project.Services
                 .ToListAsync();
 
             return model;
+        }
+
+        // ========== STAGING’i TEMİZLE ==========
+
+        public async Task ClearStagingAsync()
+        {
+            _context.SalesRaws.RemoveRange(_context.SalesRaws);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> ExportCsvAsync()
+        {
+            var rows = await _context.SalesRaws
+                .OrderBy(r => r.Id)
+                .ToListAsync();
+
+            var sb = new StringBuilder();
+
+            // Header
+            sb.AppendLine("Id,SalesTime,StoreCode,ProductCode,Quantity,UnitPrice,LoadedAt");
+
+            foreach (var r in rows)
+            {
+                sb.AppendLine(string.Join(",",
+                    r.Id,
+                    r.SalesTime.HasValue ? r.SalesTime.Value.ToString("O") : "",             // DateTime -> direkt ToString("O")
+                    r.StoreCode ?? "",
+                    r.ProductCode ?? "",
+                    r.Quantity.HasValue ? r.Quantity.Value.ToString() : "",
+                    r.UnitPrice.HasValue ? r.UnitPrice.Value.ToString() : "",
+                    r.LoadedAt.ToString("O")                // DateTime -> direkt ToString("O")
+                ));
+            }
+
+            return sb.ToString();
         }
     }
 }

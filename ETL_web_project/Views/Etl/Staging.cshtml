@@ -6,9 +6,8 @@
 }
 
 @section Styles {
-        <link rel="stylesheet" href="~/css/navbar-sidebar.css" asp-append-version="true" />
-                <link rel="stylesheet" href="~/css/dashboard/dashboard-main.css" asp-append-version="true" />
-
+    <link rel="stylesheet" href="~/css/navbar-sidebar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard/dashboard-main.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/etl/staging.css" asp-append-version="true" />
 }
 
@@ -213,10 +212,38 @@
                 <div class="chart-body">
                     <canvas id="stagingLoadChart"></canvas>
                 </div>
+
+                <!-- ⭐ BUTONLAR ARTIK ACTION'LARA POST ATIYOR -->
                 <div class="stg-load-actions">
-                    <button class="btn-outline-primary" type="button">Reload</button>
-                    <button class="btn-outline-secondary" type="button">Clear Staging</button>
-                    <button class="btn-outline-secondary" type="button">Export CSV</button>
+                    <!-- Reload -->
+                    <form asp-controller="Etl"
+                          asp-action="ReloadStaging"
+                          method="post"
+                          asp-antiforgery="true">
+                        <button class="btn-outline-primary" type="submit">
+                            Reload
+                        </button>
+                    </form>
+
+                    <!-- Clear Staging -->
+                    <form asp-controller="Etl"
+                          asp-action="ClearStaging"
+                          method="post"
+                          asp-antiforgery="true">
+                        <button class="btn-outline-secondary" type="submit">
+                            Clear Staging
+                        </button>
+                    </form>
+
+                    <!-- Export CSV -->
+                    <form asp-controller="Etl"
+                          asp-action="ExportStagingCsv"
+                          method="post"
+                          asp-antiforgery="true">
+                        <button class="btn-outline-secondary" type="submit">
+                            Export CSV
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -249,7 +276,7 @@
                                 var levelClass = log.Level switch
                                 {
                                     ETL_web_project.Enums.LogLevel.Error => "log-level-error",
-                                    ETL_web_project.Enums.LogLevel.Warn  => "log-level-warn",
+                                    ETL_web_project.Enums.LogLevel.Warn => "log-level-warn",
                                     _ => "log-level-info"
                                 };
 
