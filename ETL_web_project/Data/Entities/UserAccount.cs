@@ -25,5 +25,8 @@ namespace ETL_web_project.Data.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? LastLoginAt { get; set; }
+        public string? ResetToken { get; set; }
+        public DateTime? ResetTokenExpires { get; set; }
+
     }
 }

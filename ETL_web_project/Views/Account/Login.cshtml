@@ -12,6 +12,21 @@
 <div class="login-page-wrapper">
     <div class="login-card">
 
+        @if (Context.Request.Query["reset"] == "1")
+        {
+            <div id="resetAlert" class="alert alert-success text-center">
+                Your password reset request was received.
+            </div>
+
+            <script>
+                setTimeout(() => {
+                    var box = document.getElementById("resetAlert");
+                    if (box) box.style.display = "none";
+                }, 3000);
+            </script>
+        }
+
+
         <div class="text-center mb-3">
             <div class="login-brand-circle">
                 <span>DW</span>
