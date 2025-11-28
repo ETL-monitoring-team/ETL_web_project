@@ -1,5 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
-    // TAB LOGIC
+
     const buttons = document.querySelectorAll(".tab-btn");
     const tabs = document.querySelectorAll(".tab-content");
 
@@ -16,7 +16,6 @@
         });
     });
 
-    // REQUEST FORM - Web3Forms AJAX
     const requestForm = document.getElementById("request-form");
     const successBox = document.getElementById("request-success");
 

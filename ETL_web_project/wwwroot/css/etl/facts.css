@@ -1,18 +1,9 @@
-﻿/* ================================
-   FACT EXPLORER PAGE LAYOUT
-===================================*/
-
-.fact-explorer-page {
+﻿.fact-explorer-page {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     padding: 1.5rem;
 }
-
-
-/* ================================
-   FILTER BAR
-===================================*/
 
 .fx-filter-bar {
     display: flex;
@@ -37,7 +28,8 @@
         text-transform: uppercase;
         letter-spacing: 0.08em;
         color: #9ca3af;
-    }
+    }  
+
 
     .fx-filter-group input[type="date"],
     .fx-filter-group input[type="text"] {
@@ -83,9 +75,6 @@
     }
 
 
-/* ================================
-   SUMMARY CARDS
-===================================*/
 
 .fx-summary-row {
     display: grid;
@@ -123,9 +112,6 @@
 }
 
 
-/* ================================
-   TREND + TOP LISTS
-===================================*/
 
 .fx-trend-row {
     display: grid;
@@ -157,7 +143,7 @@
         color: #9ca3af;
     }
 
-/* Trend (chart) card */
+
 
 .fx-trend-card {
     background: radial-gradient(circle at top, rgba(129, 140, 248, 0.25), transparent 55%), #020617;
@@ -172,7 +158,7 @@
         height: 260px !important;
     }
 
-/* Top entities card */
+
 
 .fx-top-card {
     background: #020617;
@@ -221,10 +207,6 @@
     }
 
 
-/* ================================
-   FACT RECORDS TABLE
-===================================*/
-
 .fx-records-card {
     background: #020617;
     border-radius: 18px;
@@ -262,9 +244,9 @@
         background: rgba(15, 23, 42, 0.55);
     }
 
-    .fx-records-table tbody tr:hover {
-        background: rgba(59, 130, 246, 0.25);
-    }
+.fx-records-table tbody tr:hover {
+    background: rgba(59, 130, 246, 0.25);
+}
 
 .fx-empty {
     text-align: center;
@@ -273,9 +255,6 @@
 }
 
 
-/* ================================
-   RESPONSIVE TWEAKS
-===================================*/
 
 @media (max-width: 768px) {
     .fx-filter-bar {

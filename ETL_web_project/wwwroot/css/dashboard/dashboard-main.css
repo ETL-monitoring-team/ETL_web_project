@@ -22,14 +22,14 @@
 }
 
 .card {
-    background: #151821;
+    background: #151821a6;
     border-radius: 18px;
     padding: 1.2rem 1.4rem;
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-/* ========= KPI CARDS ========= */
+
 
 .kpi-card {
     display: flex;
@@ -114,7 +114,8 @@
     border: 1px solid rgba(255, 99, 132, 0.4);
 }
 
-/* ========= BIG CHART CARD ========= */
+
+
 
 .full-width-card {
     width: 100%;
@@ -144,7 +145,7 @@
     gap: 0.5rem;
 }
 
-/* ---- Range dropdown ---- */
+
 
 .range-dropdown {
     position: relative;
@@ -214,7 +215,7 @@
     height: 260px !important;
 }
 
-/* ========= BOTTOM GRID ========= */
+
 
 .bottom-grid {
     display: grid;
@@ -232,7 +233,7 @@
     }
 }
 
-/* Freshness Blocks */
+
 
 .freshness-body {
     display: flex;
@@ -274,7 +275,7 @@
     background: linear-gradient(90deg, rgba(107, 141, 227, 0.4), transparent);
 }
 
-/* Tables */
+
 
 .table-wrapper {
     max-height: 260px;
@@ -311,7 +312,7 @@
     color: #6b7280;
 }
 
-/* ETL status colors */
+
 
 .etl-status-success td {
     color: #34d399;
@@ -326,7 +327,7 @@
     color: #facc15;
 }
 
-/* Top N */
+
 
 .topn-body {
     display: flex;

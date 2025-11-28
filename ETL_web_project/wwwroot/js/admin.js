@@ -6,27 +6,23 @@
 
     let currentRoleForm = null;
 
-    // Her "Save" butonuna tıklandığında popup aç
     document.querySelectorAll(".js-role-save").forEach(btn => {
         btn.addEventListener("click", () => {
             currentRoleForm = btn.closest("form");
             if (!currentRoleForm) return;
 
-            // Şifre inputunu temizle
             inputPassword.value = "";
-            // Modal'ı göster
+
             modal.classList.remove("hidden");
             inputPassword.focus();
         });
     });
 
-    // Cancel: popup'ı kapat
     btnCancel.addEventListener("click", () => {
         modal.classList.add("hidden");
         currentRoleForm = null;
     });
 
-    // Confirm: şifreyi forma ekle ve submit et
     btnConfirm.addEventListener("click", () => {
         if (!currentRoleForm) return;
 
@@ -36,7 +32,6 @@
             return;
         }
 
-        // Formda AdminPassword yoksa oluştur
         let hidden = currentRoleForm.querySelector("input[name='AdminPassword']");
         if (!hidden) {
             hidden = document.createElement("input");
@@ -47,20 +42,18 @@
 
         hidden.value = pwd;
 
-        // Modal'ı gizle ve formu submit et
         modal.classList.add("hidden");
         currentRoleForm.submit();
         currentRoleForm = null;
     });
-    // ENTER ile onaylama (Save)
+
     inputPassword.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
-            e.preventDefault(); // Formun otomatik submit etmesini engeller
-            btnConfirm.click(); // Confirm butonunu tetikler
+            e.preventDefault();
+            btnConfirm.click();
         }
     });
 
-    // ESC ile kapatma
     document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && !modal.classList.contains("hidden")) {
             modal.classList.add("hidden");
@@ -68,7 +61,6 @@
         }
     });
 
-    // Overlay'e tıklayınca kapatma (kartın dışı)
     modal.addEventListener("click", (e) => {
         if (e.target === modal) {
             modal.classList.add("hidden");

@@ -1,6 +1,4 @@
-﻿// wwwroot/js/etl/factsChart.js
-
-(function () {
+﻿(function () {
     if (!window.factTrendData || !Array.isArray(window.factTrendData)) {
         return;
     }
@@ -10,18 +8,15 @@
 
     const labels = window.factTrendData.map(p => {
         const d = new Date(p.date);
-        // backend'de ISO geliyor
+
         if (!isNaN(d.getTime())) {
             return d.toLocaleDateString();
         }
-        // string ise direkt
         return p.date;
     });
 
     const dataValues = window.factTrendData.map(p => p.totalAmount);
 
-    // Chart.js global yüklü varsayıyoruz (dashboard'da olduğu gibi)
-    // eslint-disable-next-line no-undef
     new Chart(ctx, {
         type: "line",
         data: {

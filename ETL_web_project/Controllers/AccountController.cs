@@ -21,7 +21,6 @@ namespace ETL_web_project.Controllers
             _context = context;
         }
 
-        // ------------------ LOGIN ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
@@ -69,8 +68,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-
-        // ------------------ REGISTER ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
@@ -118,8 +115,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction("Login");
         }
 
-
-        // ------------------ FORGOT PASSWORD ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -153,8 +148,6 @@ namespace ETL_web_project.Controllers
             return View();
         }
 
-
-        // ------------------ RESET PASSWORD ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPassword(string token)
@@ -184,8 +177,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction("Login");
         }
 
-
-        // ------------------ LOGOUT ------------------
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Logout()

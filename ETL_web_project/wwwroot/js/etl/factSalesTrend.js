@@ -1,6 +1,4 @@
-﻿// wwwroot/js/fact/factSalesTrend.js
-
-document.addEventListener("DOMContentLoaded", function () {
+﻿document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById("factSalesChart");
     const data = window.factSalesTrend;
 
@@ -13,10 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const labels = data.map(d => d.label);
     const values = data.map(d => d.value || 0);
 
-    // Gradient (soldan sağa mor-mavi)
     const gradient = ctx.createLinearGradient(0, 0, canvas.width || 400, 0);
-    gradient.addColorStop(0, "#6366F1");   // indigo
-    gradient.addColorStop(1, "#A855F7");   // purple
+    gradient.addColorStop(0, "#6366F1");
+    gradient.addColorStop(1, "#A855F7");
 
     if (typeof Chart === "undefined") {
         console.error("Chart.js not loaded");
