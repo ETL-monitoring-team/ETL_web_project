@@ -1,4 +1,6 @@
-﻿using ETL_web_project.Interfaces;
+﻿using ETL_web_project.DTOs;
+using ETL_web_project.Interfaces;
+using ETL_web_project.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,20 +13,22 @@ namespace ETL_web_project.Controllers
         private readonly IEtlJobService _etlJobService;
         private readonly IEtlScheduleOverviewService _scheduleOverviewService;
         private readonly IFactExplorerService _factExplorerService;
-        private readonly IStagingService _stagingService;
 
+        // ✅ EKLENDİ
+        private readonly IStagingService _stagingService;
 
         public EtlController(
             IEtlLogService etlLogService,
             IEtlJobService etlJobService,
             IEtlScheduleOverviewService scheduleOverviewService,
-            IFactExplorerService factExplorerService, IStagingService stagingService)
+            IFactExplorerService factExplorerService,
+            IStagingService stagingService)   // ✅ EKLENDİ
         {
             _etlLogService = etlLogService;
             _etlJobService = etlJobService;
             _scheduleOverviewService = scheduleOverviewService;
             _factExplorerService = factExplorerService ?? throw new ArgumentNullException(nameof(factExplorerService));
-            _stagingService = stagingService; 
+            _stagingService = stagingService;   // ✅ EKLENDİ
         }
 
         //kullanılmıyor silinecek
@@ -49,8 +53,6 @@ namespace ETL_web_project.Controllers
         }
 
 
-
-    
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RunJob(int jobId)
@@ -72,21 +74,58 @@ namespace ETL_web_project.Controllers
             return View(runs);           // Views/Etl/JobRuns.cshtml => model: List<EtlRunHistoryDto>
         }
 
+
+        // ================== STAGING ==================
+
         [Authorize(Roles = "Admin,DataEngineer")]
-        public async Task<IActionResult> Staging()
+        public async Task<ActionResult> Staging()          // ✅ async yapıldı
         {
-            var model = await _stagingService.GetStagingOverviewAsync();
+            // Model null gelmesin diye boş da olsa bir DTO gönderiyoruz
+            var model = await _stagingService.GetStagingOverviewAsync();   // ✅ servisten çek
             return View(model);
         }
 
 
+        // ========= STAGING ACTION BUTTONS =========
+
+        // sadece yeniden yükler (GET)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ReloadStaging()
+        {
+            return RedirectToAction(nameof(Staging));
+        }
+
+        // staging tablosunu boşaltır
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClearStaging()
+        {
+            await _stagingService.ClearStagingAsync();
+            return RedirectToAction(nameof(Staging));
+        }
+
+        // CSV indirir
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExportStagingCsv()
+        {
+            var csv = await _stagingService.ExportCsvAsync();
+            var bytes = System.Text.Encoding.UTF8.GetBytes(csv);
+
+            return File(bytes, "text/csv", "staging_export.csv");
+        }
+
+
+        // ================== FACT EXPLORER ==================
+
         [Authorize(Roles = "Admin,Analyst")]
-     public async Task<ActionResult> Facts(
-    DateTime? fromDate,
-    DateTime? toDate,
-    string? storeSearch,
-    string? productSearch,
-    string? customerSearch)
+        public async Task<ActionResult> Facts(
+            DateTime? fromDate,
+            DateTime? toDate,
+            string? storeSearch,
+            string? productSearch,
+            string? customerSearch)
         {
             var model = await _factExplorerService.GetFactExplorerAsync(
                 fromDate,
@@ -99,16 +138,12 @@ namespace ETL_web_project.Controllers
         }
 
 
-
         [Authorize(Roles = "Admin,DataEngineer")]
         public async Task<IActionResult> Schedule()
         {
             var vm = await _scheduleOverviewService.GetOverviewAsync();
             return View(vm);
         }
-
-
-
 
 
         // muhtemelen sileceğiz simdilik yorum satırı yaptım
