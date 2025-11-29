@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using ETL_web_project.Data.Context;
+using ETL_web_project.DTOs.Admin;
 using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
-using ETL_web_project.Models;
+using ETL_web_project.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETL_web_project.Services
@@ -38,7 +39,7 @@ namespace ETL_web_project.Services
                 .ThenBy(u => u.CreatedAt)
                 .ToListAsync();
 
-            var userDtos = _mapper.Map<List<DTOs.AdminUserDto>>(users);
+            var userDtos = _mapper.Map<List<AdminUserDto>>(users);
 
             var vm = new AdminDashboardViewModel
             {

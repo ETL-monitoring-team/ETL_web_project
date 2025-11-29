@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using ETL_web_project.Data.Context;
 using ETL_web_project.Data.Entities;
-using ETL_web_project.DTOs;
+using ETL_web_project.DTOs.Account;
 using ETL_web_project.Handlers;
 using ETL_web_project.Interfaces;
 using Microsoft.EntityFrameworkCore;

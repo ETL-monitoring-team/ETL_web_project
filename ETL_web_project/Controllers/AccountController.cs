@@ -1,5 +1,5 @@
 ﻿using ETL_web_project.Data.Context;
-using ETL_web_project.DTOs;
+using ETL_web_project.DTOs.Account;
 using ETL_web_project.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -96,21 +96,6 @@ namespace ETL_web_project.Controllers
             }
 
             var createdUser = await _accountService.RegisterUserAsync(model);
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, createdUser.Username),
-                new Claim(ClaimTypes.Role, createdUser.Role.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, createdUser.UserId.ToString())
-            };
-
-            var identity = new ClaimsIdentity(
-                claims,
-                CookieAuthenticationDefaults.AuthenticationScheme);
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity));
 
             return RedirectToAction("Login");
         }

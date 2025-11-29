@@ -1,6 +1,8 @@
 ﻿using ETL_web_project.Data.Context;
 using ETL_web_project.Data.Entities;
 using ETL_web_project.DTOs;
+using ETL_web_project.DTOs.Etl.Jobs;
+using ETL_web_project.DTOs.Etl.Schedule;
 using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-﻿using ETL_web_project.DTOs;
+﻿using ETL_web_project.DTOs.Dashboard;
 
 namespace ETL_web_project.Interfaces
 {

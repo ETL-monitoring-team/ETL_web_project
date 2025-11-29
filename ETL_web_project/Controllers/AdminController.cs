@@ -1,4 +1,5 @@
-﻿using ETL_web_project.DTOs;
+﻿using ETL_web_project.DTOs.Account;
+using ETL_web_project.DTOs.Admin;
 using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
 using Microsoft.AspNetCore.Authorization;
