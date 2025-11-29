@@ -1,6 +1,4 @@
-﻿// wwwroot/js/etl/stagingChart.js
-
-document.addEventListener("DOMContentLoaded", function () {
+﻿document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById("stagingLoadChart");
     const data = window.stagingLoadTrend;
 

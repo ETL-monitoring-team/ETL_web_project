@@ -1,15 +1,9 @@
-﻿/* ============================================
-   LOGS PAGE – THEME MATCHED WITH DASHBOARD
-   ============================================ */
-
-/* General Layout */
-.logs-container {
+﻿.logs-container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-/* KPI cards (error / warn / info) colors */
 .kpi-icon-red {
     background: linear-gradient(135deg, #ff4757, #ff6b81);
 }
@@ -22,7 +16,6 @@
     background: linear-gradient(135deg, #32a7ff, #4f46e5);
 }
 
-/* Table for logs */
 .table-wrapper {
     max-height: 350px;
     overflow-y: auto;
@@ -48,7 +41,6 @@
     background: rgba(107, 141, 227, 0.12);
 }
 
-/* Empty message styling */
 .table-empty {
     text-align: center;
     padding: 1rem;
@@ -56,7 +48,6 @@
     font-size: 0.85rem;
 }
 
-/* ETL levels color-coded rows */
 .etl-status-failed td {
     color: #ff6b6b;
 }
@@ -69,7 +60,6 @@
     color: #7cc0ff;
 }
 
-/* Log cards and page header */
 .card-header .card-title {
     color: #ffffff;
     font-weight: 700;
@@ -81,13 +71,11 @@
     font-size: 0.8rem;
 }
 
-/* Small chip */
 .chip-outline {
     border-color: #6b8de3;
     color: #bcd4ff;
 }
 
-/* Scrollbar custom look */
 .table-wrapper::-webkit-scrollbar {
     width: 7px;
 }

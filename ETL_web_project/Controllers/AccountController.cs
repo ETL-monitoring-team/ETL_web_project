@@ -1,5 +1,5 @@
 ﻿using ETL_web_project.Data.Context;
-using ETL_web_project.DTOs;
+using ETL_web_project.DTOs.Account;
 using ETL_web_project.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -21,7 +21,6 @@ namespace ETL_web_project.Controllers
             _context = context;
         }
 
-        // ------------------ LOGIN ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
@@ -69,8 +68,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction("Index", "Dashboard");
         }
 
-
-        // ------------------ REGISTER ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
@@ -100,26 +97,9 @@ namespace ETL_web_project.Controllers
 
             var createdUser = await _accountService.RegisterUserAsync(model);
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, createdUser.Username),
-                new Claim(ClaimTypes.Role, createdUser.Role.ToString()),
-                new Claim(ClaimTypes.NameIdentifier, createdUser.UserId.ToString())
-            };
-
-            var identity = new ClaimsIdentity(
-                claims,
-                CookieAuthenticationDefaults.AuthenticationScheme);
-
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity));
-
             return RedirectToAction("Login");
         }
 
-
-        // ------------------ FORGOT PASSWORD ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -153,8 +133,6 @@ namespace ETL_web_project.Controllers
             return View();
         }
 
-
-        // ------------------ RESET PASSWORD ------------------
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPassword(string token)
@@ -184,8 +162,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction("Login");
         }
 
-
-        // ------------------ LOGOUT ------------------
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Logout()

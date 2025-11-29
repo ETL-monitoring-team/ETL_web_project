@@ -5,6 +5,8 @@ using ETL_web_project.Interfaces;
 using ETL_web_project.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using LogLevel = ETL_web_project.Enums.LogLevel;
+using ETL_web_project.DTOs.Etl.Jobs;
+using ETL_web_project.DTOs.Etl.RunHistory;
 
 namespace ETL_web_project.Services
 {

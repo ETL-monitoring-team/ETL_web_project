@@ -1,5 +1,6 @@
 ﻿using ETL_web_project.Data.Context;
 using ETL_web_project.DTOs;
+using ETL_web_project.DTOs.FactExplorer;
 using ETL_web_project.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

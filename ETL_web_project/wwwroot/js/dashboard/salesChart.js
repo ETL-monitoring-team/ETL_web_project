@@ -1,6 +1,4 @@
-﻿// wwwroot/js/dashboard/salesChart.js
-
-document.addEventListener("DOMContentLoaded", function () {
+﻿document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById("salesChart");
     const data = window.dashboardDailySales;
 
@@ -13,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const labels = data.map(d => d.label);
     const values = data.map(d => d.value || 0);
 
-    // Gradient (mavi -> mor)
     const gradient = ctx.createLinearGradient(0, 0, canvas.width || 400, 0);
     gradient.addColorStop(0, "#6B8DE3");
     gradient.addColorStop(1, "#7D1C8D");

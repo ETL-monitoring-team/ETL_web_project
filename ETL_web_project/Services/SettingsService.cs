@@ -1,7 +1,7 @@
 ﻿using ETL_web_project.Data.Context;
-using ETL_web_project.DTOs;
+using ETL_web_project.DTOs.Account;
 using ETL_web_project.Handlers;
-using ETL_web_project.Models;
+using ETL_web_project.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETL_web_project.Services

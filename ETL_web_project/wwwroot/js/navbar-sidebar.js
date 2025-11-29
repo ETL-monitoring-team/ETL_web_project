@@ -1,7 +1,4 @@
-﻿// ---------------------------
-// Fullscreen Toggle
-// ---------------------------
-const toggleBtn = document.querySelector('.js-toggle-fullscreen-btn');
+﻿const toggleBtn = document.querySelector('.js-toggle-fullscreen-btn');
 
 if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
     toggleBtn.hidden = false;

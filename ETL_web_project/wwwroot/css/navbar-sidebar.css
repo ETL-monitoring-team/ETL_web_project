@@ -155,7 +155,6 @@ body{
 }
 
 
-/* Navbar */
 .top-navbar {
     position: fixed;
     top: 0;
@@ -195,7 +194,6 @@ body{
     margin-left: 260px;
 }
 
-/*navbar sol kısım*/
 .nav-left {
     display: flex;
     align-items: center;
@@ -203,7 +201,6 @@ body{
     flex: 1;
 }
 
-/*navbar sağ kısım*/
 .nav-right {
     display: flex;
     align-items: center;

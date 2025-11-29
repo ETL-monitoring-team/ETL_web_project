@@ -6,11 +6,9 @@ namespace ETL_web_project.Interfaces
     {
         Task<List<EtlSchedule>> GetAllAsync();
         Task<EtlSchedule?> GetByIdAsync(int id);
-
         Task<EtlSchedule> CreateAsync(EtlSchedule schedule);
         Task<bool> UpdateAsync(EtlSchedule schedule);
         Task<bool> DeleteAsync(int id);
-
         Task<EtlRun> RunNowAsync(int scheduleId);
         Task<bool> ToggleActiveAsync(int scheduleId);
     }

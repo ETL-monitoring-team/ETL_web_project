@@ -1,26 +1,18 @@
-﻿/* ========= ETL JOBS PAGE ========= */
-
-.etl-jobs-page {
+﻿.etl-jobs-page {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     padding: 1.5rem;
 }
 
-.job-run-alert {
-    color: white;
-}
-
-/* Card base: dashboard ile aynı olsun */
 .card {
-    background: #151821;
+    background: #151821a6 ;
     border-radius: 18px;
     padding: 1.2rem 1.4rem;
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-/* HEADER */
 .etl-jobs-header {
     display: flex;
     align-items: center;
@@ -39,7 +31,6 @@
     color: #a2a8c5;
 }
 
-/* Search box */
 .jobs-search-form {
     display: flex;
     align-items: center;
@@ -70,9 +61,9 @@
         font-size: 0.85rem;
     }
 
-/* TABLE CARD */
 .jobs-table-card {
     width: 100%;
+    overflow-x: auto;
 }
 
 .jobs-table-header {
@@ -92,8 +83,6 @@
     font-size: 0.8rem;
     color: #9ca3c7;
 }
-
-/* TABLE */
 
 .jobs-table {
     width: 100%;
@@ -125,8 +114,6 @@
     color: #6b7280;
 }
 
-/* Job name + code */
-
 .job-main {
     display: flex;
     flex-direction: column;
@@ -142,8 +129,6 @@
     font-size: 0.75rem;
     color: #9ca3af;
 }
-
-/* Status pills */
 
 .status-pill {
     display: inline-flex;
@@ -174,8 +159,6 @@
     color: #cbd5f5;
 }
 
-/* Active pills */
-
 .active-pill {
     display: inline-flex;
     padding: 0.15rem 0.6rem;
@@ -192,8 +175,6 @@
     background: rgba(148, 163, 184, 0.12);
     color: #e5e7eb;
 }
-
-/* Actions */
 
 .jobs-actions-col {
     text-align: right;
@@ -237,11 +218,10 @@
         flex-direction: column;
         align-items: flex-end;
     }
-    /* ===== JobRuns back button ===== */
-
-    .etl-job-runs-page {
-        margin: 1.5rem;
-    }
+}
+.etl-job-runs-page {
+    margin: 1.5rem;
+}
 
     .job-runs-back-container {
         display: flex;
@@ -256,4 +236,3 @@
         padding-inline: 1rem;
         font-size: 0.85rem;
     }
-}

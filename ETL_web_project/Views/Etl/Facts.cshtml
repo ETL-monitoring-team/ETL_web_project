@@ -1,4 +1,5 @@
-﻿@model ETL_web_project.DTOs.FactExplorerPageDto
+﻿@using ETL_web_project.DTOs.FactExplorer
+@model FactExplorerPageDto
 @{
     ViewData["Title"] = "Fact Explorer";
 }
@@ -101,7 +102,7 @@
 
             <div class="fx-top-column">
                 <h4>Top Stores</h4>
-                @foreach (var s in Model?.TopStores ?? new List<ETL_web_project.DTOs.TopEntityDto>())
+                @foreach (var s in Model?.TopStores ?? new List<TopEntityDto>())
                 {
                     <div class="fx-top-item">
                         <span>@s.Name</span>
@@ -112,7 +113,7 @@
 
             <div class="fx-top-column">
                 <h4>Top Products</h4>
-                @foreach (var p in Model?.TopProducts ?? new List<ETL_web_project.DTOs.TopEntityDto>())
+                @foreach (var p in Model?.TopProducts ?? new List<TopEntityDto>())
                 {
                     <div class="fx-top-item">
                         <span>@p.Name</span>
@@ -123,7 +124,7 @@
 
             <div class="fx-top-column">
                 <h4>Top Customers</h4>
-                @foreach (var c in Model?.TopCustomers ?? new List<ETL_web_project.DTOs.TopEntityDto>())
+                @foreach (var c in Model?.TopCustomers ?? new List<TopEntityDto>())
                 {
                     <div class="fx-top-item">
                         <span>@c.Name</span>

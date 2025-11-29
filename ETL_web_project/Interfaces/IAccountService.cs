@@ -1,4 +1,4 @@
-﻿using ETL_web_project.DTOs;
+﻿using ETL_web_project.DTOs.Account;
 
 namespace ETL_web_project.Interfaces
 {
@@ -10,7 +10,5 @@ namespace ETL_web_project.Interfaces
         Task<UserDto> RegisterUserAsync(RegisterDto registerDto);
         Task<bool> ResetPasswordAsync(string token, string newPassword);
         Task<string> GeneratePasswordResetTokenAsync(string email);
-
-
     }
 }

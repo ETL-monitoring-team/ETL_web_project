@@ -4,8 +4,6 @@
     gap: 1.5rem;
 }
 
-/* TOP METRICS */
-
 .stg-top-metrics {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -40,8 +38,6 @@
     border: 1px solid rgba(248, 113, 113, 0.65);
 }
 
-/* MAIN GRID */
-
 .stg-main-grid {
     display: grid;
     grid-template-columns: 1.5fr 1.2fr;
@@ -54,8 +50,6 @@
     flex-direction: column;
     gap: 1.2rem;
 }
-
-/* TABLE CARD */
 
 .stg-card-header {
     display: flex;
@@ -90,8 +84,6 @@
         opacity: 0.7;
     }
 
-/* Rows table */
-
 .stg-rows-table {
     width: 100%;
     border-collapse: collapse;
@@ -121,8 +113,6 @@
     color: #6b7280;
 }
 
-/* SUMMARY CARD */
-
 .stg-summary-card {
     padding: 1rem 1.1rem;
 }
@@ -150,8 +140,6 @@
     font-weight: 600;
     color: #f9fafb;
 }
-
-/* QUALITY CARD */
 
 .stg-quality-card {
     padding: 1rem 1.1rem;
@@ -181,8 +169,6 @@
     color: #f9fafb;
 }
 
-/* LOAD TREND */
-
 .stg-load-card .chart-body {
     margin-top: 0.4rem;
     border-radius: 14px;
@@ -200,8 +186,6 @@
     gap: 0.5rem;
     margin-top: 0.6rem;
 }
-
-/* Butonlar */
 
 .btn-outline-primary,
 .btn-outline-secondary {
@@ -224,8 +208,6 @@
     color: #e5e7eb;
 }
 
-    /* hover / focus efektleri (mor dolu görünüm) */
-
     .btn-outline-primary:hover,
     .btn-outline-primary:focus,
     .btn-outline-secondary:hover,
@@ -234,8 +216,6 @@
         color: #ffffff;
         border-color: transparent;
     }
-
-/* ERROR CARD */
 
 .stg-error-table {
     width: 100%;
@@ -285,8 +265,6 @@
     padding: 0.7rem 0;
     color: #6b7280;
 }
-
-/* RESPONSIVE */
 
 @media (max-width: 1200px) {
     .stg-top-metrics {
