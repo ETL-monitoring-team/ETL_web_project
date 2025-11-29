@@ -2,7 +2,7 @@
 using ETL_web_project.DTOs;
 using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
-using ETL_web_project.Data.Entities;          // EtlRun, EtlLog
+using ETL_web_project.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using LogLevel = ETL_web_project.Enums.LogLevel;
 using ETL_web_project.DTOs.Etl.Jobs;
@@ -126,7 +126,7 @@ namespace ETL_web_project.Services
                 await Task.Delay(1500);
 
                 run.Status = EtlStatus.Success;
-                run.EndTime = DateTime.UtcNow;
+                run.EndTime = DateTime.Now;
                 run.ErrorMessage = string.Empty;  // başarıyla bittiyse hata yok
                 await _context.SaveChangesAsync();
 
@@ -135,7 +135,7 @@ namespace ETL_web_project.Services
             catch (Exception ex)
             {
                 run.Status = EtlStatus.Failed;
-                run.EndTime = DateTime.UtcNow;
+                run.EndTime = DateTime.Now;
                 run.ErrorMessage = ex.Message;    // hata mesajını burada kaydediyoruz
                 await _context.SaveChangesAsync();
 
@@ -156,7 +156,7 @@ namespace ETL_web_project.Services
                 RunId = runId,
                 Level = level,
                 Message = message,
-                LogTime = DateTime.UtcNow
+                LogTime = DateTime.Now
             };
 
             _context.EtlLogs.Add(log);
