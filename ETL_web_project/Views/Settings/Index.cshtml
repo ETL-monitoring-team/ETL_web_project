@@ -2,6 +2,14 @@
 @{
     ViewData["Title"] = "Settings";
 }
+@section Styles {
+    <style>
+        .settings-container {
+            min-height: calc(100vh - 180px);
+        }
+    </style>
+}
+
 <link rel="stylesheet" href="~/css/settings.css" asp-append-version="true" />
 
 <div class="settings-container">
@@ -29,15 +37,15 @@
 
             <div class="form-group">
                 <label asp-for="Profile.Username"></label>
-                <input name="Username" value="@Model.Profile.Username" class="form-control" />
+                <input asp-for="Profile.Username" class="form-control" />
             </div>
 
             <div class="form-group">
                 <label asp-for="Profile.Email"></label>
-                <input name="Email" value="@Model.Profile.Email" class="form-control" />
+                <input asp-for="Profile.Email" class="form-control" />
             </div>
 
-            <input type="hidden" name="ConfirmPassword" id="confirmPasswordHidden" />
+            <input asp-for="Profile.ConfirmPassword" type="hidden" id="confirmPasswordHidden" />
 
             <div class="form-actions">
                 <button type="button" class="btn-primary js-profile-save">Save</button>

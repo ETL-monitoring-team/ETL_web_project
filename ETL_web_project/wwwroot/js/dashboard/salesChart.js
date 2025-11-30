@@ -15,11 +15,6 @@
     gradient.addColorStop(0, "#6B8DE3");
     gradient.addColorStop(1, "#7D1C8D");
 
-    if (typeof Chart === "undefined") {
-        console.error("Chart.js not loaded");
-        return;
-    }
-
     new Chart(ctx, {
         type: "line",
         data: {

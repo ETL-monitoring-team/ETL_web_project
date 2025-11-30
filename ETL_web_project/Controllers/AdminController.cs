@@ -26,7 +26,6 @@ namespace ETL_web_project.Controllers
             return View(vm);
         }
 
-        // ============= Role değiştir (şifre doğrulamalı) =============
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateUserRole(AdminChangeRoleDto model)
@@ -77,7 +76,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // ============= Aktif / Pasif =============
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleUserActive(int userId)

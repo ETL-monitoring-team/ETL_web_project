@@ -5,10 +5,8 @@
         public long TotalRows { get; set; }
         public int DistinctStores { get; set; }
         public int DistinctProducts { get; set; }
-
         public DateTime? MinSalesTime { get; set; }
         public DateTime? MaxSalesTime { get; set; }
-
         public DateTime? MinLoadedAt { get; set; }
         public DateTime? MaxLoadedAt { get; set; }
 

@@ -1,6 +1,5 @@
 ﻿using ETL_web_project.Data.Context;
 using ETL_web_project.Data.Entities;
-using ETL_web_project.DTOs;
 using ETL_web_project.DTOs.Etl.Schedule;
 using ETL_web_project.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +11,7 @@ namespace ETL_web_project.Controllers
     {
         private readonly IEtlScheduleOverviewService _overviewService;
         private readonly IEtlScheduleService _scheduleService;
-        private readonly ProjectContext _context; // <-- EKLENDİ
+        private readonly ProjectContext _context;
 
         public EtlScheduleController(
             IEtlScheduleOverviewService overviewService,
@@ -21,21 +20,14 @@ namespace ETL_web_project.Controllers
         {
             _overviewService = overviewService;
             _scheduleService = scheduleService;
-            _context = context; // <-- EKLENDİ
+            _context = context;
         }
-
-        // ======================================================
-        // INDEX
-        // ======================================================
         public async Task<IActionResult> Index()
         {
             var overview = await _overviewService.GetOverviewAsync();
             return View(overview);
         }
 
-        // ======================================================
-        // CREATE - GET
-        // ======================================================
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -49,9 +41,6 @@ namespace ETL_web_project.Controllers
             return View(model);
         }
 
-        // ======================================================
-        // CREATE - POST
-        // ======================================================
         [HttpPost]
         public async Task<IActionResult> Create(EtlScheduleCreateFormDto model)
         {
@@ -76,9 +65,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction("Index");
         }
 
-        // ======================================================
-        // EDIT - GET
-        // ======================================================
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -103,9 +89,6 @@ namespace ETL_web_project.Controllers
             return View(dto);
         }
 
-        // ======================================================
-        // EDIT - POST
-        // ======================================================
         [HttpPost]
         public async Task<IActionResult> Edit(EtlScheduleEditDto dto)
         {
@@ -132,9 +115,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction("Index");
         }
 
-        // ======================================================
-        // PAUSE / RESUME
-        // ======================================================
         [HttpPost]
         public async Task<IActionResult> ToggleActive(int id)
         {
@@ -142,9 +122,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction("Index");
         }
 
-        // ======================================================
-        // RUN NOW
-        // ======================================================
         [HttpPost]
         public async Task<IActionResult> RunNow(int id)
         {

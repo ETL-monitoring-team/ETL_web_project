@@ -1,7 +1,5 @@
 ﻿using ETL_web_project.Data.Context;
-using ETL_web_project.DTOs;
 using ETL_web_project.DTOs.Etl.Staging;
-using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
@@ -24,8 +22,6 @@ namespace ETL_web_project.Services
 
             var model = new StagingPageDto();
 
-            // ========== ÜST METRİKLER ==========
-
             model.TotalRawRows = await _context.SalesRaws.LongCountAsync();
 
             model.LastLoadTime = await _context.SalesRaws
@@ -44,8 +40,6 @@ namespace ETL_web_project.Services
                 .CountAsync(l => l.Level == Enums.LogLevel.Error &&
                                  l.LogTime >= last24h);
 
-            // ========== RECENT ROWS GRID ==========
-
             model.RecentRows = await _context.SalesRaws
                 .OrderByDescending(r => r.LoadedAt)
                 .ThenByDescending(r => r.Id)
@@ -61,8 +55,6 @@ namespace ETL_web_project.Services
                     LoadedAt = r.LoadedAt
                 })
                 .ToListAsync();
-
-            // ========== SUMMARY CARD ==========
 
             var summary = new StagingSummaryDto
             {
@@ -83,7 +75,6 @@ namespace ETL_web_project.Services
                 MaxLoadedAt = model.LastLoadTime
             };
 
-            // Ortalama quantity / unitprice
             summary.AvgQuantity = await _context.SalesRaws
                 .Where(r => r.Quantity.HasValue)
                 .AverageAsync(r => (double?)r.Quantity) ?? null;
@@ -93,8 +84,6 @@ namespace ETL_web_project.Services
                 .AverageAsync(r => (decimal?)r.UnitPrice) ?? 0m;
 
             model.Summary = summary;
-
-            // ========== DATA QUALITY CARD ==========
 
             model.Quality = new StagingQualityDto
             {
@@ -108,9 +97,7 @@ namespace ETL_web_project.Services
                     .CountAsync(r => !r.UnitPrice.HasValue || r.UnitPrice <= 0)
             };
 
-            // ========== LOAD TREND (LAST 7 DAYS, BAR CHART) ==========
-
-            var fromDate = now.Date.AddDays(-6);   // son 7 gün
+            var fromDate = now.Date.AddDays(-6);
             model.LoadTrend = await _context.SalesRaws
                 .Where(r => r.LoadedAt.Date >= fromDate)
                 .GroupBy(r => r.LoadedAt.Date)
@@ -122,7 +109,6 @@ namespace ETL_web_project.Services
                 .OrderBy(x => x.Date)
                 .ToListAsync();
 
-            // Eksik günler için sıfır dolduralım
             var trendDict = model.LoadTrend.ToDictionary(x => x.Date.Date, x => x);
             model.LoadTrend = new List<StagingLoadTrendPointDto>();
             for (int i = 0; i < 7; i++)
@@ -142,8 +128,6 @@ namespace ETL_web_project.Services
                 }
             }
 
-            // ========== ERROR LOG CARD ==========
-
             model.ErrorLogs = await _context.EtlLogs
                 .Where(l => l.Level != Enums.LogLevel.Info)
                 .OrderByDescending(l => l.LogTime)
@@ -159,8 +143,6 @@ namespace ETL_web_project.Services
             return model;
         }
 
-        // ========== STAGING’i TEMİZLE ==========
-
         public async Task ClearStagingAsync()
         {
             _context.SalesRaws.RemoveRange(_context.SalesRaws);
@@ -175,19 +157,18 @@ namespace ETL_web_project.Services
 
             var sb = new StringBuilder();
 
-            // Header
             sb.AppendLine("Id,SalesTime,StoreCode,ProductCode,Quantity,UnitPrice,LoadedAt");
 
             foreach (var r in rows)
             {
                 sb.AppendLine(string.Join(",",
                     r.Id,
-                    r.SalesTime.HasValue ? r.SalesTime.Value.ToString("O") : "",             // DateTime -> direkt ToString("O")
+                    r.SalesTime.HasValue ? r.SalesTime.Value.ToString("O") : "",
                     r.StoreCode ?? "",
                     r.ProductCode ?? "",
                     r.Quantity.HasValue ? r.Quantity.Value.ToString() : "",
                     r.UnitPrice.HasValue ? r.UnitPrice.Value.ToString() : "",
-                    r.LoadedAt.ToString("O")                // DateTime -> direkt ToString("O")
+                    r.LoadedAt.ToString("O")
                 ));
             }
 

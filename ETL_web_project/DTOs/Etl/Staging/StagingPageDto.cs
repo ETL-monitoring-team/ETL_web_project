@@ -2,7 +2,6 @@
 {
     public class StagingPageDto
     {
-        // Üst metrikler
         public long TotalRawRows { get; set; }
         public long NewRowsLastLoad { get; set; }
         public DateTime? LastLoadTime { get; set; }
@@ -10,8 +9,6 @@
         public int ErrorCountLast24h { get; set; }
 
         public string SelectedTableName { get; set; } = "stg.SalesRaw";
-
-        // Kartlar
         public List<StagingRowDto> RecentRows { get; set; } = new();
         public StagingSummaryDto Summary { get; set; } = new();
         public StagingQualityDto Quality { get; set; } = new();

@@ -15,49 +15,35 @@ namespace ETL_web_project.Services
             _context = context;
         }
 
-        // Eski çağrılar bozulmasın diye: default 14 gün
-        public Task<DashboardSummaryDto> GetDashboardAsync()
-        {
-            return GetDashboardAsync(14);
-        }
-
-        // Yeni: grafik için gün sayısı parametreli (7 / 14 / 30)
         public async Task<DashboardSummaryDto> GetDashboardAsync(int salesRangeDays)
         {
             var now = DateTime.Now;
             var today = now.Date;
             var yesterday = today.AddDays(-1);
 
-            // sadece 7 / 14 / 30 kabul et, diğerlerinde 14'e düş
             if (salesRangeDays != 7 && salesRangeDays != 14 && salesRangeDays != 30)
             {
                 salesRangeDays = 14;
             }
 
-            // Örn: 14 gün ise today - 13
             var fromDate = today.AddDays(-(salesRangeDays - 1));
 
             var dto = new DashboardSummaryDto
             {
-                SalesRangeDays = salesRangeDays  // DTO'ya gün bilgisini yaz
+                SalesRangeDays = salesRangeDays
             };
 
-            // =========================================
             // 1) SALES KPI'lari (FactSales + DimDate)
-            // =========================================
-
             var factQuery = _context.FactSales
                                     .Include(f => f.Date)
                                     .AsQueryable();
 
-            // TOTAL
             dto.TotalSalesAmount =
                 await factQuery.SumAsync(f => (decimal?)f.TotalAmount) ?? 0m;
 
             dto.TotalSalesQuantity =
                 await factQuery.SumAsync(f => (int?)f.Quantity) ?? 0;
 
-            // TODAY
             var todayFacts = factQuery.Where(f => f.Date.Date == today);
 
             dto.TodaySalesAmount =
@@ -66,7 +52,6 @@ namespace ETL_web_project.Services
             dto.TodaySalesQuantity =
                 await todayFacts.SumAsync(f => (int?)f.Quantity) ?? 0;
 
-            // YESTERDAY
             var yestFacts = factQuery.Where(f => f.Date.Date == yesterday);
 
             var yesterdayAmount =
@@ -81,12 +66,8 @@ namespace ETL_web_project.Services
                 dto.TodayVsYesterdaySalesPercent =
                     (dto.TodaySalesAmount - yesterdayAmount) / yesterdayAmount * 100m;
             }
-
-            // =========================================
+            
             // 2) DATA FRESHNESS
-            // =========================================
-
-            // Warehouse (FactSales.CreatedAt)
             dto.WarehouseLastLoadTime =
                 await factQuery.MaxAsync(f => (DateTime?)f.CreatedAt);
 
@@ -95,7 +76,6 @@ namespace ETL_web_project.Services
                     ? (int?)Math.Round((now - dto.WarehouseLastLoadTime.Value).TotalHours)
                     : null;
 
-            // Staging (SalesRaw.LoadedAt)
             var rawQuery = _context.SalesRaws.AsQueryable();
 
             dto.StagingLastLoadTime =
@@ -106,10 +86,7 @@ namespace ETL_web_project.Services
                     ? (int?)Math.Round((now - dto.StagingLastLoadTime.Value).TotalHours)
                     : null;
 
-            // =========================================
             // 3) ETL RUN SUMMARY
-            // =========================================
-
             var runQuery = _context.EtlRuns
                                    .Include(r => r.Job)
                                    .AsQueryable();
@@ -156,10 +133,7 @@ namespace ETL_web_project.Services
                 .ToListAsync();
 
 
-            // =========================================
             // 4) DAILY SALES SERIES (LAST N DAYS)
-            // =========================================
-
             dto.DailySales = await factQuery
                 .Where(f => f.Date.Date >= fromDate &&
                             f.Date.Date <= today)
@@ -173,10 +147,7 @@ namespace ETL_web_project.Services
                 .ToListAsync();
 
 
-            // =========================================
             // 5) TOP STORES & PRODUCTS
-            // =========================================
-
             dto.TopStores = await _context.FactSales
                 .Include(f => f.Store)
                 .GroupBy(f => new { f.StoreKey, f.Store.StoreName })
@@ -204,10 +175,7 @@ namespace ETL_web_project.Services
                 .ToListAsync();
 
 
-            // =========================================
             // 6) ENTITY & USER COUNTS
-            // =========================================
-
             dto.StoreCount = await _context.DimStores
                 .CountAsync(s => s.IsActive);
 

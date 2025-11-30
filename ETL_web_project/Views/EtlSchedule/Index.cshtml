@@ -6,7 +6,6 @@
 
 <section class="etl-schedule-page">
 
-    <!-- HEADER -->
     <div class="etl-schedule-header">
         <div class="title-block">
             <h2>ETL Schedule</h2>
@@ -19,7 +18,6 @@
         </a>
     </div>
 
-    <!-- KPI CARDS -->
     <div class="etl-schedule-kpis">
         <div class="etl-schedule-card">
             <div class="card-icon bg-icon-1">
@@ -64,7 +62,6 @@
         </div>
     </div>
 
-    <!-- TABLE PANEL -->
     <div class="etl-schedule-panel">
         <div class="panel-header-row">
             <h3>ETL Schedule</h3>
@@ -104,18 +101,15 @@
                             };
 
                             <tr>
-                                <!-- JOB -->
                                 <td>
                                     <div class="job-name">@row.JobName</div>
                                     <div class="job-code">@row.JobCode</div>
                                 </td>
 
-                                <!-- FREQUENCY -->
                                 <td>
                                     <span class="freq-text">@row.FrequencyText</span>
                                 </td>
 
-                                <!-- LAST RUN -->
                                 <td>
                                     <div class="time-main">
                                         @(row.LastRunTime?.ToString("dd.MM.yyyy HH:mm") ?? "-")
@@ -125,7 +119,6 @@
                                     </div>
                                 </td>
 
-                                <!-- NEXT RUN -->
                                 <td>
                                     <div class="time-main">
                                         @(row.NextRunTime?.ToString("dd.MM.yyyy HH:mm") ?? "-")
@@ -135,7 +128,6 @@
                                     </div>
                                 </td>
 
-                                <!-- STATUS -->
                                 <td>
                                     @if (row.IsActive)
                                     {
@@ -147,7 +139,6 @@
                                     }
                                 </td>
 
-                                <!-- ACTIONS -->
                                 <td class="col-actions">
 
                                     <form asp-action="RunNow" method="post" style="display:inline;">

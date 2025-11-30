@@ -7,7 +7,7 @@ namespace ETL_web_project.Data.Entities
     public class DimDate
     {
         [Key]
-        public int DateKey { get; set; }  // YYYYMMDD
+        public int DateKey { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime Date { get; set; }

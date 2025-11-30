@@ -19,7 +19,6 @@ namespace ETL_web_project.Services
             _mapper = mapper;
         }
 
-        // ============= 1) Admin Dashboard Veri Toplama (Username filter'lı) =============
         public async Task<AdminDashboardViewModel> GetDashboardAsync(string? usernameFilter = null)
         {
             var query = _context.UserAccounts
@@ -33,7 +32,6 @@ namespace ETL_web_project.Services
             }
 
             var users = await query
-                // Admin'ler en üstte, sonra DataEngineer, sonra diğerleri
                 .OrderByDescending(u => u.Role == UserRole.Admin)
                 .ThenByDescending(u => u.Role == UserRole.DataEngineer)
                 .ThenBy(u => u.CreatedAt)
@@ -55,7 +53,6 @@ namespace ETL_web_project.Services
             return vm;
         }
 
-        // ============= 2) Kullanıcının Rolünü Güncelle =============
         public async Task<bool> ChangeUserRoleAsync(int userId, UserRole newRole)
         {
             var user = await _context.UserAccounts.FindAsync(userId);
@@ -68,7 +65,6 @@ namespace ETL_web_project.Services
             return true;
         }
 
-        // ============= 3) Kullanıcıyı Aktif / Pasif Yap =============
         public async Task<bool> ToggleUserActiveAsync(int userId)
         {
             var user = await _context.UserAccounts.FindAsync(userId);

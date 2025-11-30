@@ -12,14 +12,12 @@
 
 <section class="etl-jobs-page">
 
-    <!-- HEADER -->
     <div class="etl-jobs-header card">
         <div class="etl-jobs-header-left">
             <h1>ETL Jobs</h1>
             <p>Manage ETL pipelines, monitor status and trigger manual runs.</p>
         </div>
 
-        <!-- SEARCH BAR -->
         <form method="get"
               asp-action="Jobs"
               asp-controller="Etl"
@@ -34,7 +32,6 @@
         </form>
     </div>
 
-    <!-- OPTIONAL MESSAGE (TempData) -->
     @if (TempData["JobRunMessage"] is string msg && !string.IsNullOrWhiteSpace(msg))
     {
         <div class="job-run-alert">
@@ -42,7 +39,6 @@
         </div>
     }
 
-    <!-- TABLE CARD -->
     <div class="card jobs-table-card">
         <div class="jobs-table-header">
             <h2 class="card-title">Job Records</h2>
@@ -109,18 +105,17 @@
                             </td>
                             <td class="jobs-actions">
 
-                                <!-- RUN NOW: POST /Etl/RunJob -->
                                 <form asp-controller="Etl"
                                       asp-action="RunJob"
                                       asp-route-jobId="@job.JobId"
                                       method="post"
                                       class="inline-form">
+                                    @Html.AntiForgeryToken()
                                     <button type="submit" class="btn-outline-primary">
                                         Run Now
                                     </button>
                                 </form>
 
-                                <!-- VIEW RUNS: GET /Etl/JobRuns -->
                                 <a asp-controller="Etl"
                                    asp-action="JobRuns"
                                    asp-route-jobId="@job.JobId"
@@ -134,5 +129,4 @@
             </tbody>
         </table>
     </div>
-
 </section>

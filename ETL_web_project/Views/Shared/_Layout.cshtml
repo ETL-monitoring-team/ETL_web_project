@@ -14,7 +14,6 @@
 <body>
     <div class="dashboard">
 
-        <!-- Sidebar -->
         <aside class="sidebar">
             @{
                 string role = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value ?? "";
@@ -120,7 +119,6 @@
                 </li>
             </ul>
 
-            <!-- User Info -->
             <div class="user-account">
                 <div class="user-profile">
                     <img src="~/images/profile-img.png" alt="profile-img" />
@@ -132,7 +130,6 @@
             </div>
         </aside>
 
-        <!-- Main Wrapper -->
         <div class="main-wrapper">
             <nav class="top-navbar">
 
@@ -147,7 +144,6 @@
 
                 <div class="nav-right">
 
-                    <!-- Fullscreen -->
                     <button class="icon-btn js-toggle-fullscreen-btn" id="fullscreenBtn" aria-label="Enter fullscreen mode">
                         <svg class="toggle-fullscreen-svg" width="28" height="28" viewBox="-2 -2 28 28">
                             <g class="icon-fullscreen-enter">
@@ -172,10 +168,13 @@
                     @RenderBody()
                 </div>
             </main>
+            
+            <footer class="dashboard-footer">
+                <span>© @DateTime.Now.Year Monitor — ETL & Data Pipeline Dashboard</span>
+            </footer>
         </div>
     </div>
 
-    <!-- JS dosyan -->
     <script src="~/js/navbar-sidebar.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

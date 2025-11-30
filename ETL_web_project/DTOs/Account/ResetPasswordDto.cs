@@ -6,7 +6,7 @@ namespace ETL_web_project.DTOs.Account
         [Required]
         public string Token { get; set; }
 
-        [Required, MinLength(6)]
+        [Required, MinLength(8)]
         public string NewPassword { get; set; }
 
         [Required, Compare("NewPassword")]

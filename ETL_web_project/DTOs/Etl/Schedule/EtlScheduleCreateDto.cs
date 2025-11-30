@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
 namespace ETL_web_project.DTOs.Etl.Schedule
 {
     public class EtlScheduleCreateDto

@@ -14,13 +14,12 @@ namespace ETL_web_project.Controllers
             _dashboardService = dashboardService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(int range = 14)
         {
-            // Sadece 7 / 14 / 30 kabul et, diğerlerini 14'e zorla
             if (range != 7 && range != 14 && range != 30)
                 range = 14;
 
-            // range parametresini servise geçiriyoruz
             var model = await _dashboardService.GetDashboardAsync(range);
             return View(model);
         }

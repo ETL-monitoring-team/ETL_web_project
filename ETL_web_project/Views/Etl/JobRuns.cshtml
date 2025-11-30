@@ -52,7 +52,8 @@
                         <td>
                             <span class="@statusCss">@run.Status</span>
                         </td>
-                        <td>@run.StartTime.ToString("g")</td>
+                        <td>
+                            @run.StartTime.ToString("g")</td>
                         <td>@(run.EndTime?.ToString("g") ?? "-")</td>
                         <td>@run.DurationText</td>
                     </tr>
@@ -61,7 +62,6 @@
         </tbody>
     </table>
 
-    <!-- BACK BUTTON (bottom-right) -->
     <div class="job-runs-back-container">
         <a asp-controller="Etl"
            asp-action="Jobs"

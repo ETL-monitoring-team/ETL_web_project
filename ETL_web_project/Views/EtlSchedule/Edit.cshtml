@@ -11,10 +11,8 @@
 
     <form asp-action="Edit" method="post">
 
-        <!-- HIDDEN SCHEDULE ID -->
         <input type="hidden" asp-for="ScheduleId" />
 
-        <!-- JOB SELECT -->
         <div class="form-group">
             <label>Job</label>
             <select asp-for="JobId" class="input-control">
@@ -27,14 +25,12 @@
             </select>
         </div>
 
-        <!-- FREQUENCY INPUT -->
         <div class="form-group mt-3">
             <label>Frequency</label>
             <input asp-for="FrequencyText" class="input-control"
                    placeholder="e.g., Every hour, Daily at 02:00" />
         </div>
 
-        <!-- ACTIVE SWITCH -->
         <div class="form-group mt-3">
             <label>Status</label>
             <select asp-for="IsActive" class="input-control">
@@ -53,86 +49,5 @@
 </section>
 
 @section Styles {
-    <style>
-
-        .etl-schedule-edit-page {
-            padding: 40px;
-            color: #fff;
-            max-width: 750px;
-            margin: auto;
-        }
-
-        h2 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 25px;
-        }
-
-        label {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 6px;
-            display: block;
-            color: #d4d7e5;
-        }
-
-        .form-group {
-            margin-bottom: 22px;
-        }
-
-        .input-control {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 10px;
-            background: #1b1d2c;
-            border: 1px solid #34374a;
-            color: #fff;
-            font-size: 14px;
-            transition: border 0.2s, background 0.2s;
-        }
-
-            .input-control:focus {
-                border-color: #6c5ce7;
-                background: #212335;
-                outline: none;
-            }
-
-        .form-actions {
-            margin-top: 25px;
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-purple {
-            padding: 12px 22px;
-            background: #6c5ce7;
-            border-radius: 10px;
-            color: #fff;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-            .btn-purple:hover {
-                background: #7e6cff;
-                transform: translateY(-2px);
-            }
-
-        .btn-cancel {
-            padding: 12px 22px;
-            background: #2f3347;
-            border-radius: 10px;
-            color: #c6c9d6;
-            font-weight: 500;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-            .btn-cancel:hover {
-                background: #373b52;
-                transform: translateY(-2px);
-            }
-
-    </style>
+    <link rel="stylesheet" href="~/css/etl/schedule-edit-create.css" asp-append-version="true" />
 }

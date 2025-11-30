@@ -1,5 +1,4 @@
 ﻿using ETL_web_project.Data.Context;
-using ETL_web_project.DTOs;
 using ETL_web_project.DTOs.FactExplorer;
 using ETL_web_project.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +21,6 @@ namespace ETL_web_project.Services
             string? productSearch,
             string? customerSearch)
         {
-            // FactSales + Dim join
             var query = _context.FactSales
                 .Include(f => f.Date)
                 .Include(f => f.Store)
@@ -30,7 +28,6 @@ namespace ETL_web_project.Services
                 .Include(f => f.Customer)
                 .AsQueryable();
 
-            // --------- FILTERS ----------
             if (fromDate.HasValue)
                 query = query.Where(f => f.Date.Date >= fromDate.Value.Date);
 
@@ -62,7 +59,6 @@ namespace ETL_web_project.Services
                      f.Customer.CustomerCode.Contains(term)));
             }
 
-            // --------- SUMMARY ----------
             var totalSales = await query.SumAsync(f => (decimal?)f.TotalAmount) ?? 0m;
             var totalQuantity = await query.SumAsync(f => (int?)f.Quantity) ?? 0;
 
@@ -96,18 +92,16 @@ namespace ETL_web_project.Services
                 AvgOrderValue = avgOrderValue
             };
 
-            // --------- SALES TREND (chart) ----------
             var salesTrend = await query
                 .GroupBy(f => f.Date.Date)
                 .Select(g => new SalesTrendPointDto
                 {
                     Date = g.Key,
-                    Amount = g.Sum(x => x.TotalAmount)
+                    TotalAmount = g.Sum(x => x.TotalAmount)
                 })
                 .OrderBy(x => x.Date)
                 .ToListAsync();
 
-            // --------- TOP STORES / PRODUCTS / CUSTOMERS ----------
             var topStores = await query
                 .GroupBy(f => f.Store.StoreName)
                 .Select(g => new TopEntityDto
@@ -142,7 +136,6 @@ namespace ETL_web_project.Services
                 .Take(5)
                 .ToListAsync();
 
-            // --------- FACT RECORDS TABLE ----------
             var records = await query
                 .OrderByDescending(f => f.Date.Date)
                 .ThenByDescending(f => f.TotalAmount)
@@ -158,7 +151,6 @@ namespace ETL_web_project.Services
                 })
                 .ToListAsync();
 
-            // --------- PAGE DTO ----------
             return new FactExplorerPageDto
             {
                 FromDate = fromDate,

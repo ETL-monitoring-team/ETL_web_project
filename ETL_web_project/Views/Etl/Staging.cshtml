@@ -14,7 +14,6 @@
 
 <section class="etl-staging-page">
 
-    <!-- TOP METRICS -->
     <div class="stg-top-metrics">
         <div class="card metric-card">
             <span class="metric-label">Total Raw Rows</span>
@@ -51,11 +50,8 @@
         </div>
     </div>
 
-    <!-- MAIN GRID -->
     <div class="stg-main-grid">
-        <!-- LEFT COLUMN -->
         <div class="stg-left-col">
-            <!-- TABLE DROPDOWN + GRID -->
             <div class="card stg-table-card">
                 <div class="stg-card-header">
                     <div class="stg-header-left">
@@ -64,7 +60,6 @@
                                 @Model.SelectedTableName
                                 <i class="fa-solid fa-chevron-down"></i>
                             </button>
-                            @* ileride başka staging tabloları eklersen dropdown gerçek olacak *@
                         </div>
                     </div>
                     <span class="stg-header-sub">
@@ -114,7 +109,6 @@
                 </div>
             </div>
 
-            <!-- SUMMARY CARD -->
             <div class="card stg-summary-card">
                 <h3 class="card-title">Summary</h3>
                 <div class="stg-summary-grid">
@@ -170,9 +164,7 @@
             </div>
         </div>
 
-        <!-- RIGHT COLUMN -->
         <div class="stg-right-col">
-            <!-- DATA QUALITY -->
             <div class="card stg-quality-card">
                 <h3 class="card-title">Data Quality Checks</h3>
 
@@ -204,7 +196,6 @@
                 </div>
             </div>
 
-            <!-- LOAD TREND (BAR CHART) -->
             <div class="card stg-load-card">
                 <div class="stg-card-header">
                     <h3 class="card-title">Load Trend</h3>
@@ -214,9 +205,7 @@
                     <canvas id="stagingLoadChart"></canvas>
                 </div>
 
-                <!-- ⭐ BUTONLAR ARTIK ACTION'LARA POST ATIYOR -->
                 <div class="stg-load-actions">
-                    <!-- Reload -->
                     <form asp-controller="Etl"
                           asp-action="ReloadStaging"
                           method="post"
@@ -226,7 +215,6 @@
                         </button>
                     </form>
 
-                    <!-- Clear Staging -->
                     <form asp-controller="Etl"
                           asp-action="ClearStaging"
                           method="post"
@@ -236,7 +224,6 @@
                         </button>
                     </form>
 
-                    <!-- Export CSV -->
                     <form asp-controller="Etl"
                           asp-action="ExportStagingCsv"
                           method="post"
@@ -248,7 +235,6 @@
                 </div>
             </div>
 
-            <!-- ERROR LOG -->
             <div class="card stg-error-card">
                 <div class="stg-card-header">
                     <h3 class="card-title">Error Log</h3>

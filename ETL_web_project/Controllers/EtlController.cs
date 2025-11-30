@@ -1,6 +1,4 @@
-﻿using ETL_web_project.DTOs;
-using ETL_web_project.Interfaces;
-using ETL_web_project.Services;
+﻿using ETL_web_project.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,49 +9,40 @@ namespace ETL_web_project.Controllers
     {
         private readonly IEtlLogService _etlLogService;
         private readonly IEtlJobService _etlJobService;
-        private readonly IEtlScheduleOverviewService _scheduleOverviewService;
         private readonly IFactExplorerService _factExplorerService;
-
-        // ✅ EKLENDİ
         private readonly IStagingService _stagingService;
 
         public EtlController(
             IEtlLogService etlLogService,
             IEtlJobService etlJobService,
-            IEtlScheduleOverviewService scheduleOverviewService,
             IFactExplorerService factExplorerService,
-            IStagingService stagingService)   // ✅ EKLENDİ
+            IStagingService stagingService)
         {
             _etlLogService = etlLogService;
             _etlJobService = etlJobService;
-            _scheduleOverviewService = scheduleOverviewService;
             _factExplorerService = factExplorerService ?? throw new ArgumentNullException(nameof(factExplorerService));
-            _stagingService = stagingService;   // ✅ EKLENDİ
+            _stagingService = stagingService;
         }
 
-        //kullanılmıyor silinecek
-        //public async Task<ActionResult> Index()
-        //{
-        //    return View();
-        //}
-
+        [HttpGet]
         [Authorize(Roles = "Admin,DataEngineer")]
-        public async Task<ActionResult> Jobs(string? search)
+        public async Task<IActionResult> Jobs(string? search)
         {
             var jobs = await _etlJobService.GetJobsAsync(search);
             ViewData["Search"] = search;
             return View(jobs);
         }
 
+        [HttpGet]
         [Authorize(Roles = "Admin,DataEngineer")]
-        public async Task<ActionResult> Logs()
+        public async Task<IActionResult> Logs()
         {
             var logs = await _etlLogService.GetLogsAsync(null, null, null, null);
             return View(logs);
         }
 
-
         [HttpPost]
+        [Authorize(Roles = "Admin,DataEngineer")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RunJob(int jobId)
         {
@@ -64,31 +53,23 @@ namespace ETL_web_project.Controllers
             return RedirectToAction(nameof(Jobs));
         }
 
-
         [HttpGet]
         public async Task<IActionResult> JobRuns(int jobId)
         {
             var runs = await _etlJobService.GetRunsForJobAsync(jobId);
 
-            ViewData["JobId"] = jobId;   // view’da başlıkta göstermek için
-            return View(runs);           // Views/Etl/JobRuns.cshtml => model: List<EtlRunHistoryDto>
+            ViewData["JobId"] = jobId;
+            return View(runs);
         }
 
-
-        // ================== STAGING ==================
-
+        [HttpGet]
         [Authorize(Roles = "Admin,DataEngineer")]
-        public async Task<ActionResult> Staging()          // ✅ async yapıldı
+        public async Task<IActionResult> Staging()
         {
-            // Model null gelmesin diye boş da olsa bir DTO gönderiyoruz
-            var model = await _stagingService.GetStagingOverviewAsync();   // ✅ servisten çek
+            var model = await _stagingService.GetStagingOverviewAsync();
             return View(model);
         }
 
-
-        // ========= STAGING ACTION BUTTONS =========
-
-        // sadece yeniden yükler (GET)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult ReloadStaging()
@@ -96,7 +77,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction(nameof(Staging));
         }
 
-        // staging tablosunu boşaltır
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ClearStaging()
@@ -105,7 +85,6 @@ namespace ETL_web_project.Controllers
             return RedirectToAction(nameof(Staging));
         }
 
-        // CSV indirir
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ExportStagingCsv()
@@ -116,16 +95,9 @@ namespace ETL_web_project.Controllers
             return File(bytes, "text/csv", "staging_export.csv");
         }
 
-
-        // ================== FACT EXPLORER ==================
-
+        [HttpGet]
         [Authorize(Roles = "Admin,Analyst")]
-        public async Task<ActionResult> Facts(
-            DateTime? fromDate,
-            DateTime? toDate,
-            string? storeSearch,
-            string? productSearch,
-            string? customerSearch)
+        public async Task<IActionResult> Facts(DateTime? fromDate, DateTime? toDate, string? storeSearch, string? productSearch, string? customerSearch)
         {
             var model = await _factExplorerService.GetFactExplorerAsync(
                 fromDate,
@@ -135,14 +107,6 @@ namespace ETL_web_project.Controllers
                 customerSearch);
 
             return View(model);
-        }
-
-
-        [Authorize(Roles = "Admin,DataEngineer")]
-        public async Task<IActionResult> Schedule()
-        {
-            var vm = await _scheduleOverviewService.GetOverviewAsync();
-            return View(vm);
         }
     }
 }

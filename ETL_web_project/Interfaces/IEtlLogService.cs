@@ -1,5 +1,4 @@
-﻿using ETL_web_project.DTOs;
-using ETL_web_project.DTOs.Etl.EtlLogs;
+﻿using ETL_web_project.DTOs.Etl.EtlLogs;
 using LogLevel = ETL_web_project.Enums.LogLevel;
 
 namespace ETL_web_project.Interfaces
