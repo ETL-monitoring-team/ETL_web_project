@@ -2,17 +2,10 @@
 @{
     ViewData["Title"] = "Settings";
 }
-@section Styles {
-    <style>
-        .settings-container {
-            min-height: calc(100vh - 180px);
-        }
-    </style>
-}
 
 <link rel="stylesheet" href="~/css/settings.css" asp-append-version="true" />
 
-<div class="settings-container">
+<div class="settings-container page-container">
 
     @if (TempData["ProfileSuccess"] != null)
     {

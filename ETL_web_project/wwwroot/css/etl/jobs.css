@@ -84,6 +84,32 @@
     color: #9ca3c7;
 }
 
+.jobs-table-scroll {
+    max-height: 460px;
+    overflow-y: auto;
+    margin-top: 1rem;
+    padding-right: 6px;
+    border-radius: 12px;
+}
+
+    .jobs-table-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .jobs-table-scroll::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.4);
+        border-radius: 10px;
+    }
+
+    .jobs-table-scroll::-webkit-scrollbar-thumb {
+        background: rgba(99, 102, 241, 0.45);
+        border-radius: 10px;
+    }
+
+        .jobs-table-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(129, 140, 248, 0.65);
+        }
+
 .jobs-table {
     width: 100%;
     border-collapse: collapse;

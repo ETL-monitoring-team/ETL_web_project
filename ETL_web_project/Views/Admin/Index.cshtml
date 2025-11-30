@@ -64,86 +64,89 @@
     </div>
 
     <div class="admin-table-wrapper">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Active</th>
-                    <th>Created</th>
-                    <th>Last Login</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var u in Model.Users)
-                {
+        <div class="admin-table-scroll">
+
+            <table class="admin-table">
+                <thead>
                     <tr>
-                        <td>@u.Username</td>
-                        <td>@u.Email</td>
-                        <td>
-                            @if (u.Role == UserRole.Admin)
-                            {
-                                <span class="badge badge-admin">Admin</span>
-                            }
-                            else if (u.Role == UserRole.DataEngineer)
-                            {
-                                <span class="badge badge-engineer">Data Engineer</span>
-                            }
-                            else
-                            {
-                                <span class="badge badge-analyst">Analyst</span>
-                            }
-                    </td>
-                    <td>@(u.IsActive ? "Yes" : "No")</td>
-                    <td>@u.CreatedAt.ToString("dd MMM yyyy HH:mm")</td>
-                    <td>
-                        @(u.LastLoginAt.HasValue
-                                                ? u.LastLoginAt.Value.ToString("dd MMM yyyy HH:mm")
-                                                : "Never")
-                    </td>
-
-                        <td class="actions-cell">
-                        @if (u.Role != UserRole.Admin)
-                            {
-                                <form asp-action="UpdateUserRole"
-                                      method="post"
-                                      class="inline-form role-form">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="UserId" value="@u.UserId" />
-
-                                    <select name="Role" class="form-select-small">
-                                        <option value="Analyst" selected="@(u.Role == UserRole.Analyst)">Analyst</option>
-                                        <option value="DataEngineer" selected="@(u.Role == UserRole.DataEngineer)">Data Engineer</option>
-                                        <option value="Admin" selected="@(u.Role == UserRole.Admin)">Admin</option>
-                                    </select>
-
-                                    <button type="button"
-                                            class="btn btn-sm btn-role-save js-role-save">
-                                        Save
-                                    </button>
-                                </form>
-
-                                <form asp-action="ToggleUserActive"
-                                      method="post"
-                                      class="inline-form">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="userId" value="@u.UserId" />
-                                    <button type="submit" class="btn btn-sm btn-toggle">
-                                        @(u.IsActive ? "Deactivate" : "Activate")
-                                    </button>
-                                </form>
-                            }
-                            else
-                            {
-                                <span class="text-muted small">No actions for Admin</span>
-                            }
-                        </td>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Active</th>
+                        <th>Created</th>
+                        <th>Last Login</th>
+                        <th>Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var u in Model.Users)
+                    {
+                        <tr>
+                            <td>@u.Username</td>
+                            <td>@u.Email</td>
+                            <td>
+                                @if (u.Role == UserRole.Admin)
+                                {
+                                    <span class="badge badge-admin">Admin</span>
+                                }
+                                else if (u.Role == UserRole.DataEngineer)
+                                {
+                                    <span class="badge badge-engineer">Data Engineer</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-analyst">Analyst</span>
+                                }
+                        </td>
+                        <td>@(u.IsActive ? "Yes" : "No")</td>
+                        <td>@u.CreatedAt.ToString("dd MMM yyyy HH:mm")</td>
+                        <td>
+                            @(u.LastLoginAt.HasValue
+                                                        ? u.LastLoginAt.Value.ToString("dd MMM yyyy HH:mm")
+                                                        : "Never")
+                        </td>
+
+                            <td class="actions-cell">
+                            @if (u.Role != UserRole.Admin)
+                                {
+                                    <form asp-action="UpdateUserRole"
+                                          method="post"
+                                          class="inline-form role-form">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="UserId" value="@u.UserId" />
+
+                                        <select name="Role" class="form-select-small">
+                                            <option value="Analyst" selected="@(u.Role == UserRole.Analyst)">Analyst</option>
+                                            <option value="DataEngineer" selected="@(u.Role == UserRole.DataEngineer)">Data Engineer</option>
+                                            <option value="Admin" selected="@(u.Role == UserRole.Admin)">Admin</option>
+                                        </select>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-role-save js-role-save">
+                                            Save
+                                        </button>
+                                    </form>
+
+                                    <form asp-action="ToggleUserActive"
+                                          method="post"
+                                          class="inline-form">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="userId" value="@u.UserId" />
+                                        <button type="submit" class="btn btn-sm btn-toggle">
+                                            @(u.IsActive ? "Deactivate" : "Activate")
+                                        </button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">No actions for Admin</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

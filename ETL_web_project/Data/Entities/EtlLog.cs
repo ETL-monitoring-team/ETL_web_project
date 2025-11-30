@@ -1,5 +1,4 @@
-﻿using ETL_web_project.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ETL_web_project.Data.Entities
