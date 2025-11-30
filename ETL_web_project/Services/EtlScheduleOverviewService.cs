@@ -1,19 +1,15 @@
 ﻿using ETL_web_project.Data.Context;
 using ETL_web_project.Data.Entities;
-using ETL_web_project.DTOs;
 using ETL_web_project.DTOs.Etl.Jobs;
 using ETL_web_project.DTOs.Etl.Schedule;
-using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 
 namespace ETL_web_project.Services
 {
     public class EtlScheduleOverviewService : IEtlScheduleOverviewService
     {
         private readonly ProjectContext _context;
-
         public EtlScheduleOverviewService(ProjectContext context)
         {
             _context = context;
@@ -72,7 +68,6 @@ namespace ETL_web_project.Services
 
             dto.ClosestNextRun = closestNext;
 
-            // Available Jobs
             var jobs = await _context.EtlJobs
                 .OrderBy(j => j.JobName)
                 .ToListAsync();
@@ -101,9 +96,6 @@ namespace ETL_web_project.Services
             return dto;
         }
 
-        // ----------------------------------------------------------------------
-        // FREQUENCY PARSING – Burada gerçek scheduler mantığı çalışır
-        // ----------------------------------------------------------------------
         private DateTime? CalculateNextRun(string frequency, EtlRun lastRun)
         {
             if (string.IsNullOrWhiteSpace(frequency))
@@ -111,38 +103,28 @@ namespace ETL_web_project.Services
 
             var now = DateTime.Now;
 
-            // Normalize (noktayı iki nokta yap, case insensitive, double spaces temizle)
             frequency = frequency
                 .Trim()
                 .Replace(".", ":")
                 .Replace("  ", " ")
                 .ToLower();
 
-            // WEEKLY -------------------------------------------
             if (frequency.StartsWith("weekly"))
             {
-                // weekly on monday 05:30
-                // weekly monday 05:30
-                // weekly monday 5:30
-                // weekly on monday 5.30
                 var tokens = frequency.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-                // weekly + (on) + Monday + HH:mm
-                // tokens: [weekly, on, monday, 05:30]
-                // OR:     [weekly, monday, 05:30]
 
                 string dayText = "";
                 string timeText = "";
 
                 if (tokens.Length == 4)
                 {
-                    dayText = tokens[2];  // monday
-                    timeText = tokens[3]; // 05:30
+                    dayText = tokens[2];
+                    timeText = tokens[3];
                 }
                 else if (tokens.Length == 3)
                 {
-                    dayText = tokens[1];  // monday
-                    timeText = tokens[2]; // 05:30
+                    dayText = tokens[1];
+                    timeText = tokens[2];
                 }
                 else return null;
 
@@ -155,12 +137,10 @@ namespace ETL_web_project.Services
                 return GetNextWeekdayTime(now, day, timeSpan);
             }
 
-            // DAILY -------------------------------------------
             if (frequency.StartsWith("daily"))
             {
-                // daily at 03:00
                 var parts = frequency.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                var timeText = parts.Last(); // her zaman son parça saat olur
+                var timeText = parts.Last();
 
                 if (!TimeSpan.TryParse(timeText, out var timeSpan))
                     return null;
@@ -169,13 +149,11 @@ namespace ETL_web_project.Services
                 return (today > now) ? today : today.AddDays(1);
             }
 
-            // EVERY HOUR --------------------------------------
             if (frequency.Contains("hour"))
             {
                 return now.AddHours(1);
             }
 
-            // EVERY X MINUTES ---------------------------------
             if (frequency.StartsWith("every") && frequency.Contains("minute"))
             {
                 var number = frequency.Split(' ')
@@ -183,7 +161,6 @@ namespace ETL_web_project.Services
 
                 return number != null ? now.AddMinutes(int.Parse(number)) : null;
             }
-
             return null;
         }
 
@@ -200,6 +177,5 @@ namespace ETL_web_project.Services
 
             return next;
         }
-
     }
 }

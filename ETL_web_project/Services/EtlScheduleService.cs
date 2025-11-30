@@ -21,7 +21,6 @@ namespace ETL_web_project.Services
                 .Include(s => s.Job)
                 .ToListAsync();
         }
-
         public async Task<EtlSchedule> CreateAsync(EtlSchedule schedule)
         {
             _context.EtlSchedules.Add(schedule);
@@ -49,7 +48,6 @@ namespace ETL_web_project.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
-        // PAUSE / RESUME
         public async Task<bool> ToggleActiveAsync(int scheduleId)
         {
             var schedule = await GetByIdAsync(scheduleId);
@@ -60,7 +58,6 @@ namespace ETL_web_project.Services
             return await _context.SaveChangesAsync() > 0;
         }
 
-        // RUN NOW
         public async Task<EtlRun> RunNowAsync(int scheduleId)
         {
             var schedule = await _context
@@ -84,19 +81,11 @@ namespace ETL_web_project.Services
 
             try
             {
-                //
-                // ----------------------------------------
-                //  BURADA GERÇEK ETL KODUN ÇALIŞACAK
-                //  Extract → Transform → Load
-                // ----------------------------------------
-                //
-
-                // DEMO AMAÇLI - Sanki başarıyla ETL tamamlandı
-                await Task.Delay(1500);  // Simülasyon
+                await Task.Delay(1500);
 
                 run.Status = EtlStatus.Success;
                 run.EndTime = DateTime.Now;
-                run.ErrorMessage = null;   // BAŞARILI: NULL
+                run.ErrorMessage = null;
 
                 await _context.SaveChangesAsync();
             }
@@ -104,7 +93,7 @@ namespace ETL_web_project.Services
             {
                 run.Status = EtlStatus.Failed;
                 run.EndTime = DateTime.Now;
-                run.ErrorMessage = ex.Message; // HATA BURAYA YAZILIR
+                run.ErrorMessage = ex.Message;
 
                 await _context.SaveChangesAsync();
                 throw;

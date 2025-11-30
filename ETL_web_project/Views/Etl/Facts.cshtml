@@ -10,7 +10,6 @@
 
 <section class="fact-explorer-page">
 
-    <!-- ================== FILTER BAR ================== -->
     <form method="get" class="fx-filter-bar card">
 
         <div class="fx-filter-group">
@@ -41,8 +40,6 @@
         <button class="fx-apply-btn" type="submit">Apply</button>
     </form>
 
-
-    <!-- ================== SUMMARY METRICS ================== -->
     <div class="fx-summary-row">
 
         <div class="card fx-summary-card">
@@ -83,8 +80,6 @@
 
     </div>
 
-
-    <!-- ================== SALES TREND (LINE CHART) ================== -->
     <div class="fx-trend-row">
 
         <div class="card fx-trend-card">
@@ -96,8 +91,6 @@
             <canvas id="salesTrendChart"></canvas>
         </div>
 
-
-        <!-- ================== TOP LISTS ================== -->
         <div class="card fx-top-card">
 
             <div class="fx-top-column">
@@ -137,8 +130,6 @@
 
     </div>
 
-
-    <!-- ================== FACT RECORDS TABLE ================== -->
     <div class="card fx-records-card">
 
         <div class="fx-card-header">
@@ -181,37 +172,33 @@
                 }
             </tbody>
         </table>
-
     </div>
-
 </section>
-
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const salesLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-                    Model?.SalesTrend?.Select(x => x.Date.ToString("yyyy-MM-dd")) ?? new List<string>()
-            ));
+            const salesLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+                                            Model?.SalesTrend?.Select(x => x.Date.ToString("yyyy-MM-dd")) ?? new List<string>()
+                            ));
 
     const salesValues = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
-                Model?.SalesTrend?.Select(x => x.Amount) ?? new List<decimal>()
-        ));
+                                Model?.SalesTrend?.Select(x => x.TotalAmount) ?? new List<decimal>()
+                ));
 
     const ctx = document.getElementById('salesTrendChart').getContext('2d');
 
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: salesLabels,
-                datasets: [{
-                    label: 'Sales Amount',
-                    data: salesValues,
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: true
-                }]
-            }
-        });
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: salesLabels,
+                    datasets: [{
+                        label: 'Sales Amount',
+                        data: salesValues,
+                        borderWidth: 2
+                       
+                    }]
+                }
+            });
     </script>
 }

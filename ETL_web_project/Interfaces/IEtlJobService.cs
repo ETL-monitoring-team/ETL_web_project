@@ -1,5 +1,4 @@
-﻿using ETL_web_project.DTOs;
-using ETL_web_project.DTOs.Etl.Jobs;
+﻿using ETL_web_project.DTOs.Etl.Jobs;
 using ETL_web_project.DTOs.Etl.RunHistory;
 
 namespace ETL_web_project.Interfaces

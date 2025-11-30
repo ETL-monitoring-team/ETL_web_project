@@ -1,6 +1,4 @@
 ﻿using ETL_web_project.DTOs.Account;
-using ETL_web_project.Interfaces;
-using ETL_web_project.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;

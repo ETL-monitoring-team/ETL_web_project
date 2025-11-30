@@ -242,3 +242,14 @@ body{
 .js-toggle-fullscreen-btn.on .icon-fullscreen-enter {
     display: none;
 }
+
+.dashboard-footer {
+    margin-top: 40px;
+    padding: 18px 0;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #9ca3af;
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    width: 100%;
+}

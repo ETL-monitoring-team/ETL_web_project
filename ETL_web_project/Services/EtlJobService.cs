@@ -1,5 +1,4 @@
 ﻿using ETL_web_project.Data.Context;
-using ETL_web_project.DTOs;
 using ETL_web_project.Enums;
 using ETL_web_project.Interfaces;
 using ETL_web_project.Data.Entities;
@@ -19,9 +18,6 @@ namespace ETL_web_project.Services
             _context = context;
         }
 
-        // ================================
-        // 1) JOB LİSTESİ (arama ile)
-        // ================================
         public async Task<List<EtlJobListItemDto>> GetJobsAsync(string? searchText)
         {
             var jobsQuery = _context.EtlJobs.AsQueryable();
@@ -74,9 +70,6 @@ namespace ETL_web_project.Services
             return result;
         }
 
-        // ================================
-        // 2) BELİRLİ JOB İÇİN RUN HISTORY
-        // ================================
         public async Task<List<EtlRunHistoryDto>> GetRunsForJobAsync(int jobId)
         {
             return await _context.EtlRuns
@@ -95,39 +88,32 @@ namespace ETL_web_project.Services
                 .ToListAsync();
         }
 
-        // ================================
-        // 3) RUN NOW (manuel ETL tetikleme)
-        // ================================
         public async Task<long> TriggerRunAsync(int jobId)
         {
             var job = await _context.EtlJobs.FindAsync(jobId);
             if (job == null)
                 throw new Exception("Job not found.");
 
-            // --- ETL RUN KAYDI OLUŞTUR ---
             var run = new EtlRun
             {
                 JobId = jobId,
                 Status = EtlStatus.Running,
-                StartTime = DateTime.UtcNow,
-                ErrorMessage = string.Empty      // <-- NULL gitmesin
+                StartTime = DateTime.Now,
+                ErrorMessage = string.Empty
             };
 
             _context.EtlRuns.Add(run);
             await _context.SaveChangesAsync();
 
-            // ilk log
             await AddLogAsync(run.RunId, LogLevel.Info, "Job manually triggered.");
 
             try
             {
-                // Burada gerçekte ETL pipeline'ını çağırırsın.
-                // Şimdilik simülasyon:
                 await Task.Delay(1500);
 
                 run.Status = EtlStatus.Success;
                 run.EndTime = DateTime.Now;
-                run.ErrorMessage = string.Empty;  // başarıyla bittiyse hata yok
+                run.ErrorMessage = string.Empty;
                 await _context.SaveChangesAsync();
 
                 await AddLogAsync(run.RunId, LogLevel.Info, "Job completed successfully.");
@@ -136,19 +122,14 @@ namespace ETL_web_project.Services
             {
                 run.Status = EtlStatus.Failed;
                 run.EndTime = DateTime.Now;
-                run.ErrorMessage = ex.Message;    // hata mesajını burada kaydediyoruz
+                run.ErrorMessage = ex.Message;
                 await _context.SaveChangesAsync();
 
                 await AddLogAsync(run.RunId, LogLevel.Error, $"Job failed: {ex.Message}");
             }
-
             return run.RunId;
         }
 
-
-        // ================================
-        // 4) LOG HELPER
-        // ================================
         private async Task AddLogAsync(long runId, LogLevel level, string message)
         {
             var log = new EtlLog
@@ -158,7 +139,6 @@ namespace ETL_web_project.Services
                 Message = message,
                 LogTime = DateTime.Now
             };
-
             _context.EtlLogs.Add(log);
             await _context.SaveChangesAsync();
         }

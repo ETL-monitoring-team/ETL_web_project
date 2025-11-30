@@ -1,5 +1,4 @@
-﻿using ETL_web_project.DTOs;
-using ETL_web_project.DTOs.Etl.Staging;
+﻿using ETL_web_project.DTOs.Etl.Staging;
 
 namespace ETL_web_project.Interfaces
 {

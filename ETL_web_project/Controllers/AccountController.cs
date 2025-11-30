@@ -155,7 +155,7 @@ namespace ETL_web_project.Controllers
 
             if (!success)
             {
-                ModelState.AddModelError("", "Token is invalid or expired.");
+                ModelState.AddModelError(string.Empty, "This password reset link is invalid or has expired.");
                 return View(dto);
             }
 

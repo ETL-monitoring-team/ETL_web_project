@@ -18,9 +18,7 @@ namespace ETL_web_project.DTOs.Account
         public string Email { get; set; }
 
         [Required]
-        [MinLength(8)]
         public string? ConfirmPassword { get; set; }
-
         public UserRole Role { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? LastLoginAt { get; set; }

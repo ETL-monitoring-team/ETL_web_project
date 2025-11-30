@@ -10,9 +10,9 @@ namespace ETL_web_project.Services
     {
         private readonly ProjectContext _context;
 
-        public SettingsService(ProjectContext ctx)
+        public SettingsService(ProjectContext context)
         {
-            _context = ctx;
+            _context = context;
         }
 
         public async Task<SettingsViewModel> GetSettingsForUserAsync(int userId)
@@ -47,8 +47,8 @@ namespace ETL_web_project.Services
             if (!PasswordHashHandler.VerifyPassword(dto.ConfirmPassword!, user.PasswordHash))
                 return new ProfileUpdateResult(false, "Password is incorrect.");
 
-            if (dto.Username.Length < 3)
-                return new ProfileUpdateResult(false, "Username must be at least 3 characters.");
+            if (dto.Username.Length < 8)
+                return new ProfileUpdateResult(false, "Username must be at least 8 characters.");
 
             if (await _context.UserAccounts.AnyAsync(u => u.UserId != dto.UserId && u.Username == dto.Username))
                 return new ProfileUpdateResult(false, "This username is already in use.");

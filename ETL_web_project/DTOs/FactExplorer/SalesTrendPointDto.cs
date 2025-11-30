@@ -3,6 +3,6 @@
     public class SalesTrendPointDto
     {
         public DateTime Date { get; set; }
-        public decimal Amount { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 }

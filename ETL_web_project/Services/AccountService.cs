@@ -19,7 +19,6 @@ namespace ETL_web_project.Services
             _mapper = mapper;
         }
 
-        // ------------------ LOGIN VALIDATION ------------------
         public async Task<UserDto?> ValidateUserAsync(LoginDto loginDto)
         {
             var user = await _context.UserAccounts
@@ -41,19 +40,16 @@ namespace ETL_web_project.Services
             return _mapper.Map<UserDto>(user);
         }
 
-        // ------------------ CHECK USERNAME ------------------
         public async Task<bool> UsernameExistsAsync(string username)
         {
             return await _context.UserAccounts.AnyAsync(u => u.Username == username);
         }
 
-        // ------------------ CHECK EMAIL ------------------
         public async Task<bool> EmailExistsAsync(string email)
         {
             return await _context.UserAccounts.AnyAsync(u => u.Email == email);
         }
 
-        // ------------------ REGISTER ------------------
         public async Task<UserDto> RegisterUserAsync(RegisterDto registerDto)
         {
             var entity = _mapper.Map<UserAccount>(registerDto);
@@ -68,8 +64,6 @@ namespace ETL_web_project.Services
             return _mapper.Map<UserDto>(entity);
         }
 
-
-        // ------------------ RESET TOKEN GENERATION ------------------
         public async Task<string?> GeneratePasswordResetTokenAsync(string email)
         {
             var user = await _context.UserAccounts
@@ -89,7 +83,6 @@ namespace ETL_web_project.Services
             return token;
         }
 
-        // ------------------ RESET PASSWORD ------------------
         public async Task<bool> ResetPasswordAsync(string token, string newPassword)
         {
             var user = await _context.UserAccounts
