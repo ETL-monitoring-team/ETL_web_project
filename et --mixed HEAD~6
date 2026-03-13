@@ -1,0 +1,68 @@
+[33mf142510[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m Update access key in ForgotPassword.cshtml
+[33med91327[m Add authorization attribute to EtlScheduleController edited
+[33mdfff92e[m access view edited
+[33m6ce1717[m Replace access key in contact form
+[33m61ab8dd[m Update connection string in appsettings.json
+[33m6281db7[m Add README for Retail Data Warehouse project
+[33mfd0a970[m Applied UI improvements by adding scrollable table sections across ETL pages and aligned the footer layout, then generated a new database migration to sync updated entities with the schema.
+[33mb1319ea[m Merge pull request #17 from OykuEyuboglu/feature/dev_general
+[33m6361cd7[m[33m ([m[1;31morigin/feature/dev_general[m[33m)[m Refactored project architecture: cleaned DTOs, improved controller actions, validated services, optimized FactExplorer and ETL Schedule modules, fixed Settings profile/password flows, removed unused methods, added footer layout updates, enhanced FE chart rendering, and ensured consistent routing, authorization, and view structure across the project.
+[33m3f0bda1[m Merge pull request #16 from OykuEyuboglu/feature/dev_general
+[33m129fa2f[m Merge branch 'master' into feature/dev_general
+[33m8639b45[m Reviewed Account views, wwwroot assets, AccountController, DTOs, enums, handlers, interfaces, and mappings; pending only minor checks for Fact DTO and missing mappings.
+[33m1f29d1b[m all css files edited.
+[33m7276be3[m Merge pull request #15 from OykuEyuboglu/feature/etljob_dev
+[33m782583a[m[33m ([m[1;31morigin/feature/etljob_dev[m[33m)[m etl job page edited.
+[33mfce27d2[m Merge pull request #14 from OykuEyuboglu/feature/staging-table-page
+[33m30da436[m[33m ([m[1;31morigin/feature/staging-table-page[m[33m)[m Added full staging actions (Reload, Clear Staging, Export CSV), chart rendering, and button active-state UI for Staging Tables page.
+[33ma6a5bc2[m Merge pull request #13 from OykuEyuboglu/feature/forgetpassword_dev
+[33m885279b[m[33m ([m[1;31morigin/feature/forgetpassword_dev[m[33m)[m Added admin-notified password reset flow with Web3Forms auto-submit and login redirect message.
+[33m7e93041[m Merge pull request #12 from OykuEyuboglu/feature/stagingpage_dev
+[33mcd2fdeb[m[33m ([m[1;31morigin/feature/stagingpage_dev[m[33m)[m Fix staging page by wiring StagingService and resolving database model binding issue
+[33m99f6e19[m Merge pull request #11 from OykuEyuboglu/feature/layoutedit
+[33m8433729[m[33m ([m[1;31morigin/feature/layoutedit[m[33m)[m layout edited
+[33mfe861f7[m Merge pull request #10 from OykuEyuboglu/feature/sidebar_searchedit
+[33m9c86a32[m[33m ([m[1;31morigin/feature/sidebar_searchedit[m[33m)[m Fix sidebar search
+[33m883028e[m Merge pull request #9 from OykuEyuboglu/feature/password_dev
+[33m4fd7119[m[33m ([m[1;31morigin/feature/password_dev[m[33m)[m Add custom static error page and configure global exception handling. Delete home default page
+[33m7138dbd[m Fix profile and password update issues in Settings page
+[33mbe6e2c0[m[33m ([m[1;31morigin/feature/accountpage_css_edit[m[33m)[m Refactored authentication UI with purple theme styling
+[33meee8735[m Merge pull request #8 from OykuEyuboglu/feature/etl-job
+[33m9395fbd[m[33m ([m[1;31morigin/feature/etl-job[m[33m)[m Implemented manual ETL run execution and run history view actions on ETL Jobs page (Run Now + View Runs).
+[33m1a7c197[m Added new migration.
+[33mb3142d1[m Merge pull request #7 from OykuEyuboglu/feature/dashboard_dev
+[33m224d84c[m[33m ([m[1;31morigin/feature/dashboard_dev[m[33m)[m Fixed dashboard time formatting bugs, resolved merge conflicts, and updated UI styles across schedule and dashboard pages.
+[33m95db48c[m Merge pull request #6 from OykuEyuboglu/feature/etl_schedule
+[33m6735ef2[m[33m ([m[1;31morigin/feature/etl_schedule[m[33m)[m Merge branch 'master' into feature/etl_schedule
+[33mc801b5a[m added full ETL schedule editing support, implemented Edit DTO, fixed RunNow ID mismatch, updated controller logic, created styled Edit page, unified create/edit UI design, improved frequency parsing rules.
+[33mae4e9e2[m Edited font-size :)
+[33m96b8791[m Merge pull request #5 from OykuEyuboglu/feature/dashboard
+[33m1eb8f8c[m[33m ([m[1;31morigin/feature/dashboard[m[33m)[m Added dynamic range filter (7/14/30 days) to dashboard revenue chart and updated UI with dropdown selector.
+[33md06366e[m Integrate Sales Trend visualization using daily aggregated sales amounts
+[33m174d78f[m Merge pull request #4 from OykuEyuboglu/feature/fact-explorer-page
+[33m7267aa9[m[33m ([m[1;31morigin/feature/fact-explorer-page[m[33m)[m Add full Fact Explorer page with filters, metrics, top lists and sales trend support
+[33m2c44f09[m edit user-profile photo
+[33m2b41e80[m edit admin page popup js file
+[33m185b7c6[m sidebar searchbar edit
+[33mf129fd0[m[33m ([m[1;31morigin/feature/auth_pages[m[33m)[m Implemented role-based authorization across pages and relocated the search bar from navbar to sidebar with working item filtering.
+[33m1a48c31[m[33m ([m[1;31morigin/feature/schedule_etl[m[33m)[m Implement ETL Schedule page with full UI and backend integration.
+[33m876eb7f[m[33m ([m[1;31morigin/feature/account_and_settings_dev[m[33m)[m Add Settings Profile update with password confirmation + Preferences tab integration
+[33m2cdfe41[m Merge branch 'feature/admin_dev'
+[33m26e7045[m[33m ([m[1;31morigin/feature/admin_dev[m[33m)[m added css file to staging
+[33mfeafe19[m Merge pull request #3 from OykuEyuboglu/feature/admin_dev
+[33m2e1c4dd[m merge master into feature/admin_dev and resolve conflicts
+[33m2a518b8[m Added full admin panel enhancements including role-based UI, DataEngineer support, username search filtering, secure role-change confirmation modal, reorganized action buttons, improved styles, and controller/service updates.
+[33me0cf53e[m Merge pull request #2 from OykuEyuboglu/feature/staging-tables-page
+[33m3230cf4[m[33m ([m[1;31morigin/feature/staging-tables-page[m[33m)[m Add initial implementation of Staging Tables pages (not fully completed)
+[33m82e66dc[m Merge pull request #1 from OykuEyuboglu/feature/settings_dev
+[33m197cdd6[m[33m ([m[1;31morigin/feature/settings_dev[m[33m)[m Merge master into feature/settings_dev and resolve conflicts
+[33meca510b[m Completed full Settings page implementation including profile editing, password change, user preferences, request-to-admin form, validation rules, UI redesign, and service-layer integration.
+[33m5885420[m[33m ([m[1;31morigin/feature/etl-jobs-implementation[m[33m)[m Implement ETL Jobs page UI + service & controller integration - Added job listing, status pills, last run info - Integrated search filter (will be improved later)
+[33m226d511[m Implement complete ETL Logs module with service, controller, DTOs, view integration and enum conflict resolution
+[33m20687db[m Fix enum conflict: use project LogLevel in EtlLog
+[33m37c68c4[m Add ETL Log feature: DTO, service, interface and controller updates
+[33m5b4e89c[m[33m ([m[1;31morigin/feature/view-implementation[m[33m, [m[1;31morigin/feature/etl-logs-implementation[m[33m)[m Implement full dashboard UI: KPI cards, revenue analytics chart, ETL run tables, Top N sections, responsive layout, Chart.js integration, and service-driven data binding
+[33m1cf5d1b[m[33m ([m[1;31morigin/feature/navbar_dev[m[33m)[m Implemented a responsive sidebar navbar with integrated search functionality, dynamic notification button, and fullscreen toggle.
+[33mcdbddaf[m[33m ([m[1;31morigin/feature/sidebar_dev[m[33m)[m Implemented a fully interactive sidebar with controllers and pages, and added dynamic display of the logged-in user's username and role.
+[33m87cdfe7[m[33m ([m[1;31morigin/feature/accountHashpassword[m[33m)[m Implement secure authentication: password hashing (PBKDF2), unique email & username validation and improved registration form.
+[33mce4b654[m Add second migration in

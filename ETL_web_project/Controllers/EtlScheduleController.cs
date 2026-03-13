@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ETL_web_project.Controllers
-{
+{   
+[Authorize(Roles = "Admin,DataEngineer")]
     public class EtlScheduleController : Controller
     {
         private readonly IEtlScheduleOverviewService _overviewService;

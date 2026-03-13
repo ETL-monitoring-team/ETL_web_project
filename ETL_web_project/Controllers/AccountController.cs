@@ -169,5 +169,12 @@ namespace ETL_web_project.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login");
         }
+        
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        { 
+            return View();
+        }
     }
-}
+}    
